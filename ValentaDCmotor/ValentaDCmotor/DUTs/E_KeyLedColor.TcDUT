@@ -1,10 +1,9 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
-  <DUT Name="E_LedColor" Id="{be9c6439-73b4-4aec-972b-87ca99f44a66}">
+  <DUT Name="E_KeyLedColor" Id="{9f95a090-ec24-4f71-9552-8bc5f2112b6e}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
-{attribute 'strict'}
 {attribute 'to_string'}
-TYPE E_LedColor :
+TYPE E_KeyLedColor :
 (
     Off := 0,
     Red := 1,

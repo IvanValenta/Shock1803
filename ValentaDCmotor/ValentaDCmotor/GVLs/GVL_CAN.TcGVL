@@ -56,7 +56,7 @@ VAR_GLOBAL
     // =====================================================
     // BOX10 - komandne varijable
     // =====================================================
-    aLedColor_Box10 : ARRAY[1..cBox10_Keys] OF E_LedColor;
+    aLedColor_Box10 : ARRAY[1..cBox10_Keys] OF E_KeyLedColor;
     aLedBlink_Box10 : ARRAY[1..cBox10_Keys] OF BOOL;
 
     byLedBrightness_Box10       : USINT := 16#3F;   // 0..63
@@ -66,7 +66,7 @@ VAR_GLOBAL
     // =====================================================
     // BOX11 - komandne varijable
     // =====================================================
-    aLedColor_Box11 : ARRAY[1..cBox11_Keys] OF E_LedColor;
+    aLedColor_Box11 : ARRAY[1..cBox11_Keys] OF E_KeyLedColor;
     aLedBlink_Box11 : ARRAY[1..cBox11_Keys] OF BOOL;
 
     byLedBrightness_Box11       : USINT := 16#3F;   // 0..63
