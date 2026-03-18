@@ -3,8 +3,8 @@
   <GVL Name="GVL_CAN" Id="{2f5e5e9d-4be6-4724-b9a1-3b4fca8fe811}">
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL CONSTANT
-    cBox10_Keys : INT := 4;
-    cBox11_Keys : INT := 4;
+    cBox10_Keys : USINT := 4; // PKP2200 ima 8 bitova max (USINT)
+    cBox11_Keys : USINT := 4; // PKP2200 ima 8 bitova max (USINT)
     cBox20_Keys : INT := 15;
 END_VAR
 
@@ -56,7 +56,9 @@ VAR_GLOBAL
     // =====================================================
     // BOX10 - komandne varijable
     // =====================================================
-    aLedColor_Box10 : ARRAY[1..cBox10_Keys] OF E_LedColor;
+    // HMI/ADS upisuje sirove vrijednosti boja, validacija je u PRG_CAN
+    aLedColorRaw_Box10 : ARRAY[1..cBox10_Keys] OF USINT;
+    aLedColor_Box10 : ARRAY[1..cBox10_Keys] OF E_KeyLedColor;
     aLedBlink_Box10 : ARRAY[1..cBox10_Keys] OF BOOL;
 
     byLedBrightness_Box10       : USINT := 16#3F;   // 0..63
@@ -66,7 +68,9 @@ VAR_GLOBAL
     // =====================================================
     // BOX11 - komandne varijable
     // =====================================================
-    aLedColor_Box11 : ARRAY[1..cBox11_Keys] OF E_LedColor;
+    // HMI/ADS upisuje sirove vrijednosti boja, validacija je u PRG_CAN
+    aLedColorRaw_Box11 : ARRAY[1..cBox11_Keys] OF USINT;
+    aLedColor_Box11 : ARRAY[1..cBox11_Keys] OF E_KeyLedColor;
     aLedBlink_Box11 : ARRAY[1..cBox11_Keys] OF BOOL;
 
     byLedBrightness_Box11       : USINT := 16#3F;   // 0..63

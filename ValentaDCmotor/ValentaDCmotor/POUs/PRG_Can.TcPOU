@@ -7,20 +7,28 @@ VAR
     byMaskUSINT : USINT;
     byMaskUINT  : UINT;
     bInitDone   : BOOL := FALSE;
+    nBox10Keys  : INT;
+    nBox11Keys  : INT;
 END_VAR
 ]]></Declaration>
     <Implementation>
       <ST><![CDATA[
+// USINT tipka ima maksimalno 8 bitova
+nBox10Keys := LIMIT(0, TO_INT(GVL_CAN.cBox10_Keys), 8);
+nBox11Keys := LIMIT(0, TO_INT(GVL_CAN.cBox11_Keys), 8);
+
 IF NOT bInitDone THEN
-    FOR i := 1 TO GVL_CAN.cBox10_Keys DO
+    FOR i := 1 TO nBox10Keys DO
         GVL_CAN.aBtn_Box10[i] := FALSE;
-        GVL_CAN.aLedColor_Box10[i] := E_LedColor.Off;
+        GVL_CAN.aLedColorRaw_Box10[i] := TO_USINT(E_KeyLedColor.Off);
+        GVL_CAN.aLedColor_Box10[i] := E_KeyLedColor.Off;
         GVL_CAN.aLedBlink_Box10[i] := FALSE;
     END_FOR;
 
-    FOR i := 1 TO GVL_CAN.cBox11_Keys DO
+    FOR i := 1 TO nBox11Keys DO
         GVL_CAN.aBtn_Box11[i] := FALSE;
-        GVL_CAN.aLedColor_Box11[i] := E_LedColor.Off;
+        GVL_CAN.aLedColorRaw_Box11[i] := TO_USINT(E_KeyLedColor.Off);
+        GVL_CAN.aLedColor_Box11[i] := E_KeyLedColor.Off;
         GVL_CAN.aLedBlink_Box11[i] := FALSE;
     END_FOR;
 
@@ -35,7 +43,7 @@ END_IF;
 // =====================================================
 // DECODE BUTTONS - BOX10
 // =====================================================
-FOR i := 1 TO GVL_CAN.cBox10_Keys DO
+FOR i := 1 TO nBox10Keys DO
     byMaskUSINT := SHL(USINT#1, i - 1);
     GVL_CAN.aBtn_Box10[i] := (GVL_CAN.diBox10_ButtonsRaw AND byMaskUSINT) <> 0;
 END_FOR;
@@ -44,7 +52,7 @@ END_FOR;
 // =====================================================
 // DECODE BUTTONS - BOX11
 // =====================================================
-FOR i := 1 TO GVL_CAN.cBox11_Keys DO
+FOR i := 1 TO nBox11Keys DO
     byMaskUSINT := SHL(USINT#1, i - 1);
     GVL_CAN.aBtn_Box11[i] := (GVL_CAN.diBox11_ButtonsRaw AND byMaskUSINT) <> 0;
 END_FOR;
@@ -70,35 +78,43 @@ GVL_CAN.doBox10_LedBlinkRedRaw   := 0;
 GVL_CAN.doBox10_LedBlinkGreenRaw := 0;
 GVL_CAN.doBox10_LedBlinkBlueRaw  := 0;
 
-FOR i := 1 TO GVL_CAN.cBox10_Keys DO
+FOR i := 1 TO nBox10Keys DO
     byMaskUSINT := SHL(USINT#1, i - 1);
 
+    // Validacija raspona (HMI/ADS -> raw USINT -> enum)
+    IF GVL_CAN.aLedColorRaw_Box10[i] <= TO_USINT(E_KeyLedColor.White) THEN
+        GVL_CAN.aLedColor_Box10[i] := USINT_TO_E_KeyLedColor(GVL_CAN.aLedColorRaw_Box10[i]);
+    ELSE
+        GVL_CAN.aLedColor_Box10[i] := E_KeyLedColor.Off;
+        GVL_CAN.aLedColorRaw_Box10[i] := TO_USINT(E_KeyLedColor.Off);
+    END_IF;
+
     CASE GVL_CAN.aLedColor_Box10[i] OF
-        E_LedColor.Off:
+        E_KeyLedColor.Off:
             // ništa
 
-        E_LedColor.Red:
+        E_KeyLedColor.Red:
             GVL_CAN.doBox10_LedStateRedRaw := GVL_CAN.doBox10_LedStateRedRaw OR byMaskUSINT;
 
-        E_LedColor.Green:
+        E_KeyLedColor.Green:
             GVL_CAN.doBox10_LedStateGreenRaw := GVL_CAN.doBox10_LedStateGreenRaw OR byMaskUSINT;
 
-        E_LedColor.Blue:
+        E_KeyLedColor.Blue:
             GVL_CAN.doBox10_LedStateBlueRaw := GVL_CAN.doBox10_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.Yellow:
+        E_KeyLedColor.Yellow:
             GVL_CAN.doBox10_LedStateRedRaw := GVL_CAN.doBox10_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox10_LedStateGreenRaw := GVL_CAN.doBox10_LedStateGreenRaw OR byMaskUSINT;
 
-        E_LedColor.Cyan:
+        E_KeyLedColor.Cyan:
             GVL_CAN.doBox10_LedStateGreenRaw := GVL_CAN.doBox10_LedStateGreenRaw OR byMaskUSINT;
             GVL_CAN.doBox10_LedStateBlueRaw := GVL_CAN.doBox10_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.Magenta:
+        E_KeyLedColor.Magenta:
             GVL_CAN.doBox10_LedStateRedRaw := GVL_CAN.doBox10_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox10_LedStateBlueRaw := GVL_CAN.doBox10_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.White:
+        E_KeyLedColor.White:
             GVL_CAN.doBox10_LedStateRedRaw := GVL_CAN.doBox10_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox10_LedStateGreenRaw := GVL_CAN.doBox10_LedStateGreenRaw OR byMaskUSINT;
             GVL_CAN.doBox10_LedStateBlueRaw := GVL_CAN.doBox10_LedStateBlueRaw OR byMaskUSINT;
@@ -106,31 +122,31 @@ FOR i := 1 TO GVL_CAN.cBox10_Keys DO
 
     IF GVL_CAN.aLedBlink_Box10[i] THEN
         CASE GVL_CAN.aLedColor_Box10[i] OF
-            E_LedColor.Off:
+            E_KeyLedColor.Off:
                 // ništa
 
-            E_LedColor.Red:
+            E_KeyLedColor.Red:
                 GVL_CAN.doBox10_LedBlinkRedRaw := GVL_CAN.doBox10_LedBlinkRedRaw OR byMaskUSINT;
 
-            E_LedColor.Green:
+            E_KeyLedColor.Green:
                 GVL_CAN.doBox10_LedBlinkGreenRaw := GVL_CAN.doBox10_LedBlinkGreenRaw OR byMaskUSINT;
 
-            E_LedColor.Blue:
+            E_KeyLedColor.Blue:
                 GVL_CAN.doBox10_LedBlinkBlueRaw := GVL_CAN.doBox10_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.Yellow:
+            E_KeyLedColor.Yellow:
                 GVL_CAN.doBox10_LedBlinkRedRaw := GVL_CAN.doBox10_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox10_LedBlinkGreenRaw := GVL_CAN.doBox10_LedBlinkGreenRaw OR byMaskUSINT;
 
-            E_LedColor.Cyan:
+            E_KeyLedColor.Cyan:
                 GVL_CAN.doBox10_LedBlinkGreenRaw := GVL_CAN.doBox10_LedBlinkGreenRaw OR byMaskUSINT;
                 GVL_CAN.doBox10_LedBlinkBlueRaw := GVL_CAN.doBox10_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.Magenta:
+            E_KeyLedColor.Magenta:
                 GVL_CAN.doBox10_LedBlinkRedRaw := GVL_CAN.doBox10_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox10_LedBlinkBlueRaw := GVL_CAN.doBox10_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.White:
+            E_KeyLedColor.White:
                 GVL_CAN.doBox10_LedBlinkRedRaw := GVL_CAN.doBox10_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox10_LedBlinkGreenRaw := GVL_CAN.doBox10_LedBlinkGreenRaw OR byMaskUSINT;
                 GVL_CAN.doBox10_LedBlinkBlueRaw := GVL_CAN.doBox10_LedBlinkBlueRaw OR byMaskUSINT;
@@ -164,35 +180,43 @@ GVL_CAN.doBox11_LedBlinkRedRaw   := 0;
 GVL_CAN.doBox11_LedBlinkGreenRaw := 0;
 GVL_CAN.doBox11_LedBlinkBlueRaw  := 0;
 
-FOR i := 1 TO GVL_CAN.cBox11_Keys DO
+FOR i := 1 TO nBox11Keys DO
     byMaskUSINT := SHL(USINT#1, i - 1);
 
+    // Validacija raspona (HMI/ADS -> raw USINT -> enum)
+    IF GVL_CAN.aLedColorRaw_Box11[i] <= TO_USINT(E_KeyLedColor.White) THEN
+        GVL_CAN.aLedColor_Box11[i] := USINT_TO_E_KeyLedColor(GVL_CAN.aLedColorRaw_Box11[i]);
+    ELSE
+        GVL_CAN.aLedColor_Box11[i] := E_KeyLedColor.Off;
+        GVL_CAN.aLedColorRaw_Box11[i] := TO_USINT(E_KeyLedColor.Off);
+    END_IF;
+
     CASE GVL_CAN.aLedColor_Box11[i] OF
-        E_LedColor.Off:
+        E_KeyLedColor.Off:
             // ništa
 
-        E_LedColor.Red:
+        E_KeyLedColor.Red:
             GVL_CAN.doBox11_LedStateRedRaw := GVL_CAN.doBox11_LedStateRedRaw OR byMaskUSINT;
 
-        E_LedColor.Green:
+        E_KeyLedColor.Green:
             GVL_CAN.doBox11_LedStateGreenRaw := GVL_CAN.doBox11_LedStateGreenRaw OR byMaskUSINT;
 
-        E_LedColor.Blue:
+        E_KeyLedColor.Blue:
             GVL_CAN.doBox11_LedStateBlueRaw := GVL_CAN.doBox11_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.Yellow:
+        E_KeyLedColor.Yellow:
             GVL_CAN.doBox11_LedStateRedRaw := GVL_CAN.doBox11_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox11_LedStateGreenRaw := GVL_CAN.doBox11_LedStateGreenRaw OR byMaskUSINT;
 
-        E_LedColor.Cyan:
+        E_KeyLedColor.Cyan:
             GVL_CAN.doBox11_LedStateGreenRaw := GVL_CAN.doBox11_LedStateGreenRaw OR byMaskUSINT;
             GVL_CAN.doBox11_LedStateBlueRaw := GVL_CAN.doBox11_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.Magenta:
+        E_KeyLedColor.Magenta:
             GVL_CAN.doBox11_LedStateRedRaw := GVL_CAN.doBox11_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox11_LedStateBlueRaw := GVL_CAN.doBox11_LedStateBlueRaw OR byMaskUSINT;
 
-        E_LedColor.White:
+        E_KeyLedColor.White:
             GVL_CAN.doBox11_LedStateRedRaw := GVL_CAN.doBox11_LedStateRedRaw OR byMaskUSINT;
             GVL_CAN.doBox11_LedStateGreenRaw := GVL_CAN.doBox11_LedStateGreenRaw OR byMaskUSINT;
             GVL_CAN.doBox11_LedStateBlueRaw := GVL_CAN.doBox11_LedStateBlueRaw OR byMaskUSINT;
@@ -200,31 +224,31 @@ FOR i := 1 TO GVL_CAN.cBox11_Keys DO
 
     IF GVL_CAN.aLedBlink_Box11[i] THEN
         CASE GVL_CAN.aLedColor_Box11[i] OF
-            E_LedColor.Off:
+            E_KeyLedColor.Off:
                 // ništa
 
-            E_LedColor.Red:
+            E_KeyLedColor.Red:
                 GVL_CAN.doBox11_LedBlinkRedRaw := GVL_CAN.doBox11_LedBlinkRedRaw OR byMaskUSINT;
 
-            E_LedColor.Green:
+            E_KeyLedColor.Green:
                 GVL_CAN.doBox11_LedBlinkGreenRaw := GVL_CAN.doBox11_LedBlinkGreenRaw OR byMaskUSINT;
 
-            E_LedColor.Blue:
+            E_KeyLedColor.Blue:
                 GVL_CAN.doBox11_LedBlinkBlueRaw := GVL_CAN.doBox11_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.Yellow:
+            E_KeyLedColor.Yellow:
                 GVL_CAN.doBox11_LedBlinkRedRaw := GVL_CAN.doBox11_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox11_LedBlinkGreenRaw := GVL_CAN.doBox11_LedBlinkGreenRaw OR byMaskUSINT;
 
-            E_LedColor.Cyan:
+            E_KeyLedColor.Cyan:
                 GVL_CAN.doBox11_LedBlinkGreenRaw := GVL_CAN.doBox11_LedBlinkGreenRaw OR byMaskUSINT;
                 GVL_CAN.doBox11_LedBlinkBlueRaw := GVL_CAN.doBox11_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.Magenta:
+            E_KeyLedColor.Magenta:
                 GVL_CAN.doBox11_LedBlinkRedRaw := GVL_CAN.doBox11_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox11_LedBlinkBlueRaw := GVL_CAN.doBox11_LedBlinkBlueRaw OR byMaskUSINT;
 
-            E_LedColor.White:
+            E_KeyLedColor.White:
                 GVL_CAN.doBox11_LedBlinkRedRaw := GVL_CAN.doBox11_LedBlinkRedRaw OR byMaskUSINT;
                 GVL_CAN.doBox11_LedBlinkGreenRaw := GVL_CAN.doBox11_LedBlinkGreenRaw OR byMaskUSINT;
                 GVL_CAN.doBox11_LedBlinkBlueRaw := GVL_CAN.doBox11_LedBlinkBlueRaw OR byMaskUSINT;
