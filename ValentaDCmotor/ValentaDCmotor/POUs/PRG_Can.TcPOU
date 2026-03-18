@@ -1,7 +1,7 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
   <POU Name="PRG_Can" Id="{5f39a0ae-cb2a-494d-a7f5-eb8f3de5fe9f}" SpecialFunc="None">
-    <Declaration><![CDATA[PROGRAM PRG_CAN
+    <Declaration><![CDATA[PROGRAM PRG_Can
 VAR
     i           : INT;
     byMaskUSINT : USINT;
