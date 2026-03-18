@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_ValveState" Id="{cb433b8f-c9f9-46d6-b294-5a20c8d0ad9e}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_ValveState :
+(
+    VALVE_UNKNOWN := 0,      (* Ni otvoren ni zatvoren - putuje *)
+    VALVE_OPEN := 1,         (* Potvrđeno otvoren *)
+    VALVE_CLOSED := 2,       (* Potvrđeno zatvoren *)
+    VALVE_ERROR := 3         (* Greška: timeout ili oba signala aktivna *)
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

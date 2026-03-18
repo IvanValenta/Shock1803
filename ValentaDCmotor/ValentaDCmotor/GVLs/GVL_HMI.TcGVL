@@ -1,0 +1,78 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="GVL_HMI" Id="{b9679a71-682e-494d-b0c9-12e8e18d949f}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    (* --- KOMANDE SA EKRANA (Tipke) --- *)
+    (* TRUE = Operater želi otvoriti ventil *)
+    bCmdOpen_P1 : BOOL;
+    bCmdOpen_P2 : BOOL;
+    bCmdOpen_P3 : BOOL;
+    bCmdOpen_S1 : BOOL;
+    bCmdOpen_S2 : BOOL;
+    bCmdOpen_S3 : BOOL;
+    
+    (* Reset tipka za alarme *)
+    bCmdResetAll : BOOL;
+
+    (* --- STATUSI ZA EKRAN (Boje/Tekst) --- *)
+    (* Koristimo onaj ENUM koji smo napravili: 1=Open, 2=Closed... *)
+    eState_P1 : E_ValveState;
+    eState_P2 : E_ValveState;
+    eState_P3 : E_ValveState;
+    eState_S1 : E_ValveState;
+    eState_S2 : E_ValveState;
+    eState_S3 : E_ValveState;
+
+    (* --- ALARMI ZA EKRAN (Crvena lampica) --- *)
+    bAlarm_P1 : BOOL;
+    bAlarm_P2 : BOOL;
+    bAlarm_P3 : BOOL;
+    bAlarm_S1 : BOOL;
+    bAlarm_S2 : BOOL;
+    bAlarm_S3 : BOOL;
+	
+	(* --- VRATA --- *)
+    bCmdDoorFwd_Open  : BOOL;
+    bCmdDoorFwd_Close : BOOL;
+    bCmdDoorAft_Open  : BOOL;
+    bCmdDoorAft_Close : BOOL;
+
+    eState_DoorFwd    : INT; (* Koristimo isti enum: 1=Open, 2=Closed *)
+    eState_DoorAft    : INT;
+    
+    bAlarm_DoorFwd    : BOOL;
+    bAlarm_DoorAft    : BOOL;	
+
+    (* --- KONFIGURACIJA I OPCIJE --- *)
+    bConfig_HydraulicBoost : BOOL := FALSE; (* TRUE = PTO i DC rade ZAJEDNO za wincheve *)
+	bConfig_AllowPtoInDrive : BOOL := FALSE; (* TRUE = Dozvoli korištenje motorne hidraulike dok vozimo *)
+    bConfig_AutoDcBackup    : BOOL := TRUE;  (* TRUE = Ako motor ima premalo okretaja, automatski upali DC pumpu *)
+    
+    (* Statusi *)
+    bHydraulicsSourceEngine : BOOL; (* Motorna pumpa je aktivna *)
+    bHydraulicsSourceDC     : BOOL; (* DC pumpa je aktivna *)
+
+	fHandThrottle : REAL;         // Ručica gasa (0-100)
+    eGearCommand  : E_GearState;  // Komanda mjenjača (FWD/N/REV)
+
+	bModeSail : BOOL;
+	
+	(* --- ODABIR MODA (Zahtjev operatera) --- *)
+    bReq_ModeDrive : BOOL; (* Tipka: Želim Pogon *)
+    bReq_ModeSail  : BOOL; (* Tipka: Želim Jedrenje *)
+    bReq_Stop      : BOOL; (* Tipka: STOP / Standby *)
+
+    (* --- TRENUTNI AKTIVNI MOD (Povratna info) --- *)
+    eActiveMode    : E_SystemMode; 
+    
+    (* Statusi sekvence *)
+    bSequenceReady : BOOL; (* Spremni za rad (Vrata su u poziciji) *)
+	
+	bCmdResetAlarms : BOOL;
+	
+	test : BOOL;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

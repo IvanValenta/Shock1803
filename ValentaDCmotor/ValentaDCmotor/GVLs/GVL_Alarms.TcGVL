@@ -1,0 +1,12 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="GVL_Alarms" Id="{d560a253-dfbc-4cb1-8658-3b4ac361a35d}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    bAnyAlarmActive : BOOL; (* Zbirni alarm *)
+	bErr_DoorFwd : BOOL;
+	bLeak_DoorFwd : BOOL;
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

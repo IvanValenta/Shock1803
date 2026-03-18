@@ -1,0 +1,144 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="GVL_IO" Id="{731579fe-bfd0-4d18-9f47-f85b682328a0}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    (* --- DIGITALNI ULAZI (Feedback sa ventila) --- *)
+    (* PORT Strana *)
+    DI_BAL_P1_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_P1_CLOSE_FB  AT %I* : BOOL;
+    DI_BAL_P2_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_P2_CLOSE_FB  AT %I* : BOOL;
+    DI_BAL_P3_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_P3_CLOSE_FB  AT %I* : BOOL;
+
+    (* STARBOARD Strana *)
+    DI_BAL_S1_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_S1_CLOSE_FB  AT %I* : BOOL;
+    DI_BAL_S2_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_S2_CLOSE_FB  AT %I* : BOOL;
+    DI_BAL_S3_OPEN_FB   AT %I* : BOOL;
+    DI_BAL_S3_CLOSE_FB  AT %I* : BOOL;
+
+    (* --- DIGITALNI IZLAZI --- *)
+    (* PORT Strana *)
+    DO_BAL_P1         AT %Q* : BOOL;
+    DO_BAL_P2         AT %Q* : BOOL;
+    DO_BAL_P3         AT %Q* : BOOL;
+
+    (* STARBOARD Strana *)
+    DO_BAL_S1         AT %Q* : BOOL;
+    DO_BAL_S2         AT %Q* : BOOL;
+    DO_BAL_S3         AT %Q* : BOOL;
+	
+	(* --- VRATA (Hidraulika) --- *)
+    (* Digitalni Izlazi (24V Špule) *)
+    DO_DoorFwd_Open    AT %Q* : BOOL;
+    DO_DoorFwd_Close   AT %Q* : BOOL;
+    
+    DO_DoorAft_Open    AT %Q* : BOOL;
+    DO_DoorAft_Close   AT %Q* : BOOL;
+	
+	(* --- ULAZI (TIPKE NA PALUBI) --- *)
+    (* Svaki vinč ima 2 gumba (npr. Brzina 1 / Brzina 2 ili Trim / Ease) *)
+    bBtn_Winch1_A  AT %I* : BOOL;
+    bBtn_Winch1_B  AT %I* : BOOL;
+    
+    bBtn_Winch2_A  AT %I* : BOOL;
+    bBtn_Winch2_B  AT %I* : BOOL;
+    
+    bBtn_Winch3_A  AT %I* : BOOL;
+    bBtn_Winch3_B  AT %I* : BOOL;
+
+    (* --- IZLAZI (HIDRAULIČKI VENTILI) --- *)
+    bValve_Winch1_A AT %Q* : BOOL;
+    bValve_Winch1_B AT %Q* : BOOL;
+    
+    bValve_Winch2_A AT %Q* : BOOL;
+    bValve_Winch2_B AT %Q* : BOOL;
+    
+    bValve_Winch3_A AT %Q* : BOOL;
+    bValve_Winch3_B AT %Q* : BOOL;
+    
+    (* --- DC PUMPA (BACKUP) --- *)
+    bDcPump_Start   AT %Q* : BOOL; (* Relej za paljenje DC pumpe *)
+    
+    (* --- KOMUNIKACIJA S MOTOROM --- *)
+    iRpmReq_Winches : INT; (* Koliko RPM-a tražimo od motora *)
+    bAnyWinchActive : BOOL; (* Barem jedan radi *)
+
+    (* Analogni Ulazi (Tlak - 4-20mA skalirano u Bar) *)
+    (* Ovdje pretpostavljamo da imamo varijablu tlaka već skaliranu u REAL (Bar) *)
+    (* To mapiranje ćemo riješiti kasnije u kodu, sad samo deklaracija *)
+    fPressure_FWD_A     : REAL; 
+    fPressure_FWD_B     : REAL;
+    fPressure_AFT_A     : REAL;
+    fPressure_AFT_B     : REAL;	
+	
+	fEngineRPM_Scaled   : REAL;
+	
+    (* --- ANALOGNI ULAZI (RAW 0..32767) --- *)
+    (* Tlakovi Vrata *)
+    iPressure_FWD_A_Raw : INT;
+    iPressure_FWD_B_Raw : INT;
+    iPressure_AFT_A_Raw : INT;
+    iPressure_AFT_B_Raw : INT;
+
+    (* ZF Aktuator Feedback *)
+    iGas_ActualPos_Raw  AT %I* : INT;
+    iGear_ActualPos_Raw AT %I* : INT;
+    
+    (* Ručice (Komande) *)
+    iLever_St1_Raw      AT %I* : INT; (* Komanda Stanica 1 *)
+    iLever_St2_Raw      AT %I* : INT; (* Komanda Stanica 2 *)
+    iActiveLever_Raw    : INT; (* Odabrana ručica koja ide na motor *)
+    
+    (* --- DIGITALNI SIGNALI (Station Manager) --- *)
+    bBtn_Sel_St1        : BOOL;
+    bLed_Sel_St1        : BOOL;
+    bBtn_Sel_St2        : BOOL;
+    bLed_Sel_St2        : BOOL;
+    bBuzzer             : BOOL;
+
+    (* --- IZLAZI ZA EL7342 (ZF Aktuator) --- *)
+    nGas_Motor_Out      : INT;
+    nGear_Motor_Out     : INT;
+	
+	(* --- BALASTI (6 TANKOVA) - ULAZI 4-20mA --- *)
+    (* Lijeva strana (PORT) *)
+    iLevel_Bal_P1_Raw   AT %I* : INT; (* Port 1 (Pramac/Forward) *)
+    iLevel_Bal_P2_Raw   AT %I* : INT; (* Port 2 (Mid) *)
+    iLevel_Bal_P3_Raw   AT %I* : INT; (* Port 3 (Krma/Aft) *)
+    
+    (* Desna strana (STARBOARD) *)
+    iLevel_Bal_S1_Raw   AT %I* : INT; (* Stbd 1 *)
+    iLevel_Bal_S2_Raw   AT %I* : INT; (* Stbd 2 *)
+    iLevel_Bal_S3_Raw   AT %I* : INT; (* Stbd 3 *)
+
+    (* --- OSTALI TANKOVI --- *)
+    iLevel_Fuel_Raw         AT %I* : INT;
+    iLevel_FreshWater_Raw   AT %I* : INT;
+    iLevel_Hydraulic_Raw    AT %I* : INT;
+
+    (* --- SKALIRANE VRIJEDNOSTI (0.0 - 100.0 %) --- *)
+    (* PORT *)
+    fLevel_Bal_P1_Pct   : REAL;
+    fLevel_Bal_P2_Pct   : REAL;
+    fLevel_Bal_P3_Pct   : REAL;
+    
+    (* STBD *)
+    fLevel_Bal_S1_Pct   : REAL;
+    fLevel_Bal_S2_Pct   : REAL;
+    fLevel_Bal_S3_Pct   : REAL;
+    
+    (* OSTALO *)
+    fLevel_Fuel_Pct         : REAL;
+    fLevel_FreshWater_Pct   : REAL;
+    fLevel_Hydraulic_Pct    : REAL;
+    
+    (* --- ALARMI --- *)
+    bAlarm_HydraulicLow     : BOOL;
+    bAlarm_FuelLow          : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

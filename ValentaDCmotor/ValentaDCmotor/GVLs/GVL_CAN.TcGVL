@@ -1,0 +1,77 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="GVL_CAN" Id="{2f5e5e9d-4be6-4724-b9a1-3b4fca8fe811}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL CONSTANT
+    cBox10_Keys : INT := 4;
+    cBox11_Keys : INT := 4;
+    cBox20_Keys : INT := 15;
+END_VAR
+
+VAR_GLOBAL
+    // =====================================================
+    // RAW ulazi tipki iz CANopen linka
+    // =====================================================
+    diBox10_ButtonsRaw AT %I* : USINT;   // PKP2200 #1
+    diBox11_ButtonsRaw AT %I* : USINT;   // PKP2200 #2
+    diBox20_ButtonsRaw AT %I* : UINT;    // PKP3500 / 15 tipki
+
+    // =====================================================
+    // Dekodirano stanje tipki
+    // =====================================================
+    aBtn_Box10 : ARRAY[1..cBox10_Keys] OF BOOL;
+    aBtn_Box11 : ARRAY[1..cBox11_Keys] OF BOOL;
+    aBtn_Box20 : ARRAY[1..cBox20_Keys] OF BOOL;
+
+    // =====================================================
+    // BOX10 - RAW izlazi za link na RxPDO
+    // =====================================================
+    doBox10_LedStateRedRaw         AT %Q* : USINT;
+    doBox10_LedStateGreenRaw       AT %Q* : USINT;
+    doBox10_LedStateBlueRaw        AT %Q* : USINT;
+
+    doBox10_LedBlinkRedRaw         AT %Q* : USINT;
+    doBox10_LedBlinkGreenRaw       AT %Q* : USINT;
+    doBox10_LedBlinkBlueRaw        AT %Q* : USINT;
+
+    doBox10_LedBrightnessRaw       AT %Q* : USINT;
+    doBox10_BacklightBrightnessRaw AT %Q* : USINT;
+    doBox10_BacklightColorRaw      AT %Q* : USINT;
+
+    // =====================================================
+    // BOX11 - RAW izlazi za link na RxPDO
+    // =====================================================
+    doBox11_LedStateRedRaw         AT %Q* : USINT;
+    doBox11_LedStateGreenRaw       AT %Q* : USINT;
+    doBox11_LedStateBlueRaw        AT %Q* : USINT;
+
+    doBox11_LedBlinkRedRaw         AT %Q* : USINT;
+    doBox11_LedBlinkGreenRaw       AT %Q* : USINT;
+    doBox11_LedBlinkBlueRaw        AT %Q* : USINT;
+
+    doBox11_LedBrightnessRaw       AT %Q* : USINT;
+    doBox11_BacklightBrightnessRaw AT %Q* : USINT;
+    doBox11_BacklightColorRaw      AT %Q* : USINT;
+
+    // =====================================================
+    // BOX10 - komandne varijable
+    // =====================================================
+    aLedColor_Box10 : ARRAY[1..cBox10_Keys] OF E_LedColor;
+    aLedBlink_Box10 : ARRAY[1..cBox10_Keys] OF BOOL;
+
+    byLedBrightness_Box10       : USINT := 16#3F;   // 0..63
+    byBacklightBrightness_Box10 : USINT := 16#00;   // 0..63
+    eBacklightColor_Box10       : E_BacklightColor := E_BacklightColor.Amber;
+
+    // =====================================================
+    // BOX11 - komandne varijable
+    // =====================================================
+    aLedColor_Box11 : ARRAY[1..cBox11_Keys] OF E_LedColor;
+    aLedBlink_Box11 : ARRAY[1..cBox11_Keys] OF BOOL;
+
+    byLedBrightness_Box11       : USINT := 16#3F;   // 0..63
+    byBacklightBrightness_Box11 : USINT := 16#00;   // 0..63
+    eBacklightColor_Box11       : E_BacklightColor := E_BacklightColor.Amber;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

@@ -1,0 +1,114 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_StationManager" Id="{e40a6d9d-6ae6-4148-98a8-bbd6232e93a0}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_StationManager
+VAR_INPUT
+    (* Ulazi s ručica *)
+    bBtn1, bBtn2      : BOOL;
+    iPot1, iPot2      : INT;
+    
+    (* Kalibracija Neutrala *)
+    iNeutCenter       : INT := 16000; (* Sredina *)
+    iNeutTol          : INT := 1000;  (* Tolerancija +/- *)
+END_VAR
+
+VAR_OUTPUT
+    (* Tko je aktivan? *)
+    bActiveSt1        : BOOL;
+    bActiveSt2        : BOOL;
+    
+    (* Signal za buzzer *)
+    bBuzzerOut        : BOOL;
+    
+    (* Odabrani potenciometar *)
+    iSelectedPot      : INT;
+END_VAR
+
+VAR
+    (* Interno *)
+    bRequest1, bRequest2 : BOOL; (* Detekcija pritiska (Rising Edge) *)
+    rtBtn1, rtBtn2       : R_TRIG; (* Triggeri za tipke *)
+    
+    bSafeToTransfer      : BOOL;
+    tmrBuzzer            : TP;     (* Timer za Bip-Bip *)
+    iBipCount            : INT;    (* Brojač bipova *)
+    fbPulse              : TON;    (* Za blinkanje buzzera *)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// --- KOD ---
+
+// 1. Detekcija pritiska tipke
+rtBtn1(CLK := bBtn1);
+rtBtn2(CLK := bBtn2);
+
+// 2. Provjera jesu li ručice u Neutralu?
+// Obje moraju biti blizu sredine da bi transfer bio siguran
+bSafeToTransfer := (ABS(iPot1 - iNeutCenter) < iNeutTol) AND 
+                   (ABS(iPot2 - iNeutCenter) < iNeutTol);
+
+// 3. Logika prebacivanja (Transfer)
+
+// A) Zahtjev za Stanicu 1
+IF rtBtn1.Q THEN
+    IF bSafeToTransfer THEN
+        bActiveSt1 := TRUE;
+        bActiveSt2 := FALSE;
+    ELSE
+        // Nije sigurno! Pali alarm
+        iBipCount := 3; // 3 puta bipni
+    END_IF
+END_IF
+
+// B) Zahtjev za Stanicu 2
+IF rtBtn2.Q THEN
+    IF bSafeToTransfer THEN
+        bActiveSt1 := FALSE;
+        bActiveSt2 := TRUE;
+    ELSE
+        // Nije sigurno! Pali alarm
+        iBipCount := 3;
+    END_IF
+END_IF
+
+// Defaultno stanje na paljenju (npr. Stanica 1)
+IF NOT bActiveSt1 AND NOT bActiveSt2 THEN
+    bActiveSt1 := TRUE;
+END_IF
+
+
+// 4. Odabir signala
+IF bActiveSt1 THEN
+    iSelectedPot := iPot1;
+ELSE
+    iSelectedPot := iPot2;
+END_IF
+
+
+// 5. Logika Buzzera 
+IF iBipCount > 0 THEN
+    // Generiraj puls (npr. 200ms ON, 200ms OFF)
+    fbPulse(IN := NOT fbPulse.Q, PT := T#200MS);
+    
+    IF fbPulse.Q THEN
+        // Svaki drugi puls smanji brojač (da dobijemo ON-OFF ciklus)
+        // (Ovo je pojednostavljeno, može se i ljepše s CASE-om)
+    END_IF
+    
+    // Buzzer prati puls
+    bBuzzerOut := fbPulse.ET < T#100MS; // Prvih 100ms sviraj
+    
+    // Odbrojavanje (Ovo je pseudo-kod, u stvarnosti trebaš state machine za biper)
+    // Ali za jednostavnost: Neka svira dok je tipka stisnuta ako nije Safe?
+    // Ili jednostavnije:
+    
+    // --- JEDNOSTAVNIJI ALARM ---
+    // Ako stisneš tipku a nije safe -> Buzzer radi dok držiš tipku
+    if (bBtn1 OR bBtn2) AND NOT bSafeToTransfer THEN
+        bBuzzerOut := TRUE;
+    ELSE
+        bBuzzerOut := FALSE;
+    END_IF
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

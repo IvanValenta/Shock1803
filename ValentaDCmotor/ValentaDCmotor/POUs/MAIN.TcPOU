@@ -1,0 +1,199 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="MAIN" Id="{7b9c8698-7ce0-48af-9cd6-368a0771761d}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM MAIN
+VAR
+	RPM_Motor: MeasureRPM;
+
+// Za simulaciju kretanja
+	Tgen1: TON;
+	bTick1: BOOL;
+	R_Tgen1: R_TRIG;
+	bTakt1: BOOL;
+	bMove_M1: BOOL;	// Sim Move enable
+	
+	Tgen2: TON;
+	bTick2: BOOL;
+	R_Tgen2: R_TRIG;
+	bTakt2: BOOL;
+	bMove_M2: BOOL;	// Sim Move enable
+
+	rSetpointTarget_MinM1: REAL:=22.0;		// Simulacija Targget pos Min
+	rSetpointTarget_MaxM1: REAL:=77.0;		// Simulacija Targget pos Max
+	rSetpointTarget_MinM2: REAL:=22.0;		// Simulacija Targget pos Min
+	rSetpointTarget_MaxM2: REAL:=77.0;		// Simulacija Targget pos Max
+
+// MOTOR_1	
+	FB_DC_MOTOR1: FB_DC_Motor_Direct_Ctrl;	// FB DC Motor Ctrl
+	// komande
+	bMotorOn_M1: BOOL:=TRUE;				// Motor ON
+	rSetpointTarget_M1: REAL;		// Setpopoint Target pos percent	
+	rMaxVelocityM1: REAL:=100.0;	// Zadana brzina %
+	// Parametri
+	rKp_M1: REAL:=5.0;	// ostali su fiksni na FB-u
+	
+	bInDeadband_M1: BOOL;			// u podrucju prozora pozicije
+	bHMI_RESET_M1: BOOL;			// reset greske ih HMI
+	rErrorM1: LREAL;				// Greska slijedenja pozicije
+	bSetVelOverPozM1: BOOL;			// greska set pos koji premasuje INT  - iskljucije Motor
+	bSetVelOverNegM1: BOOL;			// greska set pos koji premasuje INT  - iskljucije Motor
+	rPotFeedback_Radno_PercM1: REAL;//Pozicija % radnog pomaka 0--100%
+	rMotorVoltageM1: REAL;			// monitoring napon motora V
+	rMotorCurrentM1: REAL;			// monitoring struja motora A
+	rActualVelocityRPM_M1: REAL;	// trnutna brzina motora RPM
+	bErrorLimitPosMin_M1: BOOL;	// Pozicija ispod min limita 
+	bErrorLimitPosMax_M1: BOOL;	// Pozicija iznad max limita 
+	bERROR_COM_M1: BOOL;			// generalna greska
+	bERROR_POS_M1: BOOL;			// greska pozicije ako je van pozicije > n sec 
+	
+
+// MOTOR_2	
+	FB_DC_MOTOR2: FB_DC_Motor_Direct_Ctrl;	// FB DC Motor Ctrl
+	// komande
+	bMotorOn_M2: BOOL:=true;				// Motor ON
+	rSetpointTarget_M2: REAL;		// Setpopoint Target pos percent	
+	rMaxVelocityM2: REAL:=100.0;	// Zadana brzina %
+	// Parametri
+	rKp_M2: REAL:=5.0;	// ostali su fiksni na FB-u
+	
+	bInDeadband_M2: BOOL;			// u podrucju prozora pozicije
+	bHMI_RESET_M2: BOOL;			// reset greske ih HMI
+	rErrorM2: LREAL;				// Greska slijedenja pozicije
+	bSetVelOverPozM2: BOOL;			// greska set pos koji premasuje INT  - iskljucije Motor
+	bSetVelOverNegM2: BOOL;			// greska set pos koji premasuje INT  - iskljucije Motor
+	rPotFeedback_Radno_PercM2: REAL;//Pozicija % radnog pomaka 0--100%
+	rMotorVoltageM2: REAL;			// monitoring napon motora V
+	rMotorCurrentM2: REAL;			// monitoring struja motora A
+	rActualVelocityRPM_M2: REAL;	// trnutna brzina motora RPM
+	bErrorLimitPosMin_M2: BOOL;	// Pozicija ispod min limita 
+	bErrorLimitPosMax_M2: BOOL;	// Pozicija iznad max limita 
+	bERROR_COM_M2: BOOL;			// generalna greska
+	bERROR_POS_M2: BOOL;			// greska pozicije ako je van pozicije > n sec 
+	
+
+
+
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// Potenciometar feedback
+
+RPM_Motor(nPotValue:=iwPotFeedback_M1 , nPotValueCount=> , RPM=> );
+
+// DirectMotorControl
+// Simulator Reverziranje Motor1 kad uđe u poziciju 
+Tgen1(IN:=bInDeadband_M1 , PT:=T#2S , Q=> , ET=> );
+R_Tgen1(CLK:=Tgen1.Q , Q=>bTick1 );
+IF bTick1 THEN
+	bTakt1:=NOT bTakt1;
+END_IF
+// reverziranje pozicije M1
+IF bTakt1 AND bMove_M1 AND bMotorOn_M1 THEN
+    rSetpointTarget_M1 := rSetpointTarget_MinM1;
+ELSE
+    rSetpointTarget_M1 := rSetpointTarget_MaxM1;
+END_IF
+
+// Simulator Reverziranje Motor2 kad uđe u poziciju 
+Tgen2(IN:=bInDeadband_M2 , PT:=T#2S , Q=> , ET=> );
+R_Tgen2(CLK:=Tgen2.Q , Q=>bTick2 );
+IF bTick2 THEN
+	bTakt2:=NOT bTakt2;
+END_IF
+
+// reverziranje pozicije M2
+IF bTakt2 AND bMove_M2 AND bMotorOn_M2  THEN
+    rSetpointTarget_M2 := rSetpointTarget_MinM2;
+ELSE
+    rSetpointTarget_M2 := rSetpointTarget_MaxM2;
+END_IF
+
+
+// MOTOR 1 ===========================
+FB_DC_MOTOR1(
+	bMotorOn:=bMotorOn_M1,	// Motor ON
+	rSetpointTarget:=PRG_ZF_Control.iTargetGear , // Setpopoint Targer pos percent
+	rRampRate:=50.0 , // Ramp rate %
+	rDeadband:=1.0 , // Deadband pozicije %	 
+	rMaxVelocity:=rMaxVelocityM1,	// Zadana brzina %
+	rMinVelocity:=10.0,		// Min. brzina %
+	cPotMin:= 0.768,             //  V min - krajnji neg. pos.
+	cPotMax:= 9.266,             //  V max - krajnji poz. pos.
+	rHodMax:= 81.0,             //  max hod spindle mm
+	rKp:=rKp_M1 ,	// Kp regulator 5.0
+	rLinearPosition_LimMin:= 5.0,	// Safe limit iskljucenja negativan mm 
+	rLinearPosition_LimMAx:= 75.0,	// Safe limit iskljucenja pozitivan mm
+	rRadno_Min_Pos:= 10.0,	// Radni limit negativan mm
+	rRadno_Max_Pos:= 70.0,	// Radni limit pozitivan mm
+	rTcy_s:= 0.01, // PLC Tcy u sec
+	bHMI_RESET:=bHMI_RESET_M1 , // Reset iz HMI
+	iwFeedback:=iwPotFeedback_M1 , // AT %I* Pot feedback Link 
+	iwMotorVoltage:=nMotorVoltage_M1 , // AT %I*
+	iwMotorCurrent:= nMotorCurrent_M1,  // AT %I*
+	ixError:= bError_M1,  // AT %I*
+	qwVelocitySetpoint=>nVelocitySetpoint_M1 , // AT %Q*
+	qxEnable=>bEnable_M1 , // AT %Q* START MOTORA
+	qxReduceTorque=>bReduceTorque_M1 ,// AT %Q* 
+	qxReset=>bReset_M1 , // AT %Q*
+	rError=>rErrorM1 , // Greska slijedenja pozicije
+	bInDeadband=>bInDeadband_M1 , // unutar pozicije
+	bSetVelOverPoz=>bSetVelOverPozM1 , // greska set pos koji premasuje INT  - iskljucije Motor
+	bSetVelOverNeg=>bSetVelOverNegM1 ,	// greska set pos koji premasuje INT  - iskljucije Motor
+	rPotFeedback_Radno_Perc=>rPotFeedback_Radno_PercM1 , //Pozicija % radnog pomaka 0--100%
+	rMotorVoltage=>rMotorVoltageM1,	// monitoring napon motora V
+	rMotorCurrent=>rMotorCurrentM1 ,		// monitoring struja motora A	
+	rActualVelocityRPM=>rActualVelocityRPM_M1,	// trnutna brzina motora RPM
+	bErrorLimitPosMin=>bErrorLimitPosMin_M1, // Pozicija ispod min limita 
+	bErrorLimitPosMax=>bErrorLimitPosMax_M1,	// Pozicija iznad max limita
+	bError=>bERROR_COM_M1,	// generalna greska
+	bErrorPos=>bERROR_POS_M1 // greska pozicije ako je van pozicije > 5sec 
+);
+
+// MOTOR 2 ===========================
+FB_DC_MOTOR2(
+	bMotorOn:=bMotorOn_M2,	// Motor ON
+	rSetpointTarget:=PRG_ZF_Control.iTargetGas , // Setpopoint Targer pos percent
+	rRampRate:=50.0 , // Ramp rate %
+	rDeadband:=1.0 , // Deadband pozicije %	 
+	rMaxVelocity:=rMaxVelocityM2,	// Zadana brzina %
+	rMinVelocity:=10.0,		// Min. brzina %
+	cPotMin:= 0.768,             //  V min - krajnji neg. pos.
+	cPotMax:= 9.266,             //  V max - krajnji poz. pos.
+	rHodMax:= 81.0,             //  max hod spindle mm
+	rKp:=rKp_M2 ,	// Kp regulator 5.0
+	rLinearPosition_LimMin:= 5.0,	// Safe limit iskljucenja negativan mm 
+	rLinearPosition_LimMAx:= 75.0,	// Safe limit iskljucenja pozitivan mm
+	rRadno_Min_Pos:= 10.0,	// Radni limit negativan mm
+	rRadno_Max_Pos:= 70.0,	// Radni limit pozitivan mm
+	rTcy_s:= 0.01, // PLC Tcy u sec
+	bHMI_RESET:=bHMI_RESET_M2 , // Reset iz HMI
+	iwFeedback:=iwPotFeedback_M2 , // AT %I* Pot feedback Link 
+	iwMotorVoltage:=nMotorVoltage_M2 , // AT %I*
+	iwMotorCurrent:= nMotorCurrent_M2,  // AT %I*
+	ixError:= bError_M2,  // AT %I*
+	qwVelocitySetpoint=>nVelocitySetpoint_M2 , // AT %Q*
+	qxEnable=>bEnable_M2 , // AT %Q* START MOTORA
+	qxReduceTorque=>bReduceTorque_M2 ,// AT %Q* 
+	qxReset=>bReset_M2 , // AT %Q*
+	rError=>rErrorM2 , // Greska slijedenja pozicije
+	bInDeadband=>bInDeadband_M2 , // unutar pozicije
+	bSetVelOverPoz=>bSetVelOverPozM2 , // greska set pos koji premasuje INT  - iskljucije Motor
+	bSetVelOverNeg=>bSetVelOverNegM2 ,	// greska set pos koji premasuje INT  - iskljucije Motor
+	rPotFeedback_Radno_Perc=>rPotFeedback_Radno_PercM2 , //Pozicija % radnog pomaka 0--100%
+	rMotorVoltage=>rMotorVoltageM2,	// monitoring napon motora V
+	rMotorCurrent=>rMotorCurrentM2 ,		// monitoring struja motora A	
+	rActualVelocityRPM=>rActualVelocityRPM_M2,	// trnutna brzina motora RPM
+	bErrorLimitPosMin=>bErrorLimitPosMin_M2, // Pozicija ispod min limita 
+	bErrorLimitPosMax=>bErrorLimitPosMax_M2,	// Pozicija iznad max limita
+	bError=>bERROR_COM_M2,	// generalna greska
+	bErrorPos=>bERROR_POS_M2 // greska pozicije ako je van pozicije > 5sec 
+
+);
+
+PRG_ZF_Control();
+PRG_StationManager();
+PRG_Can();
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

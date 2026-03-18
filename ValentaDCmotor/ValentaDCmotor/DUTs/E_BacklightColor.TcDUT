@@ -1,0 +1,21 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_BacklightColor" Id="{2d0bbcc6-2b87-4427-95f1-b556cbf2e629}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_BacklightColor :
+(
+    Red := 1,
+    Green := 2,
+    Blue := 3,
+    Yellow := 4,
+    Cyan := 5,
+    Violet := 6,
+    White := 7,
+    Amber := 8,
+    YellowGreen := 9
+) USINT := Amber;
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

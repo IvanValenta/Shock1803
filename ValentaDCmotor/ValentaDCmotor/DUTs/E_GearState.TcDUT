@@ -1,0 +1,14 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_GearState" Id="{86857fbb-1cea-404d-abc6-b3ef02321368}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_GearState :
+(
+    GEAR_NEUTRAL := 0,
+    GEAR_FWD     := 1,
+    GEAR_REV     := 2
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

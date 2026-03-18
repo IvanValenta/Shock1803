@@ -1,0 +1,92 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="MeasureRPM" Id="{7a298823-1b95-4564-b2bd-441fdaebba88}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK MeasureRPM
+VAR_INPUT
+	    nPotValue: INT;                    // GVL.iwPotFeedback
+END_VAR
+VAR_OUTPUT
+	nPotValueCount: INT;               
+	RPM: LREAL;
+	nPotValueGetriba10:DINT; 	// pozicija sim. geriba x10
+END_VAR
+VAR
+	tonPeriodTimer: TON;
+	bTick: BOOL;
+	nPotValue_Old:INT;
+	bRPM: BOOL;
+	R_bRPM: R_TRIG;
+	RPMcount: INT;
+	nPotValueCount10: INT;          //      
+
+	nbRPM: INT;
+	bnPotValue: BOOL;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// tonPeriodTimer
+tonPeriodTimer(IN:=NOT bTick , PT:=T#10S , Q=>bTick , ET=> );
+
+
+// na promjenu nPotValue
+bnPotValue:=FALSE;
+IF (nPotValue <> nPotValue_Old) THEN
+	bnPotValue:=TRUE;
+END_IF
+nPotValue_Old:=	nPotValue;
+
+
+
+// Brojanje okretaja + detekcija pada u nulu
+bRPM:=FALSE;
+IF nPotValue < (nPotValue_Old-(nPotValue-nPotValue_Old)*4) THEN // histereza 20 radi mjerenja u mirovanju
+	bRPM:=TRUE;
+END_IF
+
+// Brojanje okretaja - detekcija porasta u max
+(*
+IF nPotValue > (nPotValue_Old+(nPotValue-nPotValue_Old)*4) THEN // histereza 20 radi mjerenja u mirovanju
+	bRPM:=TRUE;
+END_IF
+*)
+
+R_bRPM(CLK:=bRPM , Q=> );
+IF R_bRPM.Q THEN
+	nPotValueCount:=nPotValueCount+1;	// za RMM
+	nPotValueCount10:=nPotValueCount10+1;	// za getribu x 10
+	nbRPM:=nbRPM+1;
+END_IF
+
+// izracun RPM svake 1Min
+IF bTick THEN
+	RPMcount:=nPotValueCount;
+	RPM:=INT_TO_LREAL(RPMcount*6);
+	nPotValueCount:=0;
+END_IF
+
+// Simulacija getribe prijenosa 1:10
+// broji 10 bRPM
+
+IF (nPotValue > nPotValue_old) AND NOT bRPM THEN
+	nPotValueGetriba10:=nPotValueGetriba10 + (nPotValue - nPotValue_old);
+END_IF
+
+IF (nPotValue < nPotValue_old) AND NOT bRPM THEN
+	nPotValueGetriba10:=nPotValueGetriba10 - (nPotValue_old - nPotValue);
+END_IF
+
+
+
+// nPotValueGetriba10:=nPotValue + nPotValue*nPotValueCount10;
+
+(*
+IF nbRPM>9 THEN
+	nbRPM:=0;
+	nPotValueCount10:=0;
+END_IF
+*) 
+
+	]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

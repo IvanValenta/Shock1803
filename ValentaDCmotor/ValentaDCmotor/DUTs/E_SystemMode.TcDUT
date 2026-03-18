@@ -1,0 +1,15 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_SystemMode" Id="{e4c7e9dc-3143-481c-af37-08862bffba24}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_SystemMode :
+(
+    MODE_IDLE   := 0,  (* Sustav miruje / Inicijalizacija *)
+    MODE_DRIVE  := 1,  (* POGON: Oba vrata otvorena *)
+    MODE_SAIL   := 2,  (* JEDRENJE: Prednja otvorena, Zadnja zatvorena *)
+    MODE_ERROR  := 3   (* Greška sustava *)
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

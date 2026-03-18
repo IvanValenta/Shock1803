@@ -1,0 +1,66 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+  <GVL Name="GVL" Id="{924ee1bc-e591-4072-a600-2c956805eddf}">
+    <Declaration><![CDATA[VAR_GLOBAL
+
+// MOTOR1 ==============
+//  Potenciometar feedback EL3255
+	iwPotFeedback_M1 AT %I*: INT;	// AI Channel 1
+
+// nControlWord bitovi
+	bEnable_M1 AT %Q*: BOOL;         // DCM Control Channel 1.Enable
+	bReset_M1 AT %Q*: BOOL;          // DCM Control Channel 1.Reset  
+	bReduceTorque_M1 AT %Q*: BOOL;   // DCM Control Channel 1.Reduce torque
+
+    nVelocitySetpoint_M1 AT %Q*: INT; // Link na "Velocity" (49.0)
+		
+// DCM Status Channel 1 - Input bitovi Link na "Status" (45.0)
+	bReadyToEnable_M1 AT %I*: BOOL;    // Spreman za enable
+	bReady_M1 AT %I*: BOOL;             // Općenito spreman
+	bWarning_M1 AT %I*: BOOL;           // Upozorenje aktivno
+	bError_M1 AT %I*: BOOL;             // Greška aktivna
+	bMovingPositive_M1 AT %I*: BOOL;    // Kreće se u + smjeru
+	bMovingNegative_M1 AT %I*: BOOL;    // Kreće se u - smjeru  
+	bTorqueReduced_M1 AT %I*: BOOL;     // Reduce torque aktivan
+	bDigitalInput1_M1 AT %I*: BOOL;     // Digitalni ulaz 1
+	bDigitalInput2_M1 AT %I*: BOOL;     // Digitalni ulaz 2
+	bSyncError_M1 AT %I*: BOOL;         // Sync greška
+	bTxPDOToggle_M1 AT %I*: BOOL;       // PDO toggle bit	
+	
+// Novo - Info data
+    nMotorVoltage_M1 AT %I*: UINT; // Info data 1 (mV)
+    nMotorCurrent_M1 AT %I*: UINT; // Info data 2 (mA)
+	
+// MOTOR2 ==============
+//  Potenciometar feedback EL3255
+	iwPotFeedback_M2 AT %I*: INT;	// AI Channel 1
+
+// nControlWord bitovi
+	bEnable_M2 AT %Q*: BOOL;         // DCM Control Channel 1.Enable
+	bReset_M2 AT %Q*: BOOL;          // DCM Control Channel 1.Reset  
+	bReduceTorque_M2 AT %Q*: BOOL;   // DCM Control Channel 1.Reduce torque
+
+    nVelocitySetpoint_M2 AT %Q*: INT; // Link na "Velocity" (49.0)
+		
+// DCM Status Channel 1 - Input bitovi Link na "Status" (45.0)
+	bReadyToEnable_M2 AT %I*: BOOL;    // Spreman za enable
+	bReady_M2 AT %I*: BOOL;             // Općenito spreman
+	bWarning_M2 AT %I*: BOOL;           // Upozorenje aktivno
+	bError_M2 AT %I*: BOOL;             // Greška aktivna
+	bMovingPositive_M2 AT %I*: BOOL;    // Kreće se u + smjeru
+	bMovingNegative_M2 AT %I*: BOOL;    // Kreće se u - smjeru  
+	bTorqueReduced_M2 AT %I*: BOOL;     // Reduce torque aktivan
+	bDigitalInput1_M2 AT %I*: BOOL;     // Digitalni ulaz 1
+	bDigitalInput2_M2 AT %I*: BOOL;     // Digitalni ulaz 2
+	bSyncError_M2 AT %I*: BOOL;         // Sync greška
+	bTxPDOToggle_M2 AT %I*: BOOL;       // PDO toggle bit	
+	
+// Novo - Info data
+    nMotorVoltage_M2 AT %I*: UINT; // Info data 1 (mV)
+    nMotorCurrent_M2 AT %I*: UINT; // Info data 2 (mA)
+	
+	
+	
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

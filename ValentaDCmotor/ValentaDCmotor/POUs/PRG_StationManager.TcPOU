@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_StationManager" Id="{63da0d73-4597-42fc-9dcb-54a0f08c4c7b}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_StationManager
+VAR
+	fbStation : FB_StationManager;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[fbStation(
+    bBtn1 := GVL_IO.bBtn_Sel_St1,
+    bBtn2 := GVL_IO.bBtn_Sel_St2,
+    iPot1 := GVL_IO.iLever_St1_Raw,
+    iPot2 := GVL_IO.iLever_St2_Raw,
+    bActiveSt1 => GVL_IO.bLed_Sel_St1,
+    bActiveSt2 => GVL_IO.bLed_Sel_St2,
+    bBuzzerOut => GVL_IO.bBuzzer,
+    iSelectedPot => GVL_IO.iActiveLever_Raw
+);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

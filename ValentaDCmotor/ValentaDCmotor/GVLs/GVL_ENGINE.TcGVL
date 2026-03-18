@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <GVL Name="GVL_ENGINE" Id="{6676cab4-b157-4e07-94e6-2aea7b5a7d64}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+VAR_GLOBAL
+    fEngineRPM      : REAL;
+    fThrottleOut    : REAL;
+    eGearOut        : E_GearState;
+    bIsShifting     : BOOL;
+    bAlarm_HighRPM  : BOOL;
+END_VAR]]></Declaration>
+  </GVL>
+</TcPlcObject>

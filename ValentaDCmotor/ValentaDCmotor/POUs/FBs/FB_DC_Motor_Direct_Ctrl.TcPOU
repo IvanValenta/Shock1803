@@ -1,0 +1,245 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_DC_Motor_Direct_Ctrl" Id="{f223b9e3-14e5-4487-9ad5-dfe2654ec1f7}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DC_Motor_Direct_Ctrl
+VAR_INPUT
+	bMotorOn: BOOL;			// komanda Motor ON
+ 	rSetpointTarget: REAL := 50.0;    // Ciljna pozicija % ranga između Min Max
+   	rRampRate: REAL := 50.0;          // Brzina rampe [%/s]
+    rDeadband: REAL := 2.0;        // Deadband ±%
+ 	rMaxVelocity: LREAL:= 100.0;
+	rMinVelocity: LREAL:= 10.0;
+    cPotMin: REAL := 0.768;             //  V min - krajnji neg. pos.
+    cPotMax: REAL := 9.266;             //  V max - krajnji poz. pos.
+	rHodMax: REAL := 81.0;             //  max hod spindle mm
+	rKp: REAL := 10;              // P pojačanje
+ 	rLinearPosition_LimMin: REAL:= 5.0;	// Safe limit iskljucenja negativan mm
+	rLinearPosition_LimMAx: REAL:= 75.0;	// Safe limit iskljucenja pozitivan mm
+ 	rRadno_Min_Pos: REAL:= 10.0;	// Radni limit negativan mm
+	rRadno_Max_Pos: REAL:= 70.0;	// Radni limit pozitivan mm
+
+	rTcy_s: REAL:=0.01;	// PLC Tcy u sec
+  	// Realni Potenciometar - u RAW vrijednosti napona
+	bHMI_RESET: BOOL;	// Reset iz HMI
+	
+	iwFeedback: INT;	// AT %I* Pot feedback Link 
+	iwMotorVoltage : UINT; // AT %I* Info data 1 (mV)
+	iwMotorCurrent : UINT; // AT %I* Info data 2 (mA)
+	ixError : BOOL; // AT %I* Error
+
+END_VAR
+VAR_OUTPUT
+    qwVelocitySetpoint : INT; // AT %Q* Link na "Velocity" (49.0)
+	qxEnable : BOOL;         // AT %Q* DCM Control Channel 1.Enable
+	qxReduceTorque : BOOL;   // AT %Q* DCM Control Channel 1.Reduce torque
+	qxReset : BOOL;          // AT %Q* DCM Control Channel 1.Reset  
+
+	rError: REAL;	// greska slijeđenja
+	bInDeadband: BOOL;	// unutar pozicije
+	bSetVelOverPoz: BOOL;	// setpoint koji premasuje INT 
+	bSetVelOverNeg: BOOL;	// setpoint koji premasuje INT 
+	rPotFeedback_Radno_Perc: LREAL;	//Postotak radnog pomaka 0--100% mora biti unutar Safe limita
+	rMotorVoltage: REAL;	// monitoring V
+	rMotorCurrent: REAL;	// monitoring A
+	rActualVelocityRPM: REAL;	// Stvarna brzina [RPM]
+	bErrorLimitPosMin: BOOL;	// Pozicija ispod min limita 
+	bErrorLimitPosMax: BOOL;	// Pozicija iznad max limita 
+	bError: BOOL;	// Generalna greska  
+	bErrorPos: BOOL;	// greska pozicije ako je van pozicije > n sec  
+	
+END_VAR
+VAR
+	rSetpoint: REAL ;      // Željena pozicija 0-100%
+	rPotFeedback_V: REAL;		// Feedback napon
+	rLinearPosition: REAL;		// stvarna pozicija mm 
+
+	Kn: LREAL;	// faktor napona motora 320
+	
+	rVelocitySetpoint: LREAL;	// velocity setpoint
+	rVelocityCmd: LREAL;
+	fbVelocityTimer: TON;	// Timer za uzorkovanje
+    tSampleTime: TIME := T#50MS;  // Vrijeme uzorkovanja
+	rDeltaPosition: LREAL;	// Promjena pozicije
+	rLastPosition: REAL;	// Prethodna pozicija
+	rActualVelocity: LREAL;	// Stvarna brzina [%/s]
+	rVelocityFiltered: LREAL; // Stvarna brzina [%/s] filter
+	rFilterConst: REAL := 0.3;    // Filter konstanta (0.1-0.5)
+	bMotorOnCmd: BOOL;
+	TON_bInDeadband: TON;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// FB za DC Motor
+
+// Rampiranje setpointa
+IF rSetpoint < rSetpointTarget - 0.1 THEN
+    // Rampiranje gore
+    rSetpoint := rSetpoint + rRampRate * rTcy_s; // 0.01 = 10ms ciklus
+    IF rSetpoint > rSetpointTarget THEN
+        rSetpoint := rSetpointTarget;
+    END_IF
+ELSIF rSetpoint > rSetpointTarget + 0.1 THEN
+    // Rampiranje dolje  
+    rSetpoint := rSetpoint - rRampRate * rTcy_s;
+    IF rSetpoint < rSetpointTarget THEN
+        rSetpoint := rSetpointTarget;
+    END_IF
+END_IF
+
+// Skaliranje 1 okretajng pot pozicije - EL3255.
+rPotFeedback_V:=10.0*iwFeedback/32767;	//napon na ulazu u EL3255
+// pozicija pomaka = 81mm
+rLinearPosition:=rHodMax*(rPotFeedback_V-cPotMin)/(cPotMax-cPotMin);
+
+// Sigurnosni limiti + / - hoda 0-->     <--rHodMax   - iskljucuju Motor
+bErrorLimitPosMin:=FALSE;	
+bErrorLimitPosMax:=FALSE;	
+IF (rLinearPosition < rLinearPosition_LimMin) THEN
+	bErrorLimitPosMin:=TRUE;	
+END_IF
+IF (rLinearPosition > rLinearPosition_LimMAx) THEN
+	bErrorLimitPosMax:=TRUE;	
+END_IF
+
+IF bErrorLimitPosMin OR bErrorLimitPosMax THEN
+	bMotorOnCmd:=FALSE;
+ELSE
+	bMotorOnCmd:=bMotorOn;	
+END_IF
+
+// Radno podrucje pomaka 0..100% = MORA BITI UNUTAR SIGURNOSNIH LIMITA
+rPotFeedback_Radno_Perc:= 100*(rLinearPosition-rRadno_Min_Pos)/(rRadno_Max_Pos-rRadno_Min_Pos);
+
+// Open-loop kontrola
+// Setpoint 0..100% = 0.....
+// Limit za pretvorbu u integer 
+// greska ako je veće od 32766 i manje od - 32766
+
+// Kn ke multiplikator za setpoint u granicama -32000 .. 32000 / 0.100%
+Kn:=320; // ako ide do napona napajanja 12V onda na 100% steka
+// reset iz HMI
+// bReset := FALSE;
+IF bHMI_RESET THEN
+	bSetVelOverPoz:=FALSE;
+	bSetVelOverNeg:=FALSE;
+    qxReset := TRUE;
+END_IF
+
+IF NOT ixError THEN
+	qxReset := FALSE;
+END_IF
+
+// greška / iskljucenje motora ako bi setpoint prešao INT max - da ne okrene u drigi smjer !
+IF (rVelocitySetpoint*Kn > 32766) THEN
+	bSetVelOverPoz:=TRUE;
+END_IF
+IF (rVelocitySetpoint*Kn < -32766) THEN
+	bSetVelOverNeg:=TRUE;
+END_IF
+IF bSetVelOverPoz OR bSetVelOverNeg THEN
+	bMotorOnCmd:=FALSE;
+ELSE
+	// ako je ispravan setpoint brzine - računa INT z aizlaz
+	qwVelocitySetpoint:=LREAL_TO_INT(rVelocitySetpoint*Kn);
+END_IF
+
+// POZICIJSKA REGULACIJA
+    // Računaj grešku pozicije
+    rError := rSetpoint - rPotFeedback_Radno_Perc;
+    
+    // Provjeri deadband
+    bInDeadband := ABS(rError) <= rDeadband;
+	// Greska pozicije ako je izvan rDeadband > n sec
+TON_bInDeadband(IN:=NOT bInDeadband , PT:=T#5S , Q=>bErrorPos , ET=> );
+	
+IF bMotorOn THEN
+    
+    IF NOT bInDeadband THEN
+        // P regulator
+        rVelocityCmd := rError * rKp;
+        
+        // Ograniči na max brzinu
+        rVelocityCmd := LIMIT(-rMaxVelocity, rVelocityCmd, rMaxVelocity);
+        
+        // Primjeni minimalnu brzinu
+        IF (ABS(rVelocityCmd) > 0.1) AND (ABS(rVelocityCmd) < rMinVelocity) THEN
+            IF rVelocityCmd > 0 THEN
+                rVelocityCmd := rMinVelocity;
+            ELSE
+                rVelocityCmd := -rMinVelocity;
+            END_IF
+        END_IF
+    ELSE
+        // Unutar deadband - zaustavi
+        rVelocityCmd := 0.0;
+    END_IF
+    
+    // Postavi brzinu
+    rVelocitySetpoint := rVelocityCmd;
+ELSE
+    rVelocitySetpoint := 0.0;
+END_IF
+
+// Računanje brzine iz promjene pozicije
+
+// Timer za periodičko računanje brzine
+fbVelocityTimer(IN:= NOT fbVelocityTimer.Q, PT:= tSampleTime);
+
+// Računaj brzinu kada timer istekne
+IF fbVelocityTimer.Q THEN
+    // Promjena pozicije u %
+    rDeltaPosition := rLinearPosition - rLastPosition;
+    
+    // Brzina u mm/s !!!! NAVOJ IMA MULTIPLIKATOR X2
+    rActualVelocity := rDeltaPosition / 0.05 / 2 ; // 50ms = 0.05s
+    
+    // Spremi trenutnu poziciju
+    rLastPosition := rLinearPosition;
+    
+    // Filter brzine (PT1)
+    rVelocityFiltered := rVelocityFiltered * (1.0 - rFilterConst) + 
+                        rActualVelocity * rFilterConst;
+END_IF
+
+// Preračun u druge jedinice
+// 81mm =  171.3 okr Motora
+// RPM motora
+rActualVelocityRPM := 60*171.3*rActualVelocity/81 ;
+
+
+// =======================  DIVER PREMA TERMINALU
+
+// driver prema EL7342
+IF bMotorOnCmd THEN
+    qxEnable := TRUE;
+    qxReduceTorque := FALSE;  // Puna snaga
+ ELSE
+    qxEnable := FALSE;
+    qxReduceTorque := FALSE;
+    qwVelocitySetpoint := 0;
+END_IF
+
+// Monitoring Napona - struje motora
+rMotorVoltage:=(UINT_TO_INT(iwMotorVoltage))/1000.0;
+rMotorCurrent:=(UINT_TO_INT(iwMotorCurrent))/1000.0;
+
+// Generalna greska, terminal, set pos, Limit feedback
+bError:=ixError OR 
+bSetVelOverPoz OR 
+bSetVelOverNeg OR 
+bErrorLimitPosMin OR 
+bErrorLimitPosMax OR
+bErrorPos;
+
+
+
+
+
+
+
+
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

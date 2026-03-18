@@ -1,0 +1,148 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_ZF_Control" Id="{3548183d-99cc-4af9-a04c-bd96e01573f5}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_ZF_Control
+VAR
+    (* --- SERVO DRIVERI --- *)
+//    fbServoGas  : FB_DC_Servo_PWM;
+//    fbServoGear : FB_DC_Servo_PWM;
+    
+    (* --- INTERNE VARIJABLE --- *)
+    fInputRaw   : REAL; (* Pozicija ručice *)
+    fGasRequest : REAL; (* Izračunati gas (0.0 - 1.0) *)
+    fRange      : REAL; (* Pomoćna za matematiku *)
+    
+    (* --- CILJEVI (TARGETS) --- *)
+    iTargetGas  : INT;
+    iTargetGear : INT;
+    
+    (* --- STATUSI --- *)
+   bGearIsSafe : BOOL; (* Kopča je na mjestu *)
+    
+    (* --- KONVERZIJA RPM ZA VINČEVE --- *)
+    fWinchRpmFactor : REAL := 10.0; (* Koliko 'Raw' bodova po 1 RPM-u? Podesi ovo! *)
+	
+	iGearState : INT := 0;   // -1 = REV, 0 = NEUT, 1 = FWD
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+// 1. OČITAVANJE ULAZA
+// =========================================================
+fInputRaw := INT_TO_REAL(GVL_IO.iActiveLever_Raw);
+
+
+// =========================================================
+// 2. LOGIKA KOPČE I GASA IZ RUČICE (S HISTERESISOM)
+// =========================================================
+
+// iGearState:
+//  -1 = REV
+//   0 = NEUT
+//   1 = FWD
+
+CASE iGearState OF
+
+    0: // NEUTRAL
+        IF fInputRaw >= INT_TO_REAL(GVL_PERSISTENT.iLever_MinFwd) THEN
+            iGearState := 1;   // FWD
+        ELSIF fInputRaw <= INT_TO_REAL(GVL_PERSISTENT.iLever_MinRev) THEN
+            iGearState := -1;  // REV
+        END_IF
+
+    1: // FWD
+        IF fInputRaw < INT_TO_REAL(GVL_PERSISTENT.iLever_FwdReturn) THEN
+            iGearState := 0;   // povrat u neutral
+        END_IF
+
+    -1: // REV
+        IF fInputRaw > INT_TO_REAL(GVL_PERSISTENT.iLever_RevReturn) THEN
+            iGearState := 0;   // povrat u neutral
+        END_IF
+
+ELSE
+    iGearState := 0;
+END_CASE
+
+
+// Izračun target gear + gas request prema stanju
+CASE iGearState OF
+
+    1: // FWD
+        iTargetGear := GVL_PERSISTENT.iAct_Gear_Fwd;
+
+        // Gas počinje tek nakon zone izlaska kuglice / detenta
+        IF fInputRaw >= INT_TO_REAL(GVL_PERSISTENT.iLever_FwdGasStart) THEN
+            fRange := INT_TO_REAL(GVL_PERSISTENT.iLever_MaxFwd - GVL_PERSISTENT.iLever_FwdGasStart);
+            IF fRange > 0.0 THEN
+                fGasRequest := (fInputRaw - INT_TO_REAL(GVL_PERSISTENT.iLever_FwdGasStart)) / fRange;
+            ELSE
+                fGasRequest := 0.0;
+            END_IF
+        ELSE
+            fGasRequest := 0.0;
+        END_IF
+
+    -1: // REV
+        iTargetGear := GVL_PERSISTENT.iAct_Gear_Rev;
+
+        // Gas počinje tek nakon zone izlaska kuglice / detenta
+        IF fInputRaw <= INT_TO_REAL(GVL_PERSISTENT.iLever_RevGasStart) THEN
+            fRange := INT_TO_REAL(GVL_PERSISTENT.iLever_RevGasStart - GVL_PERSISTENT.iLever_MaxRev);
+            IF fRange > 0.0 THEN
+                fGasRequest := (INT_TO_REAL(GVL_PERSISTENT.iLever_RevGasStart) - fInputRaw) / fRange;
+            ELSE
+                fGasRequest := 0.0;
+            END_IF
+        ELSE
+            fGasRequest := 0.0;
+        END_IF
+
+ELSE // NEUT
+    iTargetGear := GVL_PERSISTENT.iAct_Gear_Neut;
+    fGasRequest := 0.0;
+END_CASE
+// =========================================================
+// 3. LIMITIRANJE MATEMATIKE
+// =========================================================
+IF fGasRequest > 1.0 THEN fGasRequest := 1.0; END_IF
+IF fGasRequest < 0.0 THEN fGasRequest := 0.0; END_IF
+
+
+// =========================================================
+// 4. KOMBINIRANJE GASA (POGON vs. VINČEVI)
+// =========================================================
+
+// A) AKO VOZIMO (Kopča nije u leru)
+IF (iTargetGear <> GVL_PERSISTENT.iAct_Gear_Neut) THEN
+    
+    // Računamo stvarni položaj aktuatora na temelju ručice
+    iTargetGas := REAL_TO_INT(
+        fGasRequest * INT_TO_REAL(GVL_PERSISTENT.iAct_Gas_Max - GVL_PERSISTENT.iAct_Gas_Idle)
+    ) + GVL_PERSISTENT.iAct_Gas_Idle;
+
+// B) AKO SMO U LERU, A VINČEVI TRAŽE SNAGU
+ELSIF (GVL_IO.iRpmReq_Winches > 0) THEN
+    
+    // Pretvaramo traženi RPM (npr. 1200) u pomak aktuatora
+    // Formula: (TraženiRPM - LerRPM) * Faktor + PozicijaLera
+    // Podesi 'fWinchRpmFactor' dok ne dobiješ točne okretaje na motoru!
+    
+    iTargetGas := REAL_TO_INT( (INT_TO_REAL(GVL_IO.iRpmReq_Winches - 700) * fWinchRpmFactor) ) 
+                  + GVL_PERSISTENT.iAct_Gas_Idle;
+                  
+    // Sigurnosni limit da vinčevi ne zakucaju gas do daske
+    IF iTargetGas > GVL_PERSISTENT.iAct_Gas_Max THEN 
+        iTargetGas := GVL_PERSISTENT.iAct_Gas_Max; 
+    END_IF
+
+// C) ČISTI LER
+ELSE
+    iTargetGas := GVL_PERSISTENT.iAct_Gas_Idle;
+END_IF
+
+
+// =========================================================
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
