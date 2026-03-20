@@ -8,6 +8,19 @@ VAR_GLOBAL
     eGearOut        : E_GearState;
     bIsShifting     : BOOL;
     bAlarm_HighRPM  : BOOL;
+	
+	(* Triggeri za tipke *)
+    rtStart_ID10, rtStart_ID11 : R_TRIG;
+    rtStop_ID10,  rtStop_ID11  : R_TRIG;
+    rtSel_ID10,   rtSel_ID11   : R_TRIG;
+
+    (* Timeri za sekvence *)
+    tmrStopSequence : TON;
+    
+    (* Interne statusne varijable *)
+    bIgnitionActive : BOOL; 
+    bEngineRunning  : BOOL;
+    iActiveStation  : INT := 1; // 1 = Port (ID10), 2 = Stbd (ID11)
 END_VAR]]></Declaration>
   </GVL>
 </TcPlcObject>

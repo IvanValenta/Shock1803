@@ -1,0 +1,156 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_EngineControl" Id="{ff4a8b6f-2473-48dd-842e-b0444777d81c}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_EngineControl
+VAR_INPUT
+    (* Kontrola rada motora (Novi zahtjevi) *)
+    bBtnStart      : BOOL;          (* Tipka 1 - Start *)
+    bBtnStop       : BOOL;          (* Tipka 2 - Stop *)
+    bModeProp      : BOOL;          (* Tipka 4 - Mode (Zelena) *)
+    bModeBallast   : BOOL;          (* Tipka 4 - Mode (Plava) *)
+
+    (* Postojeći ulazi tvojeg FB-a *)
+    fRpmCurrent    : REAL;          (* Trenutni RPM motora *)
+    fThrottleIn    : REAL;          (* Ručica gasa (0-100%) *)
+    eGearIn        : INT;           (* Željena brzina (Joystick: 0=N, 1=FWD, 2=REV) *)
+    bDoorsOk       : BOOL;          (* Interlock: Vrata otvorena *)
+    fRpmLimit      : REAL := 900.0; (* Max RPM za šaltanje *)
+    tNeutralDelay  : TIME := T#1500MS; 
+END_VAR
+
+VAR_OUTPUT
+    (* Izlazi prema hardveru *)
+    bIgnition      : BOOL;          (* Relej kontakta *)
+    bStarter       : BOOL;          (* Relej elektropokretača *)
+    fThrottleOut   : REAL;          (* Izlaz prema motoru *)
+    eGearOut       : INT;           (* Izlaz prema kopči (0=N, 1=FWD, 2=REV) *)
+
+    (* Statusi za vizualizaciju tipki *)
+    iColorStart    : INT;           (* Boja za Tipku 1 *)
+    iColorStop     : INT;           (* Boja za Tipku 2 *)
+    bEngineRunning : BOOL;          (* Status: Motor radi *)
+    bShifting      : BOOL;          (* Status: Mijenjanje brzine *)
+    bHighRpmLock   : BOOL;          (* Status: Zabrana šaltanja *)
+END_VAR
+
+VAR
+    (* Interni tajmeri i varijable *)
+    rtStart        : R_TRIG;
+    tmrRunDelay    : TON;           (* Simulacija feedbacka motora *)
+    stepShift      : INT := 0;      (* State machine šaltanja *)
+    tmrDelay       : TON;           (* Timer za sekvencu šaltanja *)
+    eTargetGear    : INT;           
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// ===========================================================
+// 1. LOGIKA START / STOP I IGNITION
+// ===========================================================
+rtStart(CLK := bBtnStart);
+
+// START: Ako stisnem start, pali Ignition. Starter vrti dok držim tipku.
+IF rtStart.Q AND NOT bEngineRunning THEN
+    bIgnition := TRUE;
+END_IF
+
+// Starter radi samo ako imamo Ignition, držimo tipku i motor još ne radi
+bStarter := bBtnStart AND bIgnition AND NOT bEngineRunning;
+
+// Simulacija da je motor upalio (feedback) - zeleno svjetlo nakon 2s startera
+tmrRunDelay(IN := bStarter, PT := T#2S);
+IF tmrRunDelay.Q THEN
+    bEngineRunning := TRUE;
+END_IF
+
+// STOP: Gasi motor i RESETIRA Ignition (kako si tražio)
+// Ako fali ignition, stop ne radi (uvjet bIgnition)
+IF bBtnStop AND bIgnition THEN
+    bIgnition := FALSE;
+    bEngineRunning := FALSE;
+END_IF
+
+// Reset Ignitiona ako motor nekako stane (opcionalno sigurnosno)
+IF NOT bEngineRunning AND NOT bStarter AND bIgnition AND bBtnStop THEN
+     bIgnition := FALSE;
+END_IF
+
+// ===========================================================
+// 2. LOGIKA ŠALTANJA (Tvoj postojeći State Machine)
+// ===========================================================
+
+// Interlock: Ako su vrata zatvorena ILI nismo u Propulsion modu -> NEUTRAL
+// Dodajemo uvjet bModeProp: Kopča radi samo ako je Mode Zeleni
+IF NOT bDoorsOk OR NOT bModeProp THEN
+    eTargetGear := 0; 
+ELSE
+    eTargetGear := eGearIn;
+END_IF
+
+CASE stepShift OF
+    0: // STABILNO STANJE
+        // Gas ide van samo ako motor radi i ne šaltamo
+        IF bEngineRunning AND NOT bShifting THEN
+            fThrottleOut := fThrottleIn;
+        ELSE
+            fThrottleOut := 0.0;
+        END_IF
+
+        // Provjera promjene brzine
+        IF eTargetGear <> eGearOut AND bEngineRunning THEN
+            IF fRpmCurrent > fRpmLimit THEN
+                bHighRpmLock := TRUE;
+                fThrottleOut := 0.0; 
+            ELSE
+                bHighRpmLock := FALSE;
+                bShifting := TRUE;
+                stepShift := 10;
+            END_IF
+        ELSE
+            bHighRpmLock := FALSE;
+        END_IF
+
+    10: // PRIPREMA - SPUSTI GAS
+        fThrottleOut := 0.0; 
+        tmrDelay(IN := TRUE, PT := T#200MS);
+        IF tmrDelay.Q THEN tmrDelay(IN := FALSE); stepShift := 20; END_IF
+
+    20: // IZBACI U NEUTRAL
+        eGearOut := 0;
+        IF eTargetGear = 0 THEN stepShift := 99; ELSE stepShift := 30; END_IF
+
+    30: // PAUZA U NEUTRALU
+        tmrDelay(IN := TRUE, PT := tNeutralDelay);
+        IF tmrDelay.Q THEN tmrDelay(IN := FALSE); stepShift := 40; END_IF
+
+    40: // UBACI U BRZINU
+        eGearOut := eTargetGear;
+        tmrDelay(IN := TRUE, PT := T#500MS);
+        IF tmrDelay.Q THEN tmrDelay(IN := FALSE); stepShift := 99; END_IF
+
+    99: // KRAJ SEKVENCE
+        bShifting := FALSE;
+        stepShift := 0;
+END_CASE
+
+// ===========================================================
+// 3. VIZUALIZACIJA BOJA (Za tipkovnice)
+// ===========================================================
+
+// Tipka 1 (Start): Plava kad je kontakt, Zelena kad motor radi
+IF bEngineRunning THEN
+    iColorStart := 2; // Green
+ELSIF bIgnition THEN
+    iColorStart := 4; // Blue
+ELSE
+    iColorStart := 0; // Off
+END_IF
+
+// Tipka 2 (Stop): Crvena ako je kontakt uključen
+IF bIgnition THEN
+    iColorStop := 1; // Red
+ELSE
+    iColorStop := 0; // Off
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

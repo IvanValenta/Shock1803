@@ -1,0 +1,18 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="ST_UcWinchControl" Id="{d4a2d39e-fe96-4b6c-bba1-7a652908d874}">
+    <Declaration><![CDATA[TYPE ST_UcWinchControl :
+STRUCT
+    bDisable          : BOOL; (* Glavni Safety Enable *)
+    bManualEnable     : BOOL; (* HMI Manual Mode *)
+    bBtn_Dir1         : BOOL; (* Tipka: Slow ili In *)
+    bBtn_Dir2         : BOOL; (* Tipka: Fast ili Out *)
+    bValve_Dir1       : BOOL; (* Aktivan izlaz 1 *)
+    bValve_Dir2       : BOOL; (* Aktivan izlaz 2 *)
+    bReq_Pump         : BOOL; (* Pumpa radi *)
+    bSts_SystemSafe   : BOOL; (* Zeleno = Safe *)
+    bSts_ManualEn     : BOOL; (* Zeleno = Manual *)
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

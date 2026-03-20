@@ -1,0 +1,228 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Ballast" Id="{620c4fee-efe7-4196-af15-bddc2febbf13}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Ballast
+VAR
+    // Instanciranje blokova za Port i Stbd
+    fbValve_P1, fbValve_P2, fbValve_P3 : FB_BallastValve;
+    fbValve_S1, fbValve_S2, fbValve_S3 : FB_BallastValve;
+    fbValve_Tunel : FB_BallastValve;
+	
+	fbTunelPump : FB_TunelPump;
+	
+	fbScaleP1, fbScaleP2, fbScaleP3 : FB_TankScaling;
+	fbScaleS1, fbScaleS2, fbScaleS3 : FB_TankScaling;
+
+    // Triggeri za tipke
+    rtModeChange : R_TRIG;
+    rtBtnP1, rtBtnP2, rtBtnP3 : R_TRIG;
+    rtBtnS1, rtBtnS2, rtBtnS3 : R_TRIG;
+    
+    // Triggeri za Tunel Pump
+    rtBtnTunel : R_TRIG;	
+    rtBtnPump   : R_TRIG;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+
+(* ========================================================= *)
+(* 1. UPRAVLJANJE MODOM RADA (Tipka 13)                      *)
+(* ========================================================= *)
+rtModeChange(CLK := GVL_CAN.ID20_Status[13]);
+
+IF rtModeChange.Q THEN
+    CASE GVL_HMI.eSystemMode OF
+        E_ControlMode.OFF:  GVL_HMI.eSystemMode := E_ControlMode.MAN;
+        E_ControlMode.MAN:  GVL_HMI.eSystemMode := E_ControlMode.AUTO;
+        E_ControlMode.AUTO: GVL_HMI.eSystemMode := E_ControlMode.OFF;
+    END_CASE
+END_IF
+
+// Vizualizacija moda na tipki 13
+CASE GVL_HMI.eSystemMode OF
+    E_ControlMode.OFF:  GVL_CAN.ID20_Config[13].Boja := E_BlinkMarine_Color.OFF;
+    E_ControlMode.MAN:  GVL_CAN.ID20_Config[13].Boja := E_BlinkMarine_Color.GREEN;
+    E_ControlMode.AUTO: GVL_CAN.ID20_Config[13].Boja := E_BlinkMarine_Color.BLUE;
+END_CASE
+
+(* ========================================================= *)
+(* 2. OBRADA KOMANDI (Samo u MAN modu)                       *)
+(* ========================================================= *)
+rtBtnP1(CLK := GVL_CAN.ID20_Status[1]);
+rtBtnP2(CLK := GVL_CAN.ID20_Status[6]);
+rtBtnP3(CLK := GVL_CAN.ID20_Status[11]);
+rtBtnS1(CLK := GVL_CAN.ID20_Status[5]);
+rtBtnS2(CLK := GVL_CAN.ID20_Status[10]);
+rtBtnS3(CLK := GVL_CAN.ID20_Status[15]);
+rtBtnTunel(CLK := GVL_CAN.ID20_Status[12]);
+rtBtnPump(CLK := GVL_CAN.ID20_Status[14]);
+
+IF GVL_HMI.eSystemMode = E_ControlMode.MAN THEN
+    IF rtBtnP1.Q THEN GVL_HMI.bCmdOpen_P1 := NOT GVL_HMI.bCmdOpen_P1; END_IF
+    IF rtBtnP2.Q THEN GVL_HMI.bCmdOpen_P2 := NOT GVL_HMI.bCmdOpen_P2; END_IF
+    IF rtBtnP3.Q THEN GVL_HMI.bCmdOpen_P3 := NOT GVL_HMI.bCmdOpen_P3; END_IF
+    IF rtBtnS1.Q THEN GVL_HMI.bCmdOpen_S1 := NOT GVL_HMI.bCmdOpen_S1; END_IF
+    IF rtBtnS2.Q THEN GVL_HMI.bCmdOpen_S2 := NOT GVL_HMI.bCmdOpen_S2; END_IF
+    IF rtBtnS3.Q THEN GVL_HMI.bCmdOpen_S3 := NOT GVL_HMI.bCmdOpen_S3; END_IF
+    IF rtBtnTunel.Q THEN GVL_HMI.bCmdOpen_Tunel := NOT GVL_HMI.bCmdOpen_Tunel; END_IF
+    
+    // Toggle logika za pumpu
+    IF rtBtnPump.Q THEN GVL_HMI.bCmdRun_TunelPump := NOT GVL_HMI.bCmdRun_TunelPump; END_IF
+    
+    // NOVO: Automatsko isključivanje komande ako FB javi kraj vode (Reset nakon 6s)
+    IF fbTunelPump.bOutResetCmd THEN
+        GVL_HMI.bCmdRun_TunelPump := FALSE;
+    END_IF
+
+ELSIF GVL_HMI.eSystemMode = E_ControlMode.OFF THEN
+    // U OFF modu sve ugasi
+    GVL_HMI.bCmdOpen_P1 := GVL_HMI.bCmdOpen_P2 := GVL_HMI.bCmdOpen_P3 := FALSE;
+    GVL_HMI.bCmdOpen_S1 := GVL_HMI.bCmdOpen_S2 := GVL_HMI.bCmdOpen_S3 := FALSE;
+    GVL_HMI.bCmdOpen_Tunel := FALSE;
+    GVL_HMI.bCmdRun_TunelPump := FALSE;
+END_IF
+
+(* ========================================================= *)
+(* 3. POZIV FUNKCIJSKIH BLOKOVA                              *)
+(* ========================================================= *)
+
+// --- BALAST VENTILI ---
+fbValve_P1(bCmdOpen := GVL_HMI.bCmdOpen_P1, bFbOpen := GVL_IO.DI_BAL_P1_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_P1_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_P1, eState => GVL_HMI.eState_P1, bError => GVL_HMI.bAlarm_P1);
+fbValve_P2(bCmdOpen := GVL_HMI.bCmdOpen_P2, bFbOpen := GVL_IO.DI_BAL_P2_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_P2_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_P2, eState => GVL_HMI.eState_P2, bError => GVL_HMI.bAlarm_P2);
+fbValve_P3(bCmdOpen := GVL_HMI.bCmdOpen_P3, bFbOpen := GVL_IO.DI_BAL_P3_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_P3_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_P3, eState => GVL_HMI.eState_P3, bError => GVL_HMI.bAlarm_P3);
+
+fbValve_S1(bCmdOpen := GVL_HMI.bCmdOpen_S1, bFbOpen := GVL_IO.DI_BAL_S1_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_S1_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_S1, eState => GVL_HMI.eState_S1, bError => GVL_HMI.bAlarm_S1);
+fbValve_S2(bCmdOpen := GVL_HMI.bCmdOpen_S2, bFbOpen := GVL_IO.DI_BAL_S2_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_S2_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_S2, eState => GVL_HMI.eState_S2, bError => GVL_HMI.bAlarm_S2);
+fbValve_S3(bCmdOpen := GVL_HMI.bCmdOpen_S3, bFbOpen := GVL_IO.DI_BAL_S3_OPEN_FB, bFbClosed := GVL_IO.DI_BAL_S3_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_BAL_S3, eState => GVL_HMI.eState_S3, bError => GVL_HMI.bAlarm_S3);
+
+// --- TUNEL VENTIL (Tipka 12) ---
+fbValve_Tunel(bCmdOpen := GVL_HMI.bCmdOpen_Tunel, bFbOpen := GVL_IO.DI_TUNEL_OPEN_FB, bFbClosed := GVL_IO.DI_TUNEL_CLOSE_FB, bReset := GVL_HMI.bCmdResetAll, bOutSolenoid => GVL_IO.DO_TUNEL_VALVE, eState => GVL_HMI.eState_Tunel, bError => GVL_HMI.bAlarm_Tunel);
+
+// --- TUNEL PUMPA (Tipka 14) ---
+fbTunelPump(
+    bCmdRun      := GVL_HMI.bCmdRun_TunelPump,
+    eValveState  := fbValve_Tunel.eState,
+    bSondaPort   := GVL_IO.DI_Sonda_Port,
+    bSondaStbd   := GVL_IO.DI_Sonda_Stbd,
+    tDryRunDelay := T#6S,
+    bClutchOut    => GVL_IO.DO_TunelClutch,
+    bSondePowerOut => GVL_IO.DO_SondePower
+);
+
+(* ========================================================= *)
+(* 4. FEEDBACK NA TIPKOVNICU                                 *)
+(* ========================================================= *)
+
+// --- TUNEL VENTIL (Tipka 12) ---
+IF fbValve_Tunel.bError THEN 
+    GVL_CAN.ID20_Config[12].Boja := E_BlinkMarine_Color.YELLOW; GVL_CAN.ID20_Config[12].Blink := TRUE;
+ELSIF fbValve_Tunel.eState = 1 THEN 
+    GVL_CAN.ID20_Config[12].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[12].Blink := FALSE;
+ELSIF fbValve_Tunel.eState = 2 THEN 
+    GVL_CAN.ID20_Config[12].Boja := E_BlinkMarine_Color.GREEN; GVL_CAN.ID20_Config[12].Blink := FALSE;
+ELSIF fbValve_Tunel.eState = 0 THEN 
+    GVL_CAN.ID20_Config[12].Boja := E_BlinkMarine_Color.YELLOW; GVL_CAN.ID20_Config[12].Blink := FALSE;
+ELSE 
+    GVL_CAN.ID20_Config[12].Boja := E_BlinkMarine_Color.OFF;
+END_IF
+
+// --- TUNEL PUMPA (Tipka 14) ---
+IF fbTunelPump.bHasWater THEN
+    GVL_CAN.ID20_Config[14].Boja := E_BlinkMarine_Color.BLUE; GVL_CAN.ID20_Config[14].Blink := FALSE;
+ELSIF fbTunelPump.bDryRunning THEN
+    GVL_CAN.ID20_Config[14].Boja := E_BlinkMarine_Color.YELLOW; GVL_CAN.ID20_Config[14].Blink := TRUE;
+ELSE
+    // Ako se pumpa sama ugasila (Reset), boja će postati OFF
+    GVL_CAN.ID20_Config[14].Boja := E_BlinkMarine_Color.OFF; GVL_CAN.ID20_Config[14].Blink := FALSE;
+END_IF
+
+// --- PORT VENTILI (1, 6, 11) ---
+// P1
+IF fbValve_P1.bError THEN GVL_CAN.ID20_Config[1].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[1].Blink := TRUE;
+ELSIF fbValve_P1.eState = 1 THEN GVL_CAN.ID20_Config[1].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_P1.eState = 2 THEN GVL_CAN.ID20_Config[1].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_P1.eState = 0 THEN GVL_CAN.ID20_Config[1].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[1].Boja := E_BlinkMarine_Color.OFF; END_IF
+// P2
+IF fbValve_P2.bError THEN GVL_CAN.ID20_Config[6].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[6].Blink := TRUE;
+ELSIF fbValve_P2.eState = 1 THEN GVL_CAN.ID20_Config[6].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_P2.eState = 2 THEN GVL_CAN.ID20_Config[6].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_P2.eState = 0 THEN GVL_CAN.ID20_Config[6].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[6].Boja := E_BlinkMarine_Color.OFF; END_IF
+// P3
+IF fbValve_P3.bError THEN GVL_CAN.ID20_Config[11].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[11].Blink := TRUE;
+ELSIF fbValve_P3.eState = 1 THEN GVL_CAN.ID20_Config[11].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_P3.eState = 2 THEN GVL_CAN.ID20_Config[11].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_P3.eState = 0 THEN GVL_CAN.ID20_Config[11].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[11].Boja := E_BlinkMarine_Color.OFF; END_IF
+
+// --- STBD VENTILI (5, 10, 15) ---
+// S1
+IF fbValve_S1.bError THEN GVL_CAN.ID20_Config[5].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[5].Blink := TRUE;
+ELSIF fbValve_S1.eState = 1 THEN GVL_CAN.ID20_Config[5].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_S1.eState = 2 THEN GVL_CAN.ID20_Config[5].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_S1.eState = 0 THEN GVL_CAN.ID20_Config[5].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[5].Boja := E_BlinkMarine_Color.OFF; END_IF
+// S2
+IF fbValve_S2.bError THEN GVL_CAN.ID20_Config[10].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[10].Blink := TRUE;
+ELSIF fbValve_S2.eState = 1 THEN GVL_CAN.ID20_Config[10].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_S2.eState = 2 THEN GVL_CAN.ID20_Config[10].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_S2.eState = 0 THEN GVL_CAN.ID20_Config[10].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[10].Boja := E_BlinkMarine_Color.OFF; END_IF
+// S3
+IF fbValve_S3.bError THEN GVL_CAN.ID20_Config[15].Boja := E_BlinkMarine_Color.RED; GVL_CAN.ID20_Config[15].Blink := TRUE;
+ELSIF fbValve_S3.eState = 1 THEN GVL_CAN.ID20_Config[15].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF fbValve_S3.eState = 2 THEN GVL_CAN.ID20_Config[15].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbValve_S3.eState = 0 THEN GVL_CAN.ID20_Config[15].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE GVL_CAN.ID20_Config[15].Boja := E_BlinkMarine_Color.OFF; END_IF
+
+(* ========================================================= *)
+(* 5. SKALIRANJE NIVOA TANKOVA (HMI I DISPLAY)               *)
+(* ========================================================= *)
+
+// PORT TANKOVI
+fbScaleP1(
+    iRawIn  := GVL_IO.iLevel_Bal_P1_Raw, 
+    iInMin  := 4553, iInMax := 32767, 
+    iOutMin := 4553, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_P1_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_P1_Pct_Disp);
+
+fbScaleP2(
+    iRawIn  := GVL_IO.iLevel_Bal_P2_Raw, 
+    iInMin  := 4553, iInMax := 32767, 
+    iOutMin := 4553, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_P2_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_P2_Pct_Disp);
+
+fbScaleP3(
+    iRawIn  := GVL_IO.iLevel_Bal_P3_Raw, 
+    iInMin  := 4553, iInMax := 32767, 
+    iOutMin := 4553, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_P3_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_P3_Pct_Disp);
+
+// STBD TANKOVI
+fbScaleS1(
+    iRawIn  := GVL_IO.iLevel_Bal_S1_Raw, 
+    iInMin  := 4553, iInMax := 32767, 
+    iOutMin := 4553, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_S1_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_S1_Pct_Disp);
+
+fbScaleS2(
+    iRawIn  := GVL_IO.iLevel_Bal_S2_Raw, 
+    iInMin  := 4553, iInMax := 32767, 
+    iOutMin := 4553, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_S2_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_S2_Pct_Disp);
+
+fbScaleS3(
+    iRawIn  := GVL_IO.iLevel_Bal_S3_Raw, 
+    iInMin  := 0, iInMax := 32767, 
+    iOutMin := 0, iOutMax := 32767, 
+    fPercentage => GVL_IO.fLevel_Bal_S3_Pct_Hmi, 
+    iRawOut => GVL_IO.fLevel_Bal_S3_Pct_Disp);]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

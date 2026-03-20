@@ -1,0 +1,173 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_SimDoors" Id="{b46dfb3b-1cb5-496a-bf43-221a65d9bec8}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_SimDoors
+VAR
+    (* Parametri za VRATA *)
+    fRiseSpeed   : REAL := 0.04; 
+    fDropSpeed   : REAL := 0.001; 
+    fTankSpeed   : REAL := 2.0;  
+    
+    (* Tajmeri za simulaciju kretanja VENTILA *)
+    tonP1, tonP2, tonP3 : TON;
+    tonS1, tonS2, tonS3 : TON;
+    tonTunel           : TON;
+    
+    tValveTime : TIME := T#1.5S; (* Brže od 3s timeouta u FB-u! *)
+    bSimActive : BOOL := TRUE;
+	
+	// Timer koji simulira koliko dugo ima vode u cijevima nakon paljenja pumpe
+	tmrVodaTrajanje : TON;
+    tVrijemeRada    : TIME := T#10S; // Koliko dugo ima vode u tanku
+    bTankPrazan     : BOOL;         // Zasun koji sprječava titranjeEND_VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// -----------------------------------------------------------
+// 0. GLAVNI PREKIDAČ SIMULATORA
+// -----------------------------------------------------------
+IF NOT bSimActive THEN
+    RETURN;
+END_IF
+
+// -----------------------------------------------------------
+// 1. SIMULACIJA VRATA (FWD & AFT)
+// -----------------------------------------------------------
+
+// --- FWD VRATA ---
+IF GVL_IO.DO_DoorFwd_Open THEN
+    GVL_IO.fPressure_FWD_A := GVL_IO.fPressure_FWD_A + fRiseSpeed;
+    GVL_IO.fPressure_FWD_B := GVL_IO.fPressure_FWD_B - fTankSpeed;
+ELSIF GVL_IO.DO_DoorFwd_Close THEN
+    GVL_IO.fPressure_FWD_B := GVL_IO.fPressure_FWD_B + fRiseSpeed;
+    GVL_IO.fPressure_FWD_A := GVL_IO.fPressure_FWD_A - fTankSpeed;
+ELSE
+    GVL_IO.fPressure_FWD_A := GVL_IO.fPressure_FWD_A - fDropSpeed;
+    GVL_IO.fPressure_FWD_B := GVL_IO.fPressure_FWD_B - fDropSpeed;
+END_IF
+
+// --- AFT VRATA ---
+IF GVL_IO.DO_DoorAft_Open THEN
+    GVL_IO.fPressure_AFT_A := GVL_IO.fPressure_AFT_A + fRiseSpeed;
+    GVL_IO.fPressure_AFT_B := GVL_IO.fPressure_AFT_B - fTankSpeed;
+ELSIF GVL_IO.DO_DoorAft_Close THEN
+    GVL_IO.fPressure_AFT_B := GVL_IO.fPressure_AFT_B + fRiseSpeed;
+    GVL_IO.fPressure_AFT_A := GVL_IO.fPressure_AFT_A - fTankSpeed;
+ELSE
+    GVL_IO.fPressure_AFT_A := GVL_IO.fPressure_AFT_A - fDropSpeed;
+    GVL_IO.fPressure_AFT_B := GVL_IO.fPressure_AFT_B - fDropSpeed;
+END_IF
+
+// Ograničenja tlaka (da ne ide u minus ili beskonačno)
+GVL_IO.fPressure_FWD_A := LIMIT(0.0, GVL_IO.fPressure_FWD_A, 150.0);
+GVL_IO.fPressure_FWD_B := LIMIT(0.0, GVL_IO.fPressure_FWD_B, 150.0);
+GVL_IO.fPressure_AFT_A := LIMIT(0.0, GVL_IO.fPressure_AFT_A, 150.0);
+GVL_IO.fPressure_AFT_B := LIMIT(0.0, GVL_IO.fPressure_AFT_B, 150.0);
+
+// -----------------------------------------------------------
+// 2. SIMULACIJA BALAST VENTILA (Feedback)
+// -----------------------------------------------------------
+
+// PORT 1
+tonP1(IN := GVL_IO.DO_BAL_P1, PT := tValveTime);
+IF GVL_IO.DO_BAL_P1 THEN
+    GVL_IO.DI_BAL_P1_OPEN_FB  := tonP1.Q;
+    GVL_IO.DI_BAL_P1_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_P1_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_P1_CLOSE_FB := TRUE;
+END_IF
+
+// PORT 2
+tonP2(IN := GVL_IO.DO_BAL_P2, PT := tValveTime);
+IF GVL_IO.DO_BAL_P2 THEN
+    GVL_IO.DI_BAL_P2_OPEN_FB  := tonP2.Q;
+    GVL_IO.DI_BAL_P2_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_P2_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_P2_CLOSE_FB := TRUE;
+END_IF
+
+// PORT 3
+tonP3(IN := GVL_IO.DO_BAL_P3, PT := tValveTime);
+IF GVL_IO.DO_BAL_P3 THEN
+    GVL_IO.DI_BAL_P3_OPEN_FB  := tonP3.Q;
+    GVL_IO.DI_BAL_P3_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_P3_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_P3_CLOSE_FB := TRUE;
+END_IF
+
+// STBD 1
+tonS1(IN := GVL_IO.DO_BAL_S1, PT := tValveTime);
+IF GVL_IO.DO_BAL_S1 THEN
+    GVL_IO.DI_BAL_S1_OPEN_FB  := tonS1.Q;
+    GVL_IO.DI_BAL_S1_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_S1_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_S1_CLOSE_FB := TRUE;
+END_IF
+
+// STBD 2
+tonS2(IN := GVL_IO.DO_BAL_S2, PT := tValveTime);
+IF GVL_IO.DO_BAL_S2 THEN
+    GVL_IO.DI_BAL_S2_OPEN_FB  := tonS2.Q;
+    GVL_IO.DI_BAL_S2_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_S2_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_S2_CLOSE_FB := TRUE;
+END_IF
+
+// STBD 3
+tonS3(IN := GVL_IO.DO_BAL_S3, PT := tValveTime);
+IF GVL_IO.DO_BAL_S3 THEN
+    GVL_IO.DI_BAL_S3_OPEN_FB  := tonS3.Q;
+    GVL_IO.DI_BAL_S3_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_BAL_S3_OPEN_FB  := FALSE;
+    GVL_IO.DI_BAL_S3_CLOSE_FB := TRUE;
+END_IF
+
+// -----------------------------------------------------------
+// 3. SIMULACIJA TUNEL PUMP VENTILA
+// -----------------------------------------------------------
+tonTunel(IN := GVL_IO.DO_TUNEL_VALVE, PT := tValveTime);
+IF GVL_IO.DO_TUNEL_VALVE THEN
+    GVL_IO.DI_TUNEL_OPEN_FB  := tonTunel.Q;
+    GVL_IO.DI_TUNEL_CLOSE_FB := FALSE;
+ELSE
+    GVL_IO.DI_TUNEL_OPEN_FB  := FALSE;
+    GVL_IO.DI_TUNEL_CLOSE_FB := TRUE;
+END_IF
+
+// ==========================================================
+// 4. SIMULACIJA SONDI S TIMEROM (NESTANAK VODE)
+// ==========================================================
+
+// --- SIMULACIJA NESTANKA VODE ---
+// Timer mjeri koliko dugo pumpa (Clutch) vrti
+tmrVodaTrajanje(IN := GVL_IO.DO_TunelClutch, PT := tVrijemeRada);
+
+// Kad timer odradi, "ispraznili" smo tank
+IF tmrVodaTrajanje.Q THEN
+    bTankPrazan := TRUE; 
+END_IF
+
+// Resetiramo tank tek kad se ugasi komanda pumpe (da možemo opet testirati)
+IF NOT GVL_HMI.bCmdRun_TunelPump THEN
+    bTankPrazan := FALSE;
+END_IF
+
+// --- LOGIKA SONDI ---
+IF GVL_IO.DO_SondePower THEN
+    // Port Sonda: ima struje, ventil je na Portu I tank NIJE prazan
+    GVL_IO.DI_Sonda_Port := GVL_IO.DI_TUNEL_OPEN_FB AND NOT bTankPrazan;
+    
+    // Stbd Sonda: ima struje, ventil je na Stbd I tank NIJE prazan
+    GVL_IO.DI_Sonda_Stbd := GVL_IO.DI_TUNEL_CLOSE_FB AND NOT bTankPrazan;
+ELSE
+    GVL_IO.DI_Sonda_Port := FALSE;
+    GVL_IO.DI_Sonda_Stbd := FALSE;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

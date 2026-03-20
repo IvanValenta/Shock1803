@@ -5,12 +5,17 @@
 VAR_GLOBAL
     (* --- KOMANDE SA EKRANA (Tipke) --- *)
     (* TRUE = Operater želi otvoriti ventil *)
+	eSystemMode : E_ControlMode := E_ControlMode.OFF;
+    bCmdOpen_P : ARRAY[1..3] OF BOOL; // Komande za Port
+    bCmdOpen_S : ARRAY[1..3] OF BOOL; // Komande za Stbd
+	
     bCmdOpen_P1 : BOOL;
     bCmdOpen_P2 : BOOL;
     bCmdOpen_P3 : BOOL;
     bCmdOpen_S1 : BOOL;
     bCmdOpen_S2 : BOOL;
     bCmdOpen_S3 : BOOL;
+    bCmdOpen_Tunel : BOOL;
     
     (* Reset tipka za alarme *)
     bCmdResetAll : BOOL;
@@ -23,6 +28,7 @@ VAR_GLOBAL
     eState_S1 : E_ValveState;
     eState_S2 : E_ValveState;
     eState_S3 : E_ValveState;
+    eState_Tunel : E_ValveState;
 
     (* --- ALARMI ZA EKRAN (Crvena lampica) --- *)
     bAlarm_P1 : BOOL;
@@ -31,6 +37,7 @@ VAR_GLOBAL
     bAlarm_S1 : BOOL;
     bAlarm_S2 : BOOL;
     bAlarm_S3 : BOOL;
+    bAlarm_Tunel : BOOL;
 	
 	(* --- VRATA --- *)
     bCmdDoorFwd_Open  : BOOL;
@@ -43,7 +50,10 @@ VAR_GLOBAL
     
     bAlarm_DoorFwd    : BOOL;
     bAlarm_DoorAft    : BOOL;	
-
+	
+	(* --- TUNEL PUMP --- *)
+	bCmdRun_TunelPump	: BOOL;
+	
     (* --- KONFIGURACIJA I OPCIJE --- *)
     bConfig_HydraulicBoost : BOOL := FALSE; (* TRUE = PTO i DC rade ZAJEDNO za wincheve *)
 	bConfig_AllowPtoInDrive : BOOL := FALSE; (* TRUE = Dozvoli korištenje motorne hidraulike dok vozimo *)

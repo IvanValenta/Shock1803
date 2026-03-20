@@ -1,0 +1,177 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_DoorControl" Id="{081fae27-1e0d-453b-862c-59ad078d0afc}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_DoorControl
+VAR_INPUT
+    bCmdOpen      : BOOL;
+    bCmdClose     : BOOL;
+    bReset        : BOOL;
+    bEnableRefill : BOOL := TRUE;
+    fPresOpen     : REAL;
+    fPresClose    : REAL;
+    fLimitOpen    : REAL := 50.0;
+    fLimitClose   : REAL := 120.0;
+    fHysteresis   : REAL := 15.0;
+    tTimeout      : TIME := T#15S;
+    tRefillMax    : TIME := T#6S;
+END_VAR
+
+VAR_OUTPUT
+    bSolOpen      : BOOL;
+    bSolClose     : BOOL;
+    eState        : INT;
+    bError        : BOOL;
+    bLeakAlarm    : BOOL;
+END_VAR
+
+VAR
+    tmrMove       : TON;
+    tmrRefill     : TON;
+    bRefilling    : BOOL := FALSE;
+    iInternalSt   : INT := 0;
+
+    fStartOpen    : REAL;
+    fStopOpen     : REAL;
+    fStartClose   : REAL;
+    fStopClose    : REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// 1. RESET
+IF bReset THEN
+    bError := FALSE;
+    bLeakAlarm := FALSE;
+    bRefilling := FALSE;
+    iInternalSt := 0;
+
+    bSolOpen := FALSE;
+    bSolClose := FALSE;
+    eState := 0;
+
+    tmrMove(IN := FALSE, PT := tTimeout);
+    tmrRefill(IN := FALSE, PT := tRefillMax);
+    RETURN;
+END_IF;
+
+(*
+// 2. AKO JE GREŠKA / ALARM
+IF bError OR bLeakAlarm THEN
+    bSolOpen := FALSE;
+    bSolClose := FALSE;
+    bRefilling := FALSE;
+    eState := 0;
+
+    tmrMove(IN := FALSE, PT := tTimeout);
+    tmrRefill(IN := FALSE, PT := tRefillMax);
+    RETURN;
+END_IF;
+*)
+
+// 3. STATE MACHINE
+CASE iInternalSt OF
+
+    0: // IDLE
+        bSolOpen := FALSE;
+        bSolClose := FALSE;
+        bRefilling := FALSE;
+        eState := 0;
+
+        IF bCmdOpen AND NOT bCmdClose THEN
+            iInternalSt := 10;
+        ELSIF bCmdClose AND NOT bCmdOpen THEN
+            iInternalSt := 20;
+        END_IF
+
+
+    10: // PUTOVANJE OTVARANJE
+        bSolOpen := TRUE;
+        bSolClose := FALSE;
+        bRefilling := FALSE;
+        eState := 10;
+
+        IF fPresOpen >= fLimitOpen THEN
+            iInternalSt := 1;
+        ELSIF bCmdClose THEN
+            iInternalSt := 20;
+        END_IF
+
+
+    1: // OTVORENO - ODRŽAVANJE TLAKA
+        bSolClose := FALSE;
+        eState := 1;
+
+        IF bEnableRefill THEN
+            IF fPresOpen <= (fLimitOpen - fHysteresis) THEN
+                bRefilling := TRUE;
+            ELSIF fPresOpen >= fLimitOpen THEN
+                bRefilling := FALSE;
+            END_IF
+        ELSE
+            bRefilling := FALSE;
+        END_IF
+
+        bSolOpen := bRefilling;
+
+        IF bCmdClose AND NOT bCmdOpen THEN
+            bRefilling := FALSE;
+            iInternalSt := 20;
+        END_IF
+
+
+    20: // PUTOVANJE ZATVARANJE
+        bSolOpen := FALSE;
+        bSolClose := TRUE;
+        bRefilling := FALSE;
+        eState := 20;
+
+        IF fPresClose >= fLimitClose THEN
+            iInternalSt := 2;
+        ELSIF bCmdOpen THEN
+            iInternalSt := 10;
+        END_IF
+
+
+    2: // ZATVORENO - ODRŽAVANJE TLAKA
+        bSolOpen := FALSE;
+        eState := 2;
+
+        IF bEnableRefill THEN
+            IF fPresClose <= (fLimitClose - fHysteresis) THEN
+                bRefilling := TRUE;
+            ELSIF fPresClose >= fLimitClose THEN
+                bRefilling := FALSE;
+            END_IF
+        ELSE
+            bRefilling := FALSE;
+        END_IF
+
+        bSolClose := bRefilling;
+
+        IF bCmdOpen AND NOT bCmdClose THEN
+            bRefilling := FALSE;
+            iInternalSt := 10;
+        END_IF
+
+
+ELSE
+    bSolOpen := FALSE;
+    bSolClose := FALSE;
+    bRefilling := FALSE;
+    eState := 0;
+    iInternalSt := 0;
+END_CASE
+
+
+// 4. TIMERI
+tmrMove(IN := (iInternalSt = 10) OR (iInternalSt = 20), PT := tTimeout);
+IF tmrMove.Q THEN
+    bError := TRUE;
+END_IF
+
+tmrRefill(IN := bRefilling, PT := tRefillMax);
+IF tmrRefill.Q THEN
+    bLeakAlarm := TRUE;
+END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

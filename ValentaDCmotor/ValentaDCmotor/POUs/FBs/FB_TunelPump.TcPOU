@@ -1,0 +1,55 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_TunelPump" Id="{b194d720-1635-49ac-a82d-801e2a419368}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TunelPump
+VAR_INPUT
+    bCmdRun        : BOOL;    
+    eValveState    : INT;     
+    bSondaPort     : BOOL;    
+    bSondaStbd     : BOOL;    
+    tDryRunDelay   : TIME := T#6S; 
+END_VAR
+
+VAR_OUTPUT
+    bClutchOut     : BOOL;    
+    bSondePowerOut : BOOL;    
+    bHasWater      : BOOL;    
+    bDryRunning    : BOOL;    
+    bOutResetCmd   : BOOL; // NOVO: Izlaz za automatsko resetiranje komande
+END_VAR
+
+VAR
+    tmrDryRun      : TON;     
+    bActiveSonda   : BOOL;    
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// 1. Odabir aktivne sonde
+IF eValveState = 1 THEN
+    bActiveSonda := bSondaPort;
+ELSIF eValveState = 2 THEN
+    bActiveSonda := bSondaStbd;
+ELSE
+    bActiveSonda := FALSE;
+END_IF
+
+// 2. Logika rada i Dry-Run tajmera
+tmrDryRun(IN := bCmdRun AND NOT bActiveSonda, PT := tDryRunDelay);
+
+// Ako tajmer odradi (suhi rad), šaljemo impuls za reset
+bOutResetCmd := tmrDryRun.Q;
+
+// Pumpa radi samo ako NIJE aktivan tajmer suhog rada
+IF bCmdRun AND NOT tmrDryRun.Q THEN
+    bClutchOut := TRUE;
+ELSE
+    bClutchOut := FALSE;
+END_IF
+
+bSondePowerOut := bClutchOut;
+
+// 3. Statusi za vizualizaciju
+bHasWater    := bClutchOut AND bActiveSonda;
+bDryRunning  := bClutchOut AND NOT bActiveSonda;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

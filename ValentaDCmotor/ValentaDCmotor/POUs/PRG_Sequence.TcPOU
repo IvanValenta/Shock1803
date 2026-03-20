@@ -1,0 +1,95 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Sequence" Id="{14b2d13f-33af-443d-876c-d8d98553b2be}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Sequence
+VAR
+    eTargetMode  : E_SystemMode := 0;
+    bTurbineSafe : BOOL;
+    
+    (* Nova varijabla: Netko treba vodu *)
+    bWaterRequest : BOOL; 
+	
+	(* Triggeri za Tipku 4 s obje tipkovnice *)
+    rtMode_ID10   : R_TRIG;
+    rtMode_ID11   : R_TRIG;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+// 1. OBRADA ZAHTJEVA ZA MOD (Tipka 4)
+// =========================================================
+
+// Sigurnost: Ne mijenjaj mod ako turbina vrti prebrzo
+bTurbineSafe := (GVL_IO.fEngineRPM_Scaled < 900.0); 
+
+rtMode_ID10(CLK := GVL_CAN.ID10_Status[4]);
+rtMode_ID11(CLK := GVL_CAN.ID11_Status[4]);
+
+// Ako je sigurno, kružimo kroz modove pritiskom na Tipku 4
+IF bTurbineSafe AND (rtMode_ID10.Q OR rtMode_ID11.Q) THEN
+    CASE eTargetMode OF
+        E_SystemMode.MODE_IDLE:  
+            eTargetMode := E_SystemMode.MODE_DRIVE; // Prebaci na Drive (Zeleno)
+            
+        E_SystemMode.MODE_DRIVE: 
+            eTargetMode := E_SystemMode.MODE_SAIL;  // Prebaci na Sail (Plavo)
+            
+        E_SystemMode.MODE_SAIL:  
+            eTargetMode := E_SystemMode.MODE_IDLE;  // Vrati na Idle (Off)
+    END_CASE
+END_IF
+
+// Zadržavamo i tvoje HMI zahtjeve kao override (ako stisneš na ekranu)
+IF bTurbineSafe THEN
+    IF GVL_HMI.bReq_Stop THEN eTargetMode := 0;
+    ELSIF GVL_HMI.bReq_ModeDrive THEN eTargetMode := 1;
+    ELSIF GVL_HMI.bReq_ModeSail  THEN eTargetMode := 2;
+    END_IF
+END_IF
+
+// =========================================================
+// 2. DETEKCIJA ZAHTJEVA ZA VODOM (Ostaje isto)
+// =========================================================
+bWaterRequest := GVL_HMI.bCmdOpen_P1 OR GVL_HMI.bCmdOpen_P2 OR GVL_HMI.bCmdOpen_P3 OR
+                 GVL_HMI.bCmdOpen_S1 OR GVL_HMI.bCmdOpen_S2 OR GVL_HMI.bCmdOpen_S3;
+
+// =========================================================
+// 3. UPRAVLJANJE VRATIMA PREMA MODU (Tvoj CASE blok)
+// =========================================================
+CASE eTargetMode OF
+    0:  // MODE_IDLE
+        GVL_HMI.bCmdDoorFwd_Open := FALSE; GVL_HMI.bCmdDoorFwd_Close := TRUE;
+        GVL_HMI.bCmdDoorAft_Open := FALSE; GVL_HMI.bCmdDoorAft_Close := TRUE;
+        GVL_HMI.bSequenceReady := FALSE;
+
+    1:  // MODE_DRIVE (Oba vrata otvorena)
+        GVL_HMI.bCmdDoorFwd_Open := TRUE; GVL_HMI.bCmdDoorFwd_Close := FALSE;
+        GVL_HMI.bCmdDoorAft_Open := TRUE; GVL_HMI.bCmdDoorAft_Close := FALSE;
+        GVL_HMI.bSequenceReady := (GVL_HMI.eState_DoorFwd = 1) AND (GVL_HMI.eState_DoorAft = 1);
+
+    2:  // MODE_SAIL (Zadnja zatvorena, prednja po potrebi)
+        GVL_HMI.bCmdDoorAft_Open := FALSE; GVL_HMI.bCmdDoorAft_Close := TRUE;
+        IF bWaterRequest THEN
+            GVL_HMI.bCmdDoorFwd_Open := TRUE; GVL_HMI.bCmdDoorFwd_Close := FALSE;
+        ELSE
+            GVL_HMI.bCmdDoorFwd_Open := FALSE; GVL_HMI.bCmdDoorFwd_Close := TRUE;
+        END_IF
+        GVL_HMI.bSequenceReady := (GVL_HMI.eState_DoorAft = 2);
+END_CASE
+
+// Update statusa za HMI i VIZUALIZACIJA TIPKE 4
+GVL_HMI.eActiveMode := eTargetMode;
+
+CASE eTargetMode OF
+    E_SystemMode.MODE_IDLE:
+        GVL_CAN.ID10_Config[4].Boja := GVL_CAN.ID11_Config[4].Boja := 0; // OFF
+    E_SystemMode.MODE_DRIVE:
+        GVL_CAN.ID10_Config[4].Boja := GVL_CAN.ID11_Config[4].Boja := 2; // ZELENO
+    E_SystemMode.MODE_SAIL:
+        GVL_CAN.ID10_Config[4].Boja := GVL_CAN.ID11_Config[4].Boja := 3; // PLAVO
+END_CASE
+
+
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,11 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="ST_KeyControl" Id="{8639a7cd-734c-49f0-8afc-10ffc81be459}">
+    <Declaration><![CDATA[TYPE ST_KeyControl :
+STRUCT
+    Boja  : E_BlinkMarine_Color; // Koju boju želiš
+    Blink : BOOL;                // Želiš li da blica
+END_STRUCT
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

@@ -1,0 +1,246 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Doors" Id="{aa147f7f-7d2e-41b0-b41b-d72abc61bbc7}" SpecialFunc="None">
+    <Declaration><![CDATA[
+PROGRAM PRG_Doors
+VAR
+    (* Instance kontrolnih blokova za vrata *)
+    fbDoorFwd : FB_DoorControl;
+    fbDoorAft : FB_DoorControl;
+
+    (* Triggeri za tipke na tipkovnici *)
+    rtBtnDoorFwd : R_TRIG;
+    rtBtnDoorAft : R_TRIG;
+
+    (* Drive mode *)
+    eTargetMode  : E_SystemMode := E_SystemMode.MODE_IDLE;
+    bTurbineSafe : BOOL;
+
+    (* Triggeri za Tipku 4 s obje tipkovnice *)
+    rtMode_ID10 : R_TRIG;
+    rtMode_ID11 : R_TRIG;
+
+    (* Edge detekcija za ulaz/izlaz iz DRIVE *)
+    rtDriveOn  : R_TRIG;
+    rtDriveOff : F_TRIG;
+
+    (* 0 = nema sekvence, 1 = otvaranje, 2 = zatvaranje *)
+    iDoorSeq : INT := 0;
+
+    (* Reset vrata *)
+    bResetDoors : BOOL := FALSE;
+END_VAR
+]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// =========================================================
+// 1. KONTROLA MODA (Tipka 4)
+// =========================================================
+bTurbineSafe := (GVL_IO.fEngineRPM_Scaled < 900.0);
+
+rtMode_ID10(CLK := GVL_CAN.ID10_Status[4]);
+rtMode_ID11(CLK := GVL_CAN.ID11_Status[4]);
+
+IF bTurbineSafe AND (rtMode_ID10.Q OR rtMode_ID11.Q) THEN
+    IF eTargetMode = E_SystemMode.MODE_IDLE THEN
+        eTargetMode := E_SystemMode.MODE_DRIVE;
+    ELSE
+        eTargetMode := E_SystemMode.MODE_IDLE;
+    END_IF
+END_IF;
+
+// Rubovi DRIVE moda
+rtDriveOn(CLK := (eTargetMode = E_SystemMode.MODE_DRIVE));
+rtDriveOff(CLK := (eTargetMode = E_SystemMode.MODE_DRIVE));
+
+
+// =========================================================
+// 2. POKRETANJE SEKVENCI
+// =========================================================
+// Ulaz u DRIVE -> pokreni sekvencu otvaranja
+IF rtDriveOn.Q THEN
+    iDoorSeq := 1;
+END_IF;
+
+// Izlaz iz DRIVE -> pokreni sekvencu zatvaranja
+IF rtDriveOff.Q THEN
+    iDoorSeq := 2;
+END_IF;
+
+
+// =========================================================
+// 3. DEFAULT KOMANDE
+// =========================================================
+GVL_HMI.bCmdDoorFwd_Open := FALSE;
+GVL_HMI.bCmdDoorFwd_Close := FALSE;
+GVL_HMI.bCmdDoorAft_Open := FALSE;
+GVL_HMI.bCmdDoorAft_Close := FALSE;
+
+
+// =========================================================
+// 4. RUČNI RAD SAMO KAD NEMA DRIVE SEKVENCE
+//    I KAD NIJE AKTIVAN DRIVE MODE
+// =========================================================
+IF (iDoorSeq = 0) AND (eTargetMode <> E_SystemMode.MODE_DRIVE) THEN
+    rtBtnDoorFwd(CLK := GVL_CAN.ID20_Status[3]);
+    rtBtnDoorAft(CLK := GVL_CAN.ID20_Status[8]);
+
+    IF GVL_HMI.eSystemMode = E_ControlMode.MAN THEN
+
+        IF rtBtnDoorFwd.Q THEN
+            IF (fbDoorFwd.eState = 1) OR (fbDoorFwd.eState = 10) THEN
+                GVL_HMI.bCmdDoorFwd_Open := FALSE;
+                GVL_HMI.bCmdDoorFwd_Close := TRUE;
+            ELSE
+                GVL_HMI.bCmdDoorFwd_Open := TRUE;
+                GVL_HMI.bCmdDoorFwd_Close := FALSE;
+            END_IF
+        END_IF
+
+        IF rtBtnDoorAft.Q THEN
+            IF (fbDoorAft.eState = 1) OR (fbDoorAft.eState = 10) THEN
+                GVL_HMI.bCmdDoorAft_Open := FALSE;
+                GVL_HMI.bCmdDoorAft_Close := TRUE;
+            ELSE
+                GVL_HMI.bCmdDoorAft_Open := TRUE;
+                GVL_HMI.bCmdDoorAft_Close := FALSE;
+            END_IF
+        END_IF
+
+    ELSIF GVL_HMI.eSystemMode = E_ControlMode.OFF THEN
+        // sve ostaje FALSE
+    END_IF
+END_IF;
+
+
+// =========================================================
+// 5. SEKVENCA VRATA
+//    1 = OTVARANJE FWD -> AFT
+//    2 = ZATVARANJE FWD -> AFT
+// =========================================================
+CASE iDoorSeq OF
+
+    0:
+        // nema sekvence
+
+    1: // OTVARANJE
+        // prvo FWD, pa kad je otvoren onda AFT
+        IF fbDoorFwd.eState <> 1 THEN
+            GVL_HMI.bCmdDoorFwd_Open := TRUE;
+            GVL_HMI.bCmdDoorFwd_Close := FALSE;
+
+            GVL_HMI.bCmdDoorAft_Open := FALSE;
+            GVL_HMI.bCmdDoorAft_Close := FALSE;
+
+        ELSIF fbDoorAft.eState <> 1 THEN
+            GVL_HMI.bCmdDoorFwd_Open := FALSE;
+            GVL_HMI.bCmdDoorFwd_Close := FALSE;
+
+            GVL_HMI.bCmdDoorAft_Open := TRUE;
+            GVL_HMI.bCmdDoorAft_Close := FALSE;
+
+        ELSE
+            // oba otvorena -> sekvenca gotova
+            iDoorSeq := 0;
+        END_IF
+
+
+    2: // ZATVARANJE
+        // prvo FWD, pa kad je zatvoren onda AFT
+        IF fbDoorFwd.eState <> 2 THEN
+            GVL_HMI.bCmdDoorFwd_Open := FALSE;
+            GVL_HMI.bCmdDoorFwd_Close := TRUE;
+
+            GVL_HMI.bCmdDoorAft_Open := FALSE;
+            GVL_HMI.bCmdDoorAft_Close := FALSE;
+
+        ELSIF fbDoorAft.eState <> 2 THEN
+            GVL_HMI.bCmdDoorFwd_Open := FALSE;
+            GVL_HMI.bCmdDoorFwd_Close := FALSE;
+
+            GVL_HMI.bCmdDoorAft_Open := FALSE;
+            GVL_HMI.bCmdDoorAft_Close := TRUE;
+
+        ELSE
+            // oba zatvorena -> sekvenca gotova
+            iDoorSeq := 0;
+        END_IF
+
+
+ELSE
+    iDoorSeq := 0;
+END_CASE;
+
+
+// =========================================================
+// 6. POZIV FB BLOKOVA
+// =========================================================
+fbDoorFwd(
+    bCmdOpen := GVL_HMI.bCmdDoorFwd_Open,
+    bCmdClose := GVL_HMI.bCmdDoorFwd_Close,
+    bReset := bResetDoors,
+    bEnableRefill := TRUE,
+    fPresOpen := GVL_IO.fPressure_FWD_A,
+    fPresClose := GVL_IO.fPressure_FWD_B,
+    fLimitOpen := 60.0,
+    fLimitClose := 60.0,
+    bSolOpen => GVL_IO.DO_DoorFwd_Open,
+    bSolClose => GVL_IO.DO_DoorFwd_Close,
+    eState => GVL_HMI.eState_DoorFwd
+);
+
+fbDoorAft(
+    bCmdOpen := GVL_HMI.bCmdDoorAft_Open,
+    bCmdClose := GVL_HMI.bCmdDoorAft_Close,
+    bReset := bResetDoors,
+    bEnableRefill := TRUE,
+    fPresOpen := GVL_IO.fPressure_AFT_A,
+    fPresClose := GVL_IO.fPressure_AFT_B,
+    fLimitOpen := 60.0,
+    fLimitClose := 60.0,
+    bSolOpen => GVL_IO.DO_DoorAft_Open,
+    bSolClose => GVL_IO.DO_DoorAft_Close,
+    eState => GVL_HMI.eState_DoorAft
+);
+
+
+// =========================================================
+// 7. INDIKACIJA MODA
+// =========================================================
+IF eTargetMode = E_SystemMode.MODE_DRIVE THEN
+    GVL_CAN.ID10_Config[4].Boja := E_BlinkMarine_Color.GREEN;
+    GVL_CAN.ID11_Config[4].Boja := E_BlinkMarine_Color.GREEN;
+ELSE
+    GVL_CAN.ID10_Config[4].Boja := E_BlinkMarine_Color.OFF;
+    GVL_CAN.ID11_Config[4].Boja := E_BlinkMarine_Color.OFF;
+END_IF;
+
+
+// =========================================================
+// 8. INDIKACIJA STANJA VRATA NA ID20
+// =========================================================
+
+// FWD (Tipka 3)
+IF fbDoorFwd.eState = 2 THEN
+    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbDoorFwd.eState = 1 THEN
+    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF (fbDoorFwd.eState = 10) OR (fbDoorFwd.eState = 20) THEN
+    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE
+    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.OFF;
+END_IF;
+
+// AFT (Tipka 8)
+IF fbDoorAft.eState = 2 THEN
+    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.GREEN;
+ELSIF fbDoorAft.eState = 1 THEN
+    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.CYAN;
+ELSIF (fbDoorAft.eState = 10) OR (fbDoorAft.eState = 20) THEN
+    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.YELLOW;
+ELSE
+    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.OFF;
+END_IF;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -1,0 +1,71 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_BallastValve" Id="{a3d9c8a4-6bb4-4be8-9168-2614b47875ea}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_BallastValve
+VAR_INPUT
+    bCmdOpen   : BOOL;       (* TRUE = Otvori, FALSE = Zatvori *)
+    bFbOpen    : BOOL;       (* Feedback senzor: Otvoren *)
+    bFbClosed  : BOOL;       (* Feedback senzor: Zatvoren *)
+    bReset     : BOOL;       (* Reset alarma *)
+    tTimeout   : TIME := T#3S; (* Vrijeme za timeout, default 3s *)
+END_VAR
+
+VAR_OUTPUT
+    bOutSolenoid : BOOL;         (* Izlaz na špulu *)
+    eState       : E_ValveState; (* Trenutno stanje za logiku/HMI *)
+    bError       : BOOL;         (* Zbirna greška *)
+    bErrTimeout  : BOOL;         (* Greška: Nije stigao na vrijeme *)
+    bErrSensor   : BOOL;         (* Greška: Oba senzora aktivna *)
+END_VAR
+
+VAR
+    tmrMove      : TON;          (* Timer za praćenje kretanja *)
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// 1. Upravljanje fizičkim izlazom (Solenoid)
+bOutSolenoid := bCmdOpen;
+
+// 2. Evaluacija stanja ventila na temelju senzora
+// Mapiranje: 0=Unknown, 1=Open, 2=Closed, 3=Error
+
+IF bFbOpen AND NOT bFbClosed THEN
+    eState := 1; // VALVE_OPEN
+    bErrSensor := FALSE; 
+    
+ELSIF NOT bFbOpen AND bFbClosed THEN
+    eState := 2; // VALVE_CLOSED
+    bErrSensor := FALSE;
+
+ELSIF bFbOpen AND bFbClosed THEN
+    eState := 3; // VALVE_ERROR
+    bErrSensor := TRUE; // Nemoguće stanje (oba senzora aktivna)
+
+ELSE
+    eState := 0; // VALVE_UNKNOWN (Niti jedan senzor - u putovanju)
+END_IF
+
+// 3. Logika Timeout-a
+// Pokrećemo timer samo ako nismo u željenom stanju (uspoređujemo s brojevima 1 i 2)
+// a nemamo sensorsku grešku
+IF (bCmdOpen AND eState <> 1) OR (NOT bCmdOpen AND eState <> 2) THEN
+    tmrMove(IN := TRUE, PT := tTimeout);
+ELSE
+    tmrMove(IN := FALSE); // Reset timera kad stignemo na cilj
+END_IF
+
+// 4. Postavljanje Timeout greške
+IF tmrMove.Q THEN
+    bErrTimeout := TRUE;
+END_IF
+
+// 5. Resetiranje grešaka
+IF bReset THEN
+    bErrTimeout := FALSE;
+    bErrSensor  := FALSE;
+END_IF
+
+// 6. Zbirni izlaz za grešku
+bError := bErrTimeout OR bErrSensor;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

@@ -20,18 +20,30 @@ VAR_GLOBAL
     DI_BAL_S3_OPEN_FB   AT %I* : BOOL;
     DI_BAL_S3_CLOSE_FB  AT %I* : BOOL;
 
+    (* --- NOVO: TUNEL PUMP (Ventil za usmjeravanje) --- *)
+    DI_TUNEL_OPEN_FB    AT %I* : BOOL;
+    DI_TUNEL_CLOSE_FB   AT %I* : BOOL;
+	// --- NOVO: TUNEL PUMP HARDWARE ---
+	DI_Sonda_Port        AT %I* : BOOL; // Senzor u Port usisu
+    DI_Sonda_Stbd        AT %I* : BOOL; // Senzor u Stbd usisu
+    DO_TunelClutch       AT %Q* : BOOL; // Izlaz za uključivanje kuplunga pumpe
+    DO_SondePower		 AT %Q* : BOOL; // Zajedničko napajanje za obje sonde (0.5A)
+	
     (* --- DIGITALNI IZLAZI --- *)
     (* PORT Strana *)
-    DO_BAL_P1         AT %Q* : BOOL;
-    DO_BAL_P2         AT %Q* : BOOL;
-    DO_BAL_P3         AT %Q* : BOOL;
+    DO_BAL_P1           AT %Q* : BOOL;
+    DO_BAL_P2           AT %Q* : BOOL;
+    DO_BAL_P3           AT %Q* : BOOL;
 
     (* STARBOARD Strana *)
-    DO_BAL_S1         AT %Q* : BOOL;
-    DO_BAL_S2         AT %Q* : BOOL;
-    DO_BAL_S3         AT %Q* : BOOL;
+    DO_BAL_S1           AT %Q* : BOOL;
+    DO_BAL_S2           AT %Q* : BOOL;
+    DO_BAL_S3           AT %Q* : BOOL;
+
+    (* --- NOVO: TUNEL PUMP IZLAZ --- *)
+    DO_TUNEL_VALVE      AT %Q* : BOOL;
 	
-	(* --- VRATA (Hidraulika) --- *)
+    (* --- VRATA (Hidraulika) --- *)
     (* Digitalni Izlazi (24V Špule) *)
     DO_DoorFwd_Open    AT %Q* : BOOL;
     DO_DoorFwd_Close   AT %Q* : BOOL;
@@ -39,7 +51,7 @@ VAR_GLOBAL
     DO_DoorAft_Open    AT %Q* : BOOL;
     DO_DoorAft_Close   AT %Q* : BOOL;
 	
-	(* --- ULAZI (TIPKE NA PALUBI) --- *)
+    (* --- ULAZI (TIPKE NA PALUBI) --- *)
     (* Svaki vinč ima 2 gumba (npr. Brzina 1 / Brzina 2 ili Trim / Ease) *)
     bBtn_Winch1_A  AT %I* : BOOL;
     bBtn_Winch1_B  AT %I* : BOOL;
@@ -68,14 +80,12 @@ VAR_GLOBAL
     bAnyWinchActive : BOOL; (* Barem jedan radi *)
 
     (* Analogni Ulazi (Tlak - 4-20mA skalirano u Bar) *)
-    (* Ovdje pretpostavljamo da imamo varijablu tlaka već skaliranu u REAL (Bar) *)
-    (* To mapiranje ćemo riješiti kasnije u kodu, sad samo deklaracija *)
     fPressure_FWD_A     : REAL; 
     fPressure_FWD_B     : REAL;
     fPressure_AFT_A     : REAL;
     fPressure_AFT_B     : REAL;	
 	
-	fEngineRPM_Scaled   : REAL;
+    fEngineRPM_Scaled   : REAL;
 	
     (* --- ANALOGNI ULAZI (RAW 0..32767) --- *)
     (* Tlakovi Vrata *)
@@ -104,7 +114,7 @@ VAR_GLOBAL
     nGas_Motor_Out      : INT;
     nGear_Motor_Out     : INT;
 	
-	(* --- BALASTI (6 TANKOVA) - ULAZI 4-20mA --- *)
+    (* --- BALASTI (6 TANKOVA) - ULAZI 4-20mA --- *)
     (* Lijeva strana (PORT) *)
     iLevel_Bal_P1_Raw   AT %I* : INT; (* Port 1 (Pramac/Forward) *)
     iLevel_Bal_P2_Raw   AT %I* : INT; (* Port 2 (Mid) *)
@@ -115,27 +125,30 @@ VAR_GLOBAL
     iLevel_Bal_S2_Raw   AT %I* : INT; (* Stbd 2 *)
     iLevel_Bal_S3_Raw   AT %I* : INT; (* Stbd 3 *)
 
-    (* --- OSTALI TANKOVI --- *)
-    iLevel_Fuel_Raw         AT %I* : INT;
-    iLevel_FreshWater_Raw   AT %I* : INT;
-    iLevel_Hydraulic_Raw    AT %I* : INT;
-
     (* --- SKALIRANE VRIJEDNOSTI (0.0 - 100.0 %) --- *)
     (* PORT *)
-    fLevel_Bal_P1_Pct   : REAL;
-    fLevel_Bal_P2_Pct   : REAL;
-    fLevel_Bal_P3_Pct   : REAL;
-    
+    fLevel_Bal_P1_Pct_Hmi   : REAL;
+    fLevel_Bal_P2_Pct_Hmi   : REAL;
+    fLevel_Bal_P3_Pct_Hmi   : REAL;
     (* STBD *)
-    fLevel_Bal_S1_Pct   : REAL;
-    fLevel_Bal_S2_Pct   : REAL;
-    fLevel_Bal_S3_Pct   : REAL;
+    fLevel_Bal_S1_Pct_Hmi   : REAL;
+    fLevel_Bal_S2_Pct_Hmi   : REAL;
+    fLevel_Bal_S3_Pct_Hmi   : REAL;
+	
+	(* PORT *)
+    fLevel_Bal_P1_Pct_Disp   AT %Q* : INT;
+    fLevel_Bal_P2_Pct_Disp   AT %Q* : INT;
+    fLevel_Bal_P3_Pct_Disp   AT %Q* : INT;
+    (* STBD *)
+    fLevel_Bal_S1_Pct_Disp   AT %Q* : INT;
+    fLevel_Bal_S2_Pct_Disp   AT %Q* : INT;
+    fLevel_Bal_S3_Pct_Disp   AT %Q* : INT;
     
-    (* OSTALO *)
-    fLevel_Fuel_Pct         : REAL;
-    fLevel_FreshWater_Pct   : REAL;
-    fLevel_Hydraulic_Pct    : REAL;
-    
+	(* --- ENGINE --- *)
+	DO_Engine_Ignition		AT %Q* : BOOL;
+    DO_Engine_Starter		AT %Q* : BOOL;
+    DO_Engine_Stop			AT %Q* : BOOL;
+	
     (* --- ALARMI --- *)
     bAlarm_HydraulicLow     : BOOL;
     bAlarm_FuelLow          : BOOL;

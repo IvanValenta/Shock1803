@@ -1,11 +1,11 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
-<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4024.15">
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
   <Visu Name="Visualization1" Id="{a1645e5b-c9f3-4813-8ea8-0522df1fb21a}">
     <XmlArchive>
       <Data>
         <o xml:space="preserve" t="VisualObject">
           <n n="LastVisuLanguageModelEntry" />
-          <v n="UniqueIdGenerator">"3"</v>
+          <v n="UniqueIdGenerator">"6"</v>
           <o n="VisualElemList" t="VisualElemList">
             <l n="VisualElementList" t="VisualElemCollection" cet="GenericVisualElem">
               <o>
@@ -119,6 +119,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -216,6 +217,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">72</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -297,11 +302,19 @@
                     </o>
                     <o>
                       <v n="Id">743958181L</v>
-                      <v n="Value">"MAIN.bMotorOn_M1"</v>
+                      <v n="Value">"PRG_ZF_Control.bMotorOn_M1"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
                       <v n="Value">false</v>
+                    </o>
+                    <o>
+                      <v n="Id">550940142L</v>
+                      <v n="Value">0</v>
+                    </o>
+                    <o>
+                      <v n="Id">1473355128L</v>
+                      <v n="Value">0</v>
                     </o>
                   </l>
                 </o>
@@ -318,6 +331,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">0</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -430,6 +447,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -527,6 +545,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">14</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -639,6 +661,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -736,6 +759,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">16</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -848,6 +875,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -926,6 +954,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">18</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -1038,6 +1070,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -1135,6 +1168,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">20</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -1244,6 +1281,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -1322,6 +1360,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">22</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -1434,6 +1476,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -1512,6 +1555,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">25</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -1624,6 +1671,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -1702,6 +1750,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">27</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -1814,6 +1866,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -1911,6 +1964,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">29</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -2023,6 +2080,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -2101,6 +2159,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">31</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -2210,6 +2272,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -2288,6 +2351,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">36</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -2397,6 +2464,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -2475,6 +2543,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">38</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" cet="ComplexInput">
@@ -2596,6 +2668,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -2657,6 +2730,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">41</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -2766,6 +2843,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -2844,6 +2922,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">44</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -2953,6 +3035,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3031,6 +3114,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">46</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -3140,6 +3227,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3218,6 +3306,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">48</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -3327,6 +3419,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3405,6 +3498,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">50</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -3514,6 +3611,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3592,6 +3690,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">52</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -3701,6 +3803,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3779,6 +3882,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">54</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -3888,6 +3995,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -3966,6 +4074,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">56</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -4075,6 +4187,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -4153,6 +4266,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">58</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -4262,6 +4379,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -4340,6 +4458,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">60</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -4449,6 +4571,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -4527,6 +4650,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">62</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" cet="ComplexInput">
@@ -4648,6 +4775,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -4734,6 +4862,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">65</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -4913,6 +5045,12 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -4937,6 +5075,7 @@
                             <v n="TypeNodeId" t="Int16">19</v>
                             <v n="TypeNodeIdLong">3087024125L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.DiagramType"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_ScaleLocation"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -4960,6 +5099,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -4997,6 +5140,7 @@
                             <v n="TypeNodeId" t="Int16">20</v>
                             <v n="TypeNodeIdLong">2640826223L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.Orientation"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_BarOrientation"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5020,6 +5164,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5048,6 +5196,7 @@
                             <v n="TypeNodeId" t="Int16">21</v>
                             <v n="TypeNodeIdLong">3675497837L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.RunningDirection"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_RunningDirection"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5071,6 +5220,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5099,6 +5252,7 @@
                             <v n="TypeNodeId" t="Int16">22</v>
                             <v n="TypeNodeIdLong">3841252171L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.RunningDirection"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_RunningDirection"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5113,6 +5267,7 @@
                             <n n="EnumValueVisibilityAttributeValues" />
                             <n n="EnumValueLibraryId" />
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <n n="EnumValueDisplayName" />
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Bool</v>
@@ -5141,6 +5296,7 @@
                             <v n="TypeNodeId" t="Int16">23</v>
                             <v n="TypeNodeIdLong">2429759797L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.BarOptimumSize"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_BarOptimumSize"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5179,6 +5335,7 @@
                         <v n="TypeNodeId" t="Int16">18</v>
                         <v n="TypeNodeIdLong">2233288781L</v>
                         <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                        <n n="ElementId" />
                         <v n="DisplayTextId">"TL_ElementProperties.Bar"</v>
                         <v n="DescriptionTextID">"TL_ElementProperties.Desc_GeneralConfiguration"</v>
                         <v n="DescriptionUseParent">false</v>
@@ -5209,6 +5366,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -5255,6 +5413,7 @@
                               <n n="EnumValueVisibilityAttributeValues" />
                               <n n="EnumValueLibraryId" />
                               <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                              <n n="EnumValueDisplayName" />
                               <l n="TypeNodeChildren" t="ArrayList" />
                               <o n="TypeNodeType" t="TypeNodeType">
                                 <v n="TypeClass" t="TypeClass">Int</v>
@@ -5275,6 +5434,7 @@
                               <v n="TypeNodeId" t="Int16">63</v>
                               <v n="TypeNodeIdLong">27094815L</v>
                               <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                              <n n="ElementId" />
                               <n n="DisplayTextId" />
                               <n n="DescriptionTextID" />
                               <v n="DescriptionUseParent">false</v>
@@ -5293,6 +5453,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">Real</v>
@@ -5317,6 +5478,7 @@
                                   <v n="TypeNodeId" t="Int16">2</v>
                                   <v n="TypeNodeIdLong">2282471140L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.AreaBegin"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaBegin"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -5331,6 +5493,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">Real</v>
@@ -5355,6 +5518,7 @@
                                   <v n="TypeNodeId" t="Int16">3</v>
                                   <v n="TypeNodeIdLong">1219577456L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.AreaEnd"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaEnd"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -5369,6 +5533,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">DWord</v>
@@ -5395,6 +5560,7 @@
                                   <v n="TypeNodeId" t="Int16">4</v>
                                   <v n="TypeNodeIdLong">263908425L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.Color"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaColor"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -5425,6 +5591,7 @@
                               <v n="TypeNodeId" t="Int16">1</v>
                               <v n="TypeNodeIdLong">3361654365L</v>
                               <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                              <n n="ElementId" />
                               <n n="DisplayTextId" />
                               <n n="DescriptionTextID" />
                               <v n="DescriptionUseParent">false</v>
@@ -5453,6 +5620,7 @@
                             <v n="TypeNodeId" t="Int16">62</v>
                             <v n="TypeNodeIdLong">2264771898L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.Areas"</v>
                             <n n="DescriptionTextID" />
                             <v n="DescriptionUseParent">true</v>
@@ -5467,6 +5635,7 @@
                             <n n="EnumValueVisibilityAttributeValues" />
                             <n n="EnumValueLibraryId" />
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <n n="EnumValueDisplayName" />
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Int</v>
@@ -5487,6 +5656,7 @@
                             <v n="TypeNodeId" t="Int16">63</v>
                             <v n="TypeNodeIdLong">27094815L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <n n="DisplayTextId" />
                             <n n="DescriptionTextID" />
                             <v n="DescriptionUseParent">false</v>
@@ -5523,6 +5693,7 @@
                         <v n="TypeNodeId" t="Int16">61</v>
                         <v n="TypeNodeIdLong">3368668114L</v>
                         <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                        <n n="ElementId" />
                         <v n="DisplayTextId">"TL_ElementProperties.ColorAreas"</v>
                         <v n="DescriptionTextID">"TL_ElementProperties.Desc_ColorAreas"</v>
                         <v n="DescriptionUseParent">false</v>
@@ -5542,7 +5713,7 @@
                     </o>
                     <o>
                       <v n="Id">2216112L</v>
-                      <v n="Value">"MAIN.rPotFeedback_Radno_PercM1"</v>
+                      <v n="Value">"PRG_ZF_Control.rPotFeedback_Radno_PercM1"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -5551,6 +5722,14 @@
                     <o>
                       <v n="Id">2750573338L</v>
                       <v n="Value">"801"</v>
+                    </o>
+                    <o>
+                      <v n="Id">550940142L</v>
+                      <v n="Value">0</v>
+                    </o>
+                    <o>
+                      <v n="Id">1473355128L</v>
+                      <v n="Value">0</v>
                     </o>
                   </l>
                 </o>
@@ -5567,6 +5746,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">1</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -5746,6 +5929,12 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5770,6 +5959,7 @@
                             <v n="TypeNodeId" t="Int16">19</v>
                             <v n="TypeNodeIdLong">3087024125L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.DiagramType"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_ScaleLocation"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5793,6 +5983,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5830,6 +6024,7 @@
                             <v n="TypeNodeId" t="Int16">20</v>
                             <v n="TypeNodeIdLong">2640826223L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.Orientation"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_BarOrientation"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5853,6 +6048,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5881,6 +6080,7 @@
                             <v n="TypeNodeId" t="Int16">21</v>
                             <v n="TypeNodeIdLong">3675497837L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.RunningDirection"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_RunningDirection"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5904,6 +6104,10 @@
                             </a>
                             <v n="EnumValueLibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <a n="EnumValueDisplayName" et="String">
+                              <n />
+                              <n />
+                            </a>
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Userdef</v>
@@ -5932,6 +6136,7 @@
                             <v n="TypeNodeId" t="Int16">22</v>
                             <v n="TypeNodeIdLong">3841252171L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.RunningDirection"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_RunningDirection"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -5946,6 +6151,7 @@
                             <n n="EnumValueVisibilityAttributeValues" />
                             <n n="EnumValueLibraryId" />
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <n n="EnumValueDisplayName" />
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Bool</v>
@@ -5974,6 +6180,7 @@
                             <v n="TypeNodeId" t="Int16">23</v>
                             <v n="TypeNodeIdLong">2429759797L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.BarOptimumSize"</v>
                             <v n="DescriptionTextID">"TL_ElementProperties.Desc_BarOptimumSize"</v>
                             <v n="DescriptionUseParent">false</v>
@@ -6012,6 +6219,7 @@
                         <v n="TypeNodeId" t="Int16">18</v>
                         <v n="TypeNodeIdLong">2233288781L</v>
                         <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                        <n n="ElementId" />
                         <v n="DisplayTextId">"TL_ElementProperties.Bar"</v>
                         <v n="DescriptionTextID">"TL_ElementProperties.Desc_GeneralConfiguration"</v>
                         <v n="DescriptionUseParent">false</v>
@@ -6031,7 +6239,7 @@
                     </o>
                     <o>
                       <v n="Id">381541060L</v>
-                      <v n="Value">true</v>
+                      <v n="Value">false</v>
                     </o>
                     <o>
                       <v n="Id">3994970671L</v>
@@ -6042,6 +6250,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -6088,6 +6297,7 @@
                               <n n="EnumValueVisibilityAttributeValues" />
                               <n n="EnumValueLibraryId" />
                               <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                              <n n="EnumValueDisplayName" />
                               <l n="TypeNodeChildren" t="ArrayList" />
                               <o n="TypeNodeType" t="TypeNodeType">
                                 <v n="TypeClass" t="TypeClass">Int</v>
@@ -6108,6 +6318,7 @@
                               <v n="TypeNodeId" t="Int16">63</v>
                               <v n="TypeNodeIdLong">27094815L</v>
                               <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                              <n n="ElementId" />
                               <n n="DisplayTextId" />
                               <n n="DescriptionTextID" />
                               <v n="DescriptionUseParent">false</v>
@@ -6126,6 +6337,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">Real</v>
@@ -6150,6 +6362,7 @@
                                   <v n="TypeNodeId" t="Int16">2</v>
                                   <v n="TypeNodeIdLong">2282471140L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.AreaBegin"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaBegin"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -6164,6 +6377,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">Real</v>
@@ -6188,6 +6402,7 @@
                                   <v n="TypeNodeId" t="Int16">3</v>
                                   <v n="TypeNodeIdLong">1219577456L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.AreaEnd"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaEnd"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -6202,6 +6417,7 @@
                                   <n n="EnumValueVisibilityAttributeValues" />
                                   <n n="EnumValueLibraryId" />
                                   <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                                  <n n="EnumValueDisplayName" />
                                   <l n="TypeNodeChildren" t="ArrayList" />
                                   <o n="TypeNodeType" t="TypeNodeType">
                                     <v n="TypeClass" t="TypeClass">DWord</v>
@@ -6228,6 +6444,7 @@
                                   <v n="TypeNodeId" t="Int16">4</v>
                                   <v n="TypeNodeIdLong">263908425L</v>
                                   <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                                  <n n="ElementId" />
                                   <v n="DisplayTextId">"TL_ElementProperties.Color"</v>
                                   <v n="DescriptionTextID">"TL_ElementProperties.Desc_AreaColor"</v>
                                   <v n="DescriptionUseParent">false</v>
@@ -6258,6 +6475,7 @@
                               <v n="TypeNodeId" t="Int16">1</v>
                               <v n="TypeNodeIdLong">3361654365L</v>
                               <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                              <n n="ElementId" />
                               <n n="DisplayTextId" />
                               <n n="DescriptionTextID" />
                               <v n="DescriptionUseParent">false</v>
@@ -6286,6 +6504,7 @@
                             <v n="TypeNodeId" t="Int16">62</v>
                             <v n="TypeNodeIdLong">2264771898L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <v n="DisplayTextId">"TL_ElementProperties.Areas"</v>
                             <n n="DescriptionTextID" />
                             <v n="DescriptionUseParent">true</v>
@@ -6300,6 +6519,7 @@
                             <n n="EnumValueVisibilityAttributeValues" />
                             <n n="EnumValueLibraryId" />
                             <n n="DynamicEnumMemberVisibilityCheckerTypeGuid" />
+                            <n n="EnumValueDisplayName" />
                             <l n="TypeNodeChildren" t="ArrayList" />
                             <o n="TypeNodeType" t="TypeNodeType">
                               <v n="TypeClass" t="TypeClass">Int</v>
@@ -6320,6 +6540,7 @@
                             <v n="TypeNodeId" t="Int16">63</v>
                             <v n="TypeNodeIdLong">27094815L</v>
                             <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                            <n n="ElementId" />
                             <n n="DisplayTextId" />
                             <n n="DescriptionTextID" />
                             <v n="DescriptionUseParent">false</v>
@@ -6356,6 +6577,7 @@
                         <v n="TypeNodeId" t="Int16">61</v>
                         <v n="TypeNodeIdLong">3368668114L</v>
                         <v n="LibraryId">"visuelemmeter, 3.5.13.0 (system)"</v>
+                        <n n="ElementId" />
                         <v n="DisplayTextId">"TL_ElementProperties.ColorAreas"</v>
                         <v n="DescriptionTextID">"TL_ElementProperties.Desc_ColorAreas"</v>
                         <v n="DescriptionUseParent">false</v>
@@ -6375,7 +6597,7 @@
                     </o>
                     <o>
                       <v n="Id">2216112L</v>
-                      <v n="Value">"MAIN.FB_DC_MOTOR1.rLinearPosition"</v>
+                      <v n="Value">"PRG_ZF_Control.FB_DC_MOTOR1.rLinearPosition"</v>
                     </o>
                     <o>
                       <v n="Id">2597686782L</v>
@@ -6384,6 +6606,14 @@
                     <o>
                       <v n="Id">2750573338L</v>
                       <v n="Value">"39"</v>
+                    </o>
+                    <o>
+                      <v n="Id">550940142L</v>
+                      <v n="Value">0</v>
+                    </o>
+                    <o>
+                      <v n="Id">1473355128L</v>
+                      <v n="Value">0</v>
                     </o>
                   </l>
                 </o>
@@ -6400,6 +6630,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">68</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -6512,6 +6746,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -6609,6 +6844,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">70</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -6718,6 +6957,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -6815,6 +7055,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">74</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -6924,6 +7168,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -7021,6 +7266,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">76</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -7101,6 +7350,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-HeadingLarge"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">28</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -7150,6 +7400,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">79</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
               <o>
                 <a n="ConfiguredComplexInputs" et="ComplexInput" />
@@ -7259,6 +7513,7 @@
                           <v n="ExplicitColor">-16777216</v>
                           <v n="CanonicalName">"Font-Standard"</v>
                           <v n="FontName">"Arial"</v>
+                          <v n="DisplayName">""</v>
                           <v n="FontSize">12</v>
                           <v n="ScriptIdentification">0</v>
                           <v n="DoubleFontSize" t="Double">0</v>
@@ -7337,6 +7592,10 @@
                 <d n="SubElements" t="Hashtable" />
                 <v n="VisualElementId">82</v>
                 <l n="UserManagementAccessRights" t="ArrayList" />
+                <v n="AnimationDuration">"0"</v>
+                <v n="BringToForeground">""</v>
+                <v n="ElementVersion" t="Byte">0</v>
+                <n n="TabOrder" />
               </o>
             </l>
             <v n="BackgroundBitmapId">""</v>
@@ -7350,10 +7609,13 @@
               <v n="BgUseColor">16777215</v>
               <v n="BgUseGradient">false</v>
             </o>
+            <v n="AllElementsHaveDynamicVisibility">false</v>
           </o>
           <o n="GeneratedLMMDescriptions" t="GeneratedLanguageModelEntriesData">
             <o n="GeneratedVisuFbDescription" t="GenericFbDescription">
               <d n="FbMethods" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
+                <v>AreAllElementsHidden</v>
+                <v>c768b9c4-3c74-53ed-b4c8-f61e9349fe8f</v>
                 <v>ContainsPoint</v>
                 <v>d49ea2b0-2603-4cb6-80ec-2a0d714cfb27</v>
                 <v>Destruct</v>
@@ -7364,6 +7626,8 @@
                 <v>a1a46c5d-50e9-4e9e-ac74-0f4f37292257</v>
                 <v>FB_Reinit</v>
                 <v>7b2b79c6-98fc-4664-b1e0-5695238f6419</v>
+                <v>GetCallerNamespace</v>
+                <v>6de38869-566a-53a8-88de-5661d0c18861</v>
                 <v>GetClientData</v>
                 <v>8f98bb89-f456-465e-a38a-d46d514b6cdb</v>
                 <v>GetDialogInterface</v>
@@ -7374,6 +7638,8 @@
                 <v>8e45f646-0a8c-479a-b156-531294b5a19d</v>
                 <v>GetElementIdArray</v>
                 <v>997dee07-08e2-40ec-8db4-c25b14b0f8ca</v>
+                <v>GetElementName</v>
+                <v>3e889d43-df30-5bdb-a2b5-159140a3c037</v>
                 <v>GetInitializeVersion</v>
                 <v>e137a316-f133-45aa-9098-f9ba0597ccc6</v>
                 <v>GetInstance</v>
@@ -7390,6 +7656,8 @@
                 <v>099dd753-e557-44b3-85f3-2d046aa4e884</v>
                 <v>GetSurroundingRect</v>
                 <v>13ad6a24-d1c2-4685-a073-abe1f7282444</v>
+                <v>GetTabOrderIdArray</v>
+                <v>aac66bf1-5d2b-55fc-a511-37f788816f26</v>
                 <v>GetText</v>
                 <v>34307d64-fde3-41d2-a447-cc2445cd2d5b</v>
                 <v>GetTextProperties</v>
@@ -7418,6 +7686,8 @@
                 <v>1cdc303a-9158-4e33-b38f-c793ee56227d</v>
                 <v>SetClientData</v>
                 <v>fefbf8d7-aa96-4d9c-97e9-b0e07730f306</v>
+                <v>SetContainerSize</v>
+                <v>348c1041-6279-535a-83a1-3fdeda572c90</v>
                 <v>SetDialogInterface</v>
                 <v>93cd4624-a628-4e99-89f1-67be1e9b34b9</v>
                 <v>SetResult</v>
@@ -7428,6 +7698,12 @@
                 <v>2efe0b51-09ee-4eee-9459-ed53d722a0cd</v>
                 <v>Update</v>
                 <v>b808f323-97bd-4276-b279-a135ba1ac5c2</v>
+              </d>
+              <d n="FbProperties" t="CaseInsensitiveHashtable_1" ckt="String" cvt="Guid">
+                <v>__getContainer</v>
+                <v>a3368a77-9754-5c3d-ab82-9a394befaf7c</v>
+                <v>__getVisu</v>
+                <v>67d4c354-b135-5365-a209-f82abadf260b</v>
               </d>
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{a1645e5b-c9f3-4813-8ea8-0522df1fb21a}</v>
@@ -7445,6 +7721,7 @@
                 <v>FB_Reinit</v>
                 <v>6f375a5a-7884-4ee6-8449-844f677b2922</v>
               </d>
+              <d n="FbProperties" t="CaseInsensitiveHashtable_1" />
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{5ce00914-7a8a-44b9-8b22-47d436619204}</v>
             </o>
@@ -7477,35 +7754,25 @@
                 <v>8b828943-9cfd-4dcd-b63e-66faad15a56d</v>
                 <v>ExecuteMouseUp</v>
                 <v>dd1e0323-706c-46d6-ac33-953cfaa7aa9d</v>
+                <v>ExecuteValueChanged</v>
+                <v>0963ed1f-ca63-46c5-8d01-1476abc058e5</v>
                 <v>GetElementInfo</v>
                 <v>d3f50123-ce6f-4070-8254-c25a29742604</v>
                 <v>Initialize</v>
                 <v>53bbc681-64bf-48b5-9149-e7b38759d4ad</v>
               </d>
+              <d n="FbProperties" t="CaseInsensitiveHashtable_1" />
               <v n="FbName">"NotImportant"</v>
               <v n="FbGuid">{d649639f-dd0e-4772-9631-8f37b512b552}</v>
             </o>
             <v n="DialogDut">{a5b7a06e-300d-435c-bcb5-20c43207bb99}</v>
           </o>
-          <v n="LastUsedIdForIdentifier">79</v>
+          <v n="LastUsedIdForIdentifier">81</v>
           <o n="TextDocument" t="TextDocument">
-            <a n="TextLines" cet="TextLine">
-              <o>
-                <v n="Id">2L</v>
-                <n n="Tag" />
-                <v n="Text">"VAR_IN_OUT"</v>
-              </o>
-              <o>
-                <v n="Id">3L</v>
-                <n n="Tag" />
-                <v n="Text">"	"</v>
-              </o>
-              <o>
-                <v n="Id">1L</v>
-                <n n="Tag" />
-                <v n="Text">"END_VAR"</v>
-              </o>
-            </a>
+            <v n="TextBlobForSerialisation">"VAR_IN_OUT
+	
+END_VAR"</v>
+            <n n="LineInfoPersistence" />
           </o>
           <v n="GvlCreated">false</v>
           <n n="LMEntry" />
@@ -7532,9 +7799,15 @@
                 <v n="Width">590</v>
                 <v n="Height">588</v>
               </o>
+              <v>2</v>
+              <o>
+                <v n="Width">590</v>
+                <v n="Height">588</v>
+              </o>
             </d2>
-            <v n="Version">1</v>
+            <v n="Version">2</v>
           </o>
+          <n n="FrameInterfaceDataModel" />
         </o>
       </Data>
       <TypeList>
@@ -7542,6 +7815,7 @@
         <Type n="BackgroundSettings">{1038f12c-dd4b-4f96-87a3-a350fe8f3552}</Type>
         <Type n="BasicTypeNode">{f7e1e748-ea0f-4fcb-b563-94837ee17e8d}</Type>
         <Type n="Boolean">System.Boolean</Type>
+        <Type n="Byte">System.Byte</Type>
         <Type n="CaseInsensitiveHashtable">{02a85e84-ef2d-46fc-93f2-acb0bbff3eda}</Type>
         <Type n="CaseInsensitiveHashtable_1">{7df88604-7ac5-4e36-91c4-55e4fdad3e68}</Type>
         <Type n="ComplexInput">{1de566f6-72a7-494c-9353-9a418172c96e}</Type>
@@ -7555,7 +7829,7 @@
         <Type n="Hashtable">System.Collections.Hashtable</Type>
         <Type n="HotkeyConfiguration">{6b108d46-58af-4e41-a3f4-174d8f160cc4}</Type>
         <Type n="InputBoxInputAction">{e8e7e747-f76f-4dee-ab1c-b9637e41ac26}</Type>
-        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=3.5.13.32, Culture=neutral, PublicKeyToken=null</Type>
+        <Type n="InputBoxInputAction[]">_3S.CoDeSys.VisualElem.InputBoxInputAction[], VisualElem.plugin, Version=4.8.0.0, Culture=neutral, PublicKeyToken=null</Type>
         <Type n="Int16">System.Int16</Type>
         <Type n="Int32">System.Int32</Type>
         <Type n="Int64">System.Int64</Type>
@@ -7565,7 +7839,6 @@
         <Type n="String">System.String</Type>
         <Type n="StructuredTypeNode">{503c5b2e-e80e-4ee7-ae00-c5b93a62b1aa}</Type>
         <Type n="TextDocument">{f3878285-8e4f-490b-bb1b-9acbb7eb04db}</Type>
-        <Type n="TextLine">{a5de0b0b-1cb5-4913-ac21-9d70293ec00d}</Type>
         <Type n="TypeClass">{16f7aa24-038f-444e-9d81-b001bc091d35}</Type>
         <Type n="TypeNodeAttributes2">{c1464dbe-c10d-4717-be8f-63efe8638434}</Type>
         <Type n="TypeNodeType">{b12a9636-e818-4598-ae0d-fb6a2446102c}</Type>

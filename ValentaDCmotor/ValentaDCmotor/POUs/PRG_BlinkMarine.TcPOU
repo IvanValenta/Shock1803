@@ -1,0 +1,115 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_BlinkMarine" Id="{41d39066-fa83-4e76-9528-c3b64776708a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_BlinkMarine
+VAR
+    i : INT;
+    BitMask : DWORD; // Pomoćna varijabla za rad s bitovima
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// ==========================================
+// OBRADA ID10 (4 tipke - USINT)
+// ==========================================
+GVL_CAN.ID10_LedRed := 0; GVL_CAN.ID10_LedGreen := 0; GVL_CAN.ID10_LedBlue := 0;
+GVL_CAN.ID10_LedBlinkRed := 0; GVL_CAN.ID10_LedBlinkGreen := 0; GVL_CAN.ID10_LedBlinkBlue := 0;
+
+FOR i := 1 TO 4 DO
+    BitMask := SHL(DWORD#1, i-1);
+    
+    // Čitanje statusa tipke
+    GVL_CAN.ID10_Status[i] := (GVL_CAN.ID10_KeyState AND DWORD_TO_USINT(BitMask)) > 0;
+    
+    // Logika boja
+    // CRVENA (Red, Yellow, Magenta, White, Amber, Orange)
+    IF GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.RED OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.WHITE OR
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.AMBER OR
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID10_LedRed := GVL_CAN.ID10_LedRed OR DWORD_TO_USINT(BitMask);
+    END_IF
+    
+    // ZELENA (Green, Yellow, Cyan, White, Amber, Orange)
+    IF GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.GREEN OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.CYAN OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.WHITE OR
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.AMBER OR
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID10_LedGreen := GVL_CAN.ID10_LedGreen OR DWORD_TO_USINT(BitMask);
+    END_IF
+    
+    // PLAVA (Blue, Magenta, Cyan, White)
+    IF GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.BLUE OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.CYAN OR 
+       GVL_CAN.ID10_Config[i].Boja = E_BlinkMarine_Color.WHITE THEN
+        GVL_CAN.ID10_LedBlue := GVL_CAN.ID10_LedBlue OR DWORD_TO_USINT(BitMask);
+    END_IF
+    
+    // BLINK LOGIKA
+    IF GVL_CAN.ID10_Config[i].Blink THEN
+        IF (GVL_CAN.ID10_LedRed AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID10_LedBlinkRed := GVL_CAN.ID10_LedBlinkRed OR DWORD_TO_USINT(BitMask); END_IF
+        IF (GVL_CAN.ID10_LedGreen AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID10_LedBlinkGreen := GVL_CAN.ID10_LedBlinkGreen OR DWORD_TO_USINT(BitMask); END_IF
+        IF (GVL_CAN.ID10_LedBlue AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID10_LedBlinkBlue := GVL_CAN.ID10_LedBlinkBlue OR DWORD_TO_USINT(BitMask); END_IF
+    END_IF
+END_FOR
+
+// ==========================================
+// OBRADA ID11 (4 tipke - Kopija logike ID10)
+// ==========================================
+GVL_CAN.ID11_LedRed := 0; GVL_CAN.ID11_LedGreen := 0; GVL_CAN.ID11_LedBlue := 0;
+GVL_CAN.ID11_LedBlinkRed := 0; GVL_CAN.ID11_LedBlinkGreen := 0; GVL_CAN.ID11_LedBlinkBlue := 0;
+
+FOR i := 1 TO 4 DO
+    BitMask := SHL(DWORD#1, i-1);
+    GVL_CAN.ID11_Status[i] := (GVL_CAN.ID11_KeyState AND DWORD_TO_USINT(BitMask)) > 0;
+    
+    IF GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.RED OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.WHITE OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.AMBER OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID11_LedRed := GVL_CAN.ID11_LedRed OR DWORD_TO_USINT(BitMask);
+    END_IF
+    IF GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.GREEN OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.CYAN OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.WHITE OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.AMBER OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID11_LedGreen := GVL_CAN.ID11_LedGreen OR DWORD_TO_USINT(BitMask);
+    END_IF
+    IF GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.BLUE OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.CYAN OR GVL_CAN.ID11_Config[i].Boja = E_BlinkMarine_Color.WHITE THEN
+        GVL_CAN.ID11_LedBlue := GVL_CAN.ID11_LedBlue OR DWORD_TO_USINT(BitMask);
+    END_IF
+    IF GVL_CAN.ID11_Config[i].Blink THEN
+        IF (GVL_CAN.ID11_LedRed AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID11_LedBlinkRed := GVL_CAN.ID11_LedBlinkRed OR DWORD_TO_USINT(BitMask); END_IF
+        IF (GVL_CAN.ID11_LedGreen AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID11_LedBlinkGreen := GVL_CAN.ID11_LedBlinkGreen OR DWORD_TO_USINT(BitMask); END_IF
+        IF (GVL_CAN.ID11_LedBlue AND DWORD_TO_USINT(BitMask)) > 0 THEN GVL_CAN.ID11_LedBlinkBlue := GVL_CAN.ID11_LedBlinkBlue OR DWORD_TO_USINT(BitMask); END_IF
+    END_IF
+END_FOR
+
+// ==========================================
+// OBRADA ID20 (15 tipki - UINT)
+// ==========================================
+GVL_CAN.ID20_LedRed := 0; GVL_CAN.ID20_LedGreen := 0; GVL_CAN.ID20_LedBlue := 0;
+GVL_CAN.ID20_LedBlinkRed := 0; GVL_CAN.ID20_LedBlinkGreen := 0; GVL_CAN.ID20_LedBlinkBlue := 0;
+
+FOR i := 1 TO 15 DO
+    BitMask := SHL(DWORD#1, i-1);
+    
+    GVL_CAN.ID20_Status[i] := (GVL_CAN.ID20_KeyState AND DWORD_TO_UINT(BitMask)) > 0;
+    
+    IF GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.RED OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.WHITE OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.AMBER OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID20_LedRed := GVL_CAN.ID20_LedRed OR DWORD_TO_UINT(BitMask);
+    END_IF
+    IF GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.GREEN OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.YELLOW OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.CYAN OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.WHITE OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.AMBER OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.ORANGE THEN
+        GVL_CAN.ID20_LedGreen := GVL_CAN.ID20_LedGreen OR DWORD_TO_UINT(BitMask);
+    END_IF
+    IF GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.BLUE OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.MAGENTA OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.CYAN OR GVL_CAN.ID20_Config[i].Boja = E_BlinkMarine_Color.WHITE THEN
+        GVL_CAN.ID20_LedBlue := GVL_CAN.ID20_LedBlue OR DWORD_TO_UINT(BitMask);
+    END_IF
+    
+    IF GVL_CAN.ID20_Config[i].Blink THEN
+        IF (GVL_CAN.ID20_LedRed AND DWORD_TO_UINT(BitMask)) > 0 THEN GVL_CAN.ID20_LedBlinkRed := GVL_CAN.ID20_LedBlinkRed OR DWORD_TO_UINT(BitMask); END_IF
+        IF (GVL_CAN.ID20_LedGreen AND DWORD_TO_UINT(BitMask)) > 0 THEN GVL_CAN.ID20_LedBlinkGreen := GVL_CAN.ID20_LedBlinkGreen OR DWORD_TO_UINT(BitMask); END_IF
+        IF (GVL_CAN.ID20_LedBlue AND DWORD_TO_UINT(BitMask)) > 0 THEN GVL_CAN.ID20_LedBlinkBlue := GVL_CAN.ID20_LedBlinkBlue OR DWORD_TO_UINT(BitMask); END_IF
+    END_IF
+END_FOR]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

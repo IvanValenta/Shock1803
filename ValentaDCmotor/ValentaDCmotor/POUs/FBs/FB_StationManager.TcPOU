@@ -9,7 +9,7 @@ VAR_INPUT
     
     (* Kalibracija Neutrala *)
     iNeutCenter       : INT := 16000; (* Sredina *)
-    iNeutTol          : INT := 1000;  (* Tolerancija +/- *)
+    iNeutTol          : INT := 2000;  (* Tolerancija +/- *)
 END_VAR
 
 VAR_OUTPUT

@@ -1,0 +1,136 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Engine" Id="{819f9b34-6194-4c4c-85ba-a4a8d558498e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Engine
+VAR
+    (* Instanca glavnog bloka za kontrolu motora (Prošireni s prethodnim uputama) *)
+    fbEngine        : FB_EngineControl;
+    fbStation       : FB_StationManager;
+
+    (* Triggeri za tipke ID10 i ID11 *)
+    rtMode_ID10     : R_TRIG;
+    rtMode_ID11     : R_TRIG;
+    iModeState      : INT; (* 0=OFF, 1=Propulsion (Green), 2=Ballast Ready (Blue) *)
+
+    (* Interne varijable za logiku *)
+    bInterlockDoors : BOOL;
+    bValvePathReady : BOOL; (* Barem jedan ventil otvoren *)
+    bInterlockTotal : BOOL; (* Konačna dozvola za turbinu *)
+    bBallastActive  : BOOL; (* Zastavica: Balasti rade *)
+    bWinchReq       : BOOL; (* Zastavica: Netko želi koristiti vinč *)
+	
+	(* Triggeri za tipke *)
+    rtStart_ID10, rtStart_ID11 : R_TRIG;
+    rtStop_ID10,  rtStop_ID11  : R_TRIG;
+    rtSel_ID10,   rtSel_ID11   : R_TRIG;
+
+    (* Timeri za Start sekvencu *)
+    tonStartDelay   : TON;   (* Kašnjenje startera nakon Ignitiona *)
+    toffStartHold   : TOF;  (* Drži starter aktivnim kratko nakon puštanja tipke *)
+    
+    (* Timeri za Stop sekvencu *)
+    tmrStopSequence : TON;
+    
+    (* Interne statusne varijable *)
+    bIgnitionActive : BOOL; 
+    bEngineRunning  : BOOL;
+    bStartButtonPressed : BOOL; (* Pomoćna varijabla za detekciju pritiska *)
+    iActiveStation  : INT := 1;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* ========================================================= *)
+(* 1. STATION MANAGER & VIZUALIZACIJA (Tipka 3)              *)
+(* ========================================================= *)
+fbStation(
+    bBtn1 := GVL_CAN.ID10_Status[3], 
+    bBtn2 := GVL_CAN.ID11_Status[3],
+    iPot1 := GVL_IO.iLever_St1_Raw,
+    iPot2 := GVL_IO.iLever_St2_Raw,
+    bActiveSt1 => GVL_IO.bLed_Sel_St1,
+    bActiveSt2 => GVL_IO.bLed_Sel_St2,
+    bBuzzerOut => GVL_IO.bBuzzer,
+    iSelectedPot => GVL_IO.iActiveLever_Raw
+);
+
+// --- 1. STATUS MOTORA ---
+bEngineRunning := bIgnitionActive OR (GVL_IO.fEngineRPM_Scaled > 400.0);
+bStartButtonPressed := GVL_CAN.ID10_Status[1] OR GVL_CAN.ID11_Status[1];
+
+// --- 2. LOGIKA STARTA (Tipka 1) ---
+rtStart_ID10(CLK := GVL_CAN.ID10_Status[1]);
+rtStart_ID11(CLK := GVL_CAN.ID11_Status[1]);
+
+// A) Setiranje Ignitiona na prvi klik
+IF (rtStart_ID10.Q OR rtStart_ID11.Q) AND NOT bIgnitionActive THEN
+    bIgnitionActive := TRUE;
+END_IF
+
+// B) TON: Čekaj npr. 500ms nakon što je Ignition aktivan prije nego dozvoliš Start
+tonStartDelay(IN := bStartButtonPressed AND bIgnitionActive AND NOT bEngineRunning, 
+              PT := T#500MS);
+
+// C) TOFF: Drži DO_Start aktivnim npr. 200ms nakon puštanja tipke (da izbjegnemo "ckatanje" releja)
+toffStartHold(IN := tonStartDelay.Q, 
+              PT := T#200MS);
+
+// Fizički izlaz za Starter
+GVL_IO.DO_Engine_Starter := toffStartHold.Q;
+
+// --- 3. LOGIKA STOPA (Tipka 2) ---
+rtStop_ID10(CLK := GVL_CAN.ID10_Status[2]);
+rtStop_ID11(CLK := GVL_CAN.ID11_Status[2]);
+
+IF (rtStop_ID10.Q OR rtStop_ID11.Q) AND bIgnitionActive THEN
+    GVL_IO.DO_Engine_Stop := TRUE;
+END_IF
+
+tmrStopSequence(IN := GVL_IO.DO_Engine_Stop, PT := T#2S);
+
+IF tmrStopSequence.Q THEN
+    GVL_IO.DO_Engine_Stop := FALSE;
+    bIgnitionActive := FALSE;
+END_IF
+
+// --- 4. ODABIR KOMANDE (Tipka 3) ---
+rtSel_ID10(CLK := GVL_CAN.ID10_Status[3]);
+rtSel_ID11(CLK := GVL_CAN.ID11_Status[3]);
+IF rtSel_ID10.Q THEN iActiveStation := 1; END_IF
+IF rtSel_ID11.Q THEN iActiveStation := 2; END_IF
+
+// --- 5. VIZUALIZACIJA (Boje na tipkovnicama) ---
+
+// TIPKA 1 (START)
+IF bStartButtonPressed THEN
+    GVL_CAN.ID10_Config[1].Boja := GVL_CAN.ID11_Config[1].Boja := 2; // ZELENO (Radi)
+    GVL_CAN.ID10_Config[1].Blink := GVL_CAN.ID11_Config[1].Blink := TRUE;
+ELSIF bEngineRunning  THEN
+    GVL_CAN.ID10_Config[1].Boja := GVL_CAN.ID11_Config[1].Boja := 2; // Zeleno (Vergla)
+    GVL_CAN.ID10_Config[1].Blink := GVL_CAN.ID11_Config[1].Blink := FALSE;                           // Blinka 
+ELSE
+    GVL_CAN.ID10_Config[1].Boja := GVL_CAN.ID11_Config[1].Boja := 0; // OFF
+    GVL_CAN.ID10_Config[1].Blink := FALSE;
+END_IF
+
+// TIPKA 2 (STOP)
+IF GVL_IO.DO_Engine_Stop THEN
+    GVL_CAN.ID10_Config[2].Boja := GVL_CAN.ID11_Config[2].Boja := 1; 
+    GVL_CAN.ID10_Config[2].Blink := GVL_CAN.ID11_Config[2].Blink := TRUE; // Blinka crveno dok traje stop sekvenca
+ELSIF bIgnitionActive THEN
+    GVL_CAN.ID10_Config[2].Boja := GVL_CAN.ID11_Config[2].Boja := 1; 
+    GVL_CAN.ID10_Config[2].Blink := GVL_CAN.ID11_Config[2].Blink := FALSE;
+ELSE
+    GVL_CAN.ID10_Config[2].Boja := GVL_CAN.ID11_Config[2].Boja := 0;
+END_IF
+
+// TIPKA 3 (SEL)
+IF iActiveStation = 1 THEN
+    GVL_CAN.ID10_Config[3].Boja := 4; GVL_CAN.ID11_Config[3].Boja := 0;
+ELSE
+    GVL_CAN.ID10_Config[3].Boja := 0; GVL_CAN.ID11_Config[3].Boja := 4;
+END_IF
+
+// --- 6. FIZIČKI IZLAZ KONTAKTA ---
+GVL_IO.DO_Engine_Ignition := bIgnitionActive;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

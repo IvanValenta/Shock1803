@@ -1,0 +1,108 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Winches" Id="{960c15ce-d47e-48a5-8095-7add16fd196e}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Winches
+VAR
+    (* --- INSTANCE KONTROLNIH BLOKOVA --- *)
+    fbWinch1 : FB_WinchControl;
+    fbWinch2 : FB_WinchControl;
+    fbWinch3 : FB_WinchControl;
+
+    (* --- HMI STRUKTURE --- *)
+    // Ove strukture linkaš na svoj HMI ekran za ručno upravljanje i animacije
+    stWinch1_HMI : ST_UcWinchControl;
+    stWinch2_HMI : ST_UcWinchControl;
+    stWinch3_HMI : ST_UcWinchControl;
+
+    (* --- INTERNE VARIJABLE --- *)
+    iActiveCount : INT := 0;
+    iRpmPerWinch : INT := 200; 
+    iBaseRpm     : INT := 700; 
+    
+    tmrDCPumpOff : TOF; // Timer za gašenje DC pumpe
+    bEngineIsOn  : BOOL;
+    
+    // Glavna dozvola za rad vinčeva (npr. možeš vezati na neku glavu sklopku ili E-Stop)
+    bSystemSafe  : BOOL := TRUE; 
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+// 1. POZIV FUNKCIJSKIH BLOKOVA ZA VINČEVE
+// =========================================================
+
+// WINCH 1
+fbWinch1(
+    bIn_SafetyEnable := bSystemSafe,
+    bBtn_Phy_Dir1    := GVL_IO.bBtn_Winch1_A,
+    bBtn_Phy_Dir2    := GVL_IO.bBtn_Winch1_B,
+    stHMI            := stWinch1_HMI,
+    bValve_Dir1      => GVL_IO.bValve_Winch1_A,
+    bValve_Dir2      => GVL_IO.bValve_Winch1_B
+);
+
+// WINCH 2
+fbWinch2(
+    bIn_SafetyEnable := bSystemSafe,
+    bBtn_Phy_Dir1    := GVL_IO.bBtn_Winch2_A,
+    bBtn_Phy_Dir2    := GVL_IO.bBtn_Winch2_B,
+    stHMI            := stWinch2_HMI,
+    bValve_Dir1      => GVL_IO.bValve_Winch2_A,
+    bValve_Dir2      => GVL_IO.bValve_Winch2_B
+);
+
+// WINCH 3
+fbWinch3(
+    bIn_SafetyEnable := bSystemSafe,
+    bBtn_Phy_Dir1    := GVL_IO.bBtn_Winch3_A,
+    bBtn_Phy_Dir2    := GVL_IO.bBtn_Winch3_B,
+    stHMI            := stWinch3_HMI,
+    bValve_Dir1      => GVL_IO.bValve_Winch3_A,
+    bValve_Dir2      => GVL_IO.bValve_Winch3_B
+);
+
+// =========================================================
+// 2. DETEKCIJA OPTEREĆENJA (Koliko vinčeva radi?)
+// =========================================================
+iActiveCount := 0;
+
+// Sada gledamo čisti izlaz iz FB-a koji već u sebi ima interlock i logiku!
+IF fbWinch1.bReq_Pump THEN iActiveCount := iActiveCount + 1; END_IF
+IF fbWinch2.bReq_Pump THEN iActiveCount := iActiveCount + 1; END_IF
+IF fbWinch3.bReq_Pump THEN iActiveCount := iActiveCount + 1; END_IF
+
+// Zastavica: Radi li itko?
+GVL_IO.bAnyWinchActive := (iActiveCount > 0);
+
+// =========================================================
+// 3. UPRAVLJANJE RPM-om MOTORA (BOOST)
+// =========================================================
+bEngineIsOn := (GVL_IO.fEngineRPM_Scaled > 500.0);
+
+IF GVL_IO.bAnyWinchActive AND bEngineIsOn THEN
+    // Formula: Bazni ler + (BrojVinčeva * 200)
+    GVL_IO.iRpmReq_Winches := iBaseRpm + (iActiveCount * iRpmPerWinch);
+    
+    // Sigurnosni limit RPM-a
+    IF GVL_IO.iRpmReq_Winches > 2000 THEN 
+        GVL_IO.iRpmReq_Winches := 2000; 
+    END_IF
+ELSE
+    // Ako vinčevi ne rade ili motor stoji
+    GVL_IO.iRpmReq_Winches := 0; 
+END_IF
+
+// =========================================================
+// 4. LOGIKA DC PUMPE (BACKUP S OFF-DELAY TIMEMEROM)
+// =========================================================
+
+// Ako netko stišće vinč, a glavni motor ne vrti
+// TOF (Timer Off) se pali momentalno, a gasi tek 5 sekundi nakon što pustiš tipku
+tmrDCPumpOff(
+    IN := (GVL_IO.bAnyWinchActive AND NOT bEngineIsOn), 
+    PT := T#5S
+);
+
+GVL_IO.bDcPump_Start := tmrDCPumpOff.Q;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

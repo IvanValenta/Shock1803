@@ -1,0 +1,33 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_TankScaling" Id="{d5f136eb-48d9-4ec8-aaca-0409db27a933}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_TankScaling
+VAR_INPUT
+    iRawIn          : INT;          (* Sirova vrijednost s AI kartice (4-20mA) *)
+    iInMin          : INT := 0;     (* Npr. 0 ili 4000 ovisno o senzoru *)
+    iInMax          : INT := 32767;
+    iOutMin         : INT := 0;     (* Vrijednost za AO EL4018 na 4mA *)
+    iOutMax         : INT := 32767; (* Vrijednost za AO EL4018 na 20mA *)
+END_VAR
+VAR_OUTPUT
+    fPercentage     : REAL;         (* 0.0 - 100.0 % za HMI *)
+    iRawOut         : INT;          (* Izlaz za Display (AO kartica) *)
+END_VAR
+VAR
+    fTemp           : REAL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// 1. Izračun postotka (Input Scaling)
+IF (iInMax - iInMin) <> 0 THEN
+    fTemp := (INT_TO_REAL(iRawIn) - INT_TO_REAL(iInMin)) / (INT_TO_REAL(iInMax) - INT_TO_REAL(iInMin));
+    fPercentage := LIMIT(0.0, fTemp * 100.0, 100.0);
+ELSE
+    fPercentage := 0.0;
+END_IF
+
+// 2. Izračun izlaza za Display (Output Scaling)
+// fPercentage (0-100) skaliramo na opseg iOutMin do iOutMax
+iRawOut := REAL_TO_INT((fPercentage / 100.0) * INT_TO_REAL(iOutMax - iOutMin) + INT_TO_REAL(iOutMin));]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

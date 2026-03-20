@@ -38,7 +38,7 @@
 			</ArrayInfo>
 		</DataType>
 		<DataType>
-			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" BitType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
+			<Name GUID="{18071995-0000-0000-0000-002000000004}" IecBaseType="true" AutoDeleteType="true" HideSubItems="true">ARRAY [0..3] OF BIT</Name>
 			<BitSize>4</BitSize>
 			<BaseType GUID="{18071995-0000-0000-0000-000000000010}">BIT</BaseType>
 			<ArrayInfo>
@@ -114,7 +114,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6CCBC4A6-2DB5-4FD8-A360-2DF8A41C936D}" Name="ValentaDCmotor" PrjFilePath="ValentaDCmotor\ValentaDCmotor.plcproj" TmcFilePath="ValentaDCmotor\ValentaDCmotor.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{6E2B2155-C826-F1BF-42CF-B48A8BC833B5}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{4C58FD9D-CAD9-5D84-E214-5D860692CD31}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
 					<Name>ValentaDCmotor Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -123,6 +123,63 @@
 							<Name>GVL.bEnable_M1</Name>
 							<Comment><![CDATA[ DCM Control Channel 1.Enable]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedRed</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedGreen</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedBlue</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedBlinkRed</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedBlinkGreen</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_LedBlinkBlue</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedRed</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedGreen</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedBlue</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedBlinkRed</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedBlinkGreen</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_LedBlinkBlue</Name>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DO_TUNEL_VALVE</Name>
+							<Comment><![CDATA[ --- NOVO: TUNEL PUMP IZLAZ --- ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_LedRed</Name>
+							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL.bReset_M1</Name>
@@ -138,6 +195,22 @@
 							<Name>GVL.nVelocitySetpoint_M1</Name>
 							<Comment><![CDATA[ Link na "Velocity" (49.0)]]></Comment>
 							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_LedGreen</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_LedBlue</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_LedBlinkRed</Name>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_LedBlinkGreen</Name>
+							<Type>UINT</Type>
 						</Var>
 						<Var>
 							<Name>GVL.bEnable_M2</Name>
@@ -160,82 +233,18 @@
 							<Type>INT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_CAN.doBox10_LedStateRedRaw</Name>
-							<Comment><![CDATA[ =====================================================
- BOX10 - RAW izlazi za link na RxPDO
- =====================================================]]></Comment>
-							<Type>USINT</Type>
+							<Name>GVL_CAN.ID20_LedBlinkBlue</Name>
+							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_CAN.doBox10_LedStateGreenRaw</Name>
-							<Type>USINT</Type>
+							<Name>GVL_IO.DO_TunelClutch</Name>
+							<Comment><![CDATA[ Izlaz za uključivanje kuplunga pumpe]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_CAN.doBox10_LedStateBlueRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_LedBlinkRedRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_LedBlinkGreenRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_LedBlinkBlueRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_LedBrightnessRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_BacklightBrightnessRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox10_BacklightColorRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedStateRedRaw</Name>
-							<Comment><![CDATA[ =====================================================
- BOX11 - RAW izlazi za link na RxPDO
- =====================================================]]></Comment>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedStateGreenRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedStateBlueRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedBlinkRedRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedBlinkGreenRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedBlinkBlueRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_LedBrightnessRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_BacklightBrightnessRaw</Name>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.doBox11_BacklightColorRaw</Name>
-							<Type>USINT</Type>
+							<Name>GVL_IO.DO_SondePower</Name>
+							<Comment><![CDATA[ Zajedničko napajanje za obje sonde (0.5A)]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.DO_BAL_P1</Name>
@@ -312,9 +321,72 @@
 							<Comment><![CDATA[ Relej za paljenje DC pumpe ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
+						<Var>
+							<Name>GVL_IO.DO_Engine_Ignition</Name>
+							<Comment><![CDATA[ --- ENGINE --- ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DO_Engine_Starter</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DO_Engine_Stop</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_P1_Pct_Disp</Name>
+							<Comment><![CDATA[ PORT ]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_P2_Pct_Disp</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_P3_Pct_Disp</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_S1_Pct_Disp</Name>
+							<Comment><![CDATA[ STBD ]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_S2_Pct_Disp</Name>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.fLevel_Bal_S3_Pct_Disp</Name>
+							<Type>INT</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
+						<Var>
+							<Name>GVL_IO.DI_TUNEL_OPEN_FB</Name>
+							<Comment><![CDATA[ --- NOVO: TUNEL PUMP (Ventil za usmjeravanje) --- ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_TUNEL_CLOSE_FB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID10_KeyState</Name>
+							<Comment><![CDATA[ --- ID10 (4 tipke) ---]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_KeyState</Name>
+							<Comment><![CDATA[ --- ID11 (4 tipke) ---]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_KeyState</Name>
+							<Comment><![CDATA[ --- ID20 (15 tipki) ---]]></Comment>
+							<Type>UINT</Type>
+						</Var>
 						<Var>
 							<Name>GVL.iwPotFeedback_M1</Name>
 							<Comment><![CDATA[ AI Channel 1]]></Comment>
@@ -456,19 +528,14 @@
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_CAN.diBox10_ButtonsRaw</Name>
-							<Comment><![CDATA[ PKP2200 #1]]></Comment>
-							<Type>USINT</Type>
+							<Name>GVL_IO.DI_Sonda_Port</Name>
+							<Comment><![CDATA[ Senzor u Port usisu]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_CAN.diBox20_ButtonsRaw</Name>
-							<Comment><![CDATA[ PKP3500 / 15 tipki]]></Comment>
-							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.diBox11_ButtonsRaw</Name>
-							<Comment><![CDATA[ PKP2200 #2]]></Comment>
-							<Type>USINT</Type>
+							<Name>GVL_IO.DI_Sonda_Stbd</Name>
+							<Comment><![CDATA[ Senzor u Stbd usisu]]></Comment>
+							<Type>BOOL</Type>
 						</Var>
 						<Var>
 							<Name>GVL_IO.DI_BAL_P1_OPEN_FB</Name>
@@ -596,19 +663,6 @@
 							<Comment><![CDATA[ Stbd 3 ]]></Comment>
 							<Type>INT</Type>
 						</Var>
-						<Var>
-							<Name>GVL_IO.iLevel_Fuel_Raw</Name>
-							<Comment><![CDATA[ --- OSTALI TANKOVI --- ]]></Comment>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.iLevel_FreshWater_Raw</Name>
-							<Type>INT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.iLevel_Hydraulic_Raw</Name>
-							<Type>INT</Type>
-						</Var>
 					</Vars>
 					<UnrestoredVarLinks ImportTime="2026-01-03T14:47:08">
 						<OwnerA Name="InputDst" Prefix="TIPC^ValentaDCmotor^ValentaDCmotor Instance" Type="1">
@@ -656,6 +710,72 @@
 								<Link VarA="GVL_CAN.doBox20_LedStateBlueRaw" TypeA="UINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="RxPDO 1^Outputs^Led State Blue" RestoreInfo="ANotFound"/>
 								<Link VarA="GVL_CAN.doBox20_LedStateGreenRaw" TypeA="UINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="RxPDO 1^Outputs^Led State Green" RestoreInfo="ANotFound"/>
 								<Link VarA="GVL_CAN.doBox20_LedStateRedRaw" TypeA="UINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="RxPDO 1^Outputs^Led State Red" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-03-18T15:16:16">
+						<OwnerA Name="InputDst" Prefix="TIPC^ValentaDCmotor^ValentaDCmotor Instance" Type="1">
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 10 (BlinkMarine)">
+								<Link VarA="GVL_CAN.diBox10_ButtonsRaw" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="TxPDO 1^Inputs^Key State" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 11 (BlinkMarine)">
+								<Link VarA="GVL_CAN.diBox11_ButtonsRaw" TypeA="USINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="TxPDO 1^Inputs^Key State" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 20 (BlinkMarine)">
+								<Link VarA="GVL_CAN.diBox20_ButtonsRaw" TypeA="UINT" InOutA="0" GuidA="{18071995-0000-0000-0000-000000000005}" VarB="TxPDO 1^Inputs^Key State" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+						<OwnerA Name="OutputSrc" Prefix="TIPC^ValentaDCmotor^ValentaDCmotor Instance" Type="2">
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 10 (BlinkMarine)">
+								<Link VarA="GVL_CAN.doBox10_BacklightBrightnessRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_BacklightColorRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Color" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedBlinkBlueRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Blue" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedBlinkGreenRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Green" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedBlinkRedRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Red" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedBrightnessRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 3^Outputs^LED Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedStateBlueRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Blue" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedStateGreenRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Green" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox10_LedStateRedRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Red" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 11 (BlinkMarine)">
+								<Link VarA="GVL_CAN.doBox11_BacklightBrightnessRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_BacklightColorRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Color" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedBlinkBlueRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Blue" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedBlinkGreenRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Green" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedBlinkRedRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 2^Outputs^Led Blink State Red" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedBrightnessRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 3^Outputs^LED Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedStateBlueRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Blue" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedStateGreenRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Green" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.doBox11_LedStateRedRaw" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 1^Outputs^Led State Red" RestoreInfo="ANotFound"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-03-18T15:28:38">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^ValentaDCmotor^ValentaDCmotor Instance" Type="2">
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 10 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID10_BacklightColor" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Color" RestoreInfo="TypeMismatch" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="E_BlinkMarine_Color" NewGuidA="{8B6F2614-C29A-649F-6449-FF536F122EDC}"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 11 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID11_BacklightColor" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Color" RestoreInfo="TypeMismatch" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="E_BlinkMarine_Color" NewGuidA="{8B6F2614-C29A-649F-6449-FF536F122EDC}"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 20 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID20_BacklightColor" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Color" RestoreInfo="TypeMismatch" OldTypeA="USINT" OldGuidA="{18071995-0000-0000-0000-000000000002}" NewTypeA="E_BlinkMarine_Color" NewGuidA="{8B6F2614-C29A-649F-6449-FF536F122EDC}"/>
+							</OwnerB>
+						</OwnerA>
+					</UnrestoredVarLinks>
+					<UnrestoredVarLinks ImportTime="2026-03-18T15:56:50">
+						<OwnerA Name="OutputSrc" Prefix="TIPC^ValentaDCmotor^ValentaDCmotor Instance" Type="2">
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 10 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID10_BacklightBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.ID10_LedBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 3^Outputs^LED Brightness" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 11 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID11_BacklightBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.ID11_LedBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 3^Outputs^LED Brightness" RestoreInfo="ANotFound"/>
+							</OwnerB>
+							<OwnerB Name="TIID^Device 2 (EL6751)^Box 20 (BlinkMarine)">
+								<Link VarA="GVL_CAN.ID20_BacklightBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness" RestoreInfo="ANotFound"/>
+								<Link VarA="GVL_CAN.ID20_LedBrightness" TypeA="USINT" InOutA="1" GuidA="{18071995-0000-0000-0000-000000000002}" VarB="RxPDO 3^Outputs^LED Brightness" RestoreInfo="ANotFound"/>
 							</OwnerB>
 						</OwnerA>
 					</UnrestoredVarLinks>
@@ -3212,7 +3332,7 @@ Slave-Mode:
 					<Vars VarGrpType="2">
 						<Name>Outputs</Name>
 					</Vars>
-					<CanOpen NodeId="10" BaudSupport="511" FixedSdos="10" GenerateFixedSdos="true" DvFlag_Active="true" AddTypeInfo="11" DevProfNum="401" CobIDEmcy="138" CobIDGuard="1802" GuardTime="100" LifeTime="3" VendorId="994" SdoTimeout="0">
+					<CanOpen NodeId="10" BaudSupport="511" FixedSdos="10" GenerateFixedSdos="true" DvFlag_Active="true" AddTypeInfo="11" DevProfNum="401" CobIDEmcy="138" CobIDGuard="1802" GuardTime="100" LifeTime="3" VendorId="994">
 						<Sdo Index="6144" SubIndex="1" Length="4" Value="394"/>
 						<Sdo Index="6144" SubIndex="2" Length="1" Value="254"/>
 						<Sdo Index="5120" SubIndex="1" Length="4" Value="522"/>
@@ -3247,13 +3367,11 @@ Slave-Mode:
 									<Name>Led State Green</Name>
 									<Type>USINT</Type>
 									<BitOffs>8</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 								<Var>
 									<Name>Led State Blue</Name>
 									<Type>USINT</Type>
 									<BitOffs>16</BitOffs>
-									<ExternalAddress>2</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3271,13 +3389,11 @@ Slave-Mode:
 									<Name>Led Blink State Green</Name>
 									<Type>USINT</Type>
 									<BitOffs>32</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 								<Var>
 									<Name>Led Blink State Blue</Name>
 									<Type>USINT</Type>
 									<BitOffs>40</BitOffs>
-									<ExternalAddress>2</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3307,7 +3423,6 @@ Slave-Mode:
 									<Name>BACKLIGHT Color</Name>
 									<Type>USINT</Type>
 									<BitOffs>64</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3395,13 +3510,11 @@ Slave-Mode:
 									<Name>Led State Green</Name>
 									<Type>USINT</Type>
 									<BitOffs>80</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 								<Var>
 									<Name>Led State Blue</Name>
 									<Type>USINT</Type>
 									<BitOffs>88</BitOffs>
-									<ExternalAddress>2</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3419,13 +3532,11 @@ Slave-Mode:
 									<Name>Led Blink State Green</Name>
 									<Type>USINT</Type>
 									<BitOffs>104</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 								<Var>
 									<Name>Led Blink State Blue</Name>
 									<Type>USINT</Type>
 									<BitOffs>112</BitOffs>
-									<ExternalAddress>2</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3455,7 +3566,6 @@ Slave-Mode:
 									<Name>BACKLIGHT Color</Name>
 									<Type>USINT</Type>
 									<BitOffs>136</BitOffs>
-									<ExternalAddress>1</ExternalAddress>
 								</Var>
 							</Vars>
 						</RxPdo>
@@ -3661,32 +3771,63 @@ Slave-Mode:
 				<Link VarA="PlcTask Outputs^GVL.nVelocitySetpoint_M1" VarB="DCM Velocity Channel 1^Velocity"/>
 				<Link VarA="PlcTask Outputs^GVL.nVelocitySetpoint_M2" VarB="DCM Velocity Channel 2^Velocity"/>
 			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1100)^Term 17 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_DoorAft_Close" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_DoorAft_Open" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_DoorFwd_Close" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_DoorFwd_Open" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bDcPump_Start" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch1_A" VarB="Channel 7^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch1_B" VarB="Channel 8^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1100)^Term 18 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch2_A" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch2_B" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch3_A" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.bValve_Winch3_B" VarB="Channel 4^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1100)^Term 19 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_Engine_Ignition" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_Engine_Starter" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_Engine_Stop" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_TunelClutch" VarB="Channel 4^Output"/>
+			</OwnerB>
+			<OwnerB Name="TIID^Device 1 (EtherCAT)^Term 7 (EK1100)^Term 20 (EL2008)">
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_P1" VarB="Channel 1^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_P2" VarB="Channel 2^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_P3" VarB="Channel 3^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_S1" VarB="Channel 4^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_S2" VarB="Channel 5^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_BAL_S3" VarB="Channel 6^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_SondePower" VarB="Channel 8^Output"/>
+				<Link VarA="PlcTask Outputs^GVL_IO.DO_TUNEL_VALVE" VarB="Channel 7^Output"/>
+			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EL6751)^Box 10 (BlinkMarine)">
-				<Link VarA="PlcTask Inputs^GVL_CAN.diBox10_ButtonsRaw" VarB="TxPDO 1^Inputs^Key State"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_BacklightBrightnessRaw" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_BacklightColorRaw" VarB="RxPDO 4^Outputs^BACKLIGHT Color"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedBlinkBlueRaw" VarB="RxPDO 2^Outputs^Led Blink State Blue"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedBlinkGreenRaw" VarB="RxPDO 2^Outputs^Led Blink State Green"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedBlinkRedRaw" VarB="RxPDO 2^Outputs^Led Blink State Red"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedBrightnessRaw" VarB="RxPDO 3^Outputs^LED Brightness"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedStateBlueRaw" VarB="RxPDO 1^Outputs^Led State Blue"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedStateGreenRaw" VarB="RxPDO 1^Outputs^Led State Green"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox10_LedStateRedRaw" VarB="RxPDO 1^Outputs^Led State Red"/>
+				<Link VarA="PlcTask Inputs^GVL_CAN.ID10_KeyState" VarB="TxPDO 1^Inputs^Key State"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedBlinkBlue" VarB="RxPDO 2^Outputs^Led Blink State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedBlinkGreen" VarB="RxPDO 2^Outputs^Led Blink State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedBlinkRed" VarB="RxPDO 2^Outputs^Led Blink State Red"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedBlue" VarB="RxPDO 1^Outputs^Led State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedGreen" VarB="RxPDO 1^Outputs^Led State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID10_LedRed" VarB="RxPDO 1^Outputs^Led State Red"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EL6751)^Box 11 (BlinkMarine)">
-				<Link VarA="PlcTask Inputs^GVL_CAN.diBox11_ButtonsRaw" VarB="TxPDO 1^Inputs^Key State"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_BacklightBrightnessRaw" VarB="RxPDO 4^Outputs^BACKLIGHT Brightness"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_BacklightColorRaw" VarB="RxPDO 4^Outputs^BACKLIGHT Color"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedBlinkBlueRaw" VarB="RxPDO 2^Outputs^Led Blink State Blue"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedBlinkGreenRaw" VarB="RxPDO 2^Outputs^Led Blink State Green"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedBlinkRedRaw" VarB="RxPDO 2^Outputs^Led Blink State Red"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedBrightnessRaw" VarB="RxPDO 3^Outputs^LED Brightness"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedStateBlueRaw" VarB="RxPDO 1^Outputs^Led State Blue"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedStateGreenRaw" VarB="RxPDO 1^Outputs^Led State Green"/>
-				<Link VarA="PlcTask Outputs^GVL_CAN.doBox11_LedStateRedRaw" VarB="RxPDO 1^Outputs^Led State Red"/>
+				<Link VarA="PlcTask Inputs^GVL_CAN.ID11_KeyState" VarB="TxPDO 1^Inputs^Key State"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedBlinkBlue" VarB="RxPDO 2^Outputs^Led Blink State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedBlinkGreen" VarB="RxPDO 2^Outputs^Led Blink State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedBlinkRed" VarB="RxPDO 2^Outputs^Led Blink State Red"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedBlue" VarB="RxPDO 1^Outputs^Led State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedGreen" VarB="RxPDO 1^Outputs^Led State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID11_LedRed" VarB="RxPDO 1^Outputs^Led State Red"/>
 			</OwnerB>
 			<OwnerB Name="TIID^Device 2 (EL6751)^Box 20 (BlinkMarine)">
-				<Link VarA="PlcTask Inputs^GVL_CAN.diBox20_ButtonsRaw" VarB="TxPDO 1^Inputs^Key State"/>
+				<Link VarA="PlcTask Inputs^GVL_CAN.ID20_KeyState" VarB="TxPDO 1^Inputs^Key State"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedBlinkBlue" VarB="RxPDO 2^Outputs^Led Blink State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedBlinkGreen" VarB="RxPDO 2^Outputs^Led Blink State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedBlinkRed" VarB="RxPDO 2^Outputs^Led Blink State Red"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedBlue" VarB="RxPDO 1^Outputs^Led State Blue"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedGreen" VarB="RxPDO 1^Outputs^Led State Green"/>
+				<Link VarA="PlcTask Outputs^GVL_CAN.ID20_LedRed" VarB="RxPDO 1^Outputs^Led State Red"/>
 			</OwnerB>
 		</OwnerA>
 	</Mappings>

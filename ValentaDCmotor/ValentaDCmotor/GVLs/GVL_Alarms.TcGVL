@@ -6,6 +6,8 @@ VAR_GLOBAL
     bAnyAlarmActive : BOOL; (* Zbirni alarm *)
 	bErr_DoorFwd : BOOL;
 	bLeak_DoorFwd : BOOL;
+	bErr_DoorAft : BOOL;
+	bLeak_DoorAft : BOOL;
 	
 END_VAR]]></Declaration>
   </GVL>

@@ -1,0 +1,87 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="FB_WinchControl" Id="{0b80ee85-6614-414a-8a4c-2b80be5e1371}" SpecialFunc="None">
+    <Declaration><![CDATA[FUNCTION_BLOCK FB_WinchControl
+VAR_INPUT
+    (* --- FIZIČKI ULAZI --- *)
+	bIn_SafetyEnable : BOOL;
+    bBtn_Phy_Dir1    : BOOL; (* Fizička tipka (npr. nožni prekidač Slow) *)
+    bBtn_Phy_Dir2    : BOOL; (* Fizička tipka (npr. nožni prekidač Fast) *)
+END_VAR
+VAR_OUTPUT
+    (* --- FIZIČKI IZLAZI --- *)
+    bValve_Dir1      : BOOL; 
+    bValve_Dir2      : BOOL; 
+    bReq_Pump        : BOOL; 
+END_VAR
+VAR_IN_OUT
+    (* --- HMI PODACI --- *)
+    stHMI            : ST_UcWinchControl;
+END_VAR
+VAR
+    xCmd_Dir1        : BOOL;
+    xCmd_Dir2        : BOOL;
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[(* ========================================================== *)
+(* 1. INPUT MIXER (HMI vs HARDVER)                            *)
+(* ========================================================== *)
+IF stHMI.bManualEnable THEN
+    (* Manual Mode: Slušamo samo HMI *)
+    xCmd_Dir1 := stHMI.bBtn_Dir1;
+    xCmd_Dir2 := stHMI.bBtn_Dir2;
+ELSE
+    (* Local Mode: Slušamo samo fizičke tipke *)
+    xCmd_Dir1 := bBtn_Phy_Dir1;
+    xCmd_Dir2 := bBtn_Phy_Dir2;
+END_IF;
+
+(* ========================================================== *)
+(* 2. LOGIKA VITLA (Interlock + Pumpa)                        *)
+(* ========================================================== *)
+IF bIn_SafetyEnable AND NOT stHMI.bDisable THEN
+    
+    // Interlock: Ne može obje brzine/smjera odjednom
+    IF xCmd_Dir1 AND xCmd_Dir2 THEN
+        bValve_Dir1 := FALSE;
+        bValve_Dir2 := FALSE;
+        bReq_Pump   := FALSE;
+
+    // Smjer 1 (npr. Slow / In)
+    ELSIF xCmd_Dir1 THEN
+        bValve_Dir1 := TRUE;
+        bValve_Dir2 := FALSE;
+        bReq_Pump   := TRUE; (* PUMPA ON *)
+
+    // Smjer 2 (npr. Fast / Out)
+    ELSIF xCmd_Dir2 THEN
+        bValve_Dir1 := FALSE;
+        bValve_Dir2 := TRUE;
+        bReq_Pump   := TRUE; (* PUMPA ON *)
+    
+    // Mirovanje
+    ELSE
+        bValve_Dir1 := FALSE;
+        bValve_Dir2 := FALSE;
+        bReq_Pump   := FALSE;
+    END_IF
+
+ELSE
+    // SAFETY STOP
+    bValve_Dir1 := FALSE;
+    bValve_Dir2 := FALSE;
+    bReq_Pump   := FALSE;
+END_IF
+
+(* ========================================================== *)
+(* 3. HMI FEEDBACK (Update strukture)                         *)
+(* ========================================================== *)
+stHMI.bValve_Dir1     := bValve_Dir1;
+stHMI.bValve_Dir2     := bValve_Dir2;
+stHMI.bReq_Pump       := bReq_Pump;
+
+stHMI.bSts_SystemSafe := bIn_SafetyEnable AND NOT stHMI.bDisable;
+stHMI.bSts_ManualEn   := stHMI.bManualEnable;]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

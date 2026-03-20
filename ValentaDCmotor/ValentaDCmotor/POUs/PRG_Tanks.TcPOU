@@ -1,0 +1,52 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_Tanks" Id="{fa4e7b52-df5e-4359-b002-78a6e486c12a}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_Tanks
+VAR
+    fScale : REAL := 100.0 / 32767.0; 
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[// =========================================================
+// 1. SKALIRANJE BALASTA (PORT)
+// =========================================================
+GVL_IO.fLevel_Bal_P1_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_P1_Raw) * fScale;
+GVL_IO.fLevel_Bal_P2_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_P2_Raw) * fScale;
+GVL_IO.fLevel_Bal_P3_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_P3_Raw) * fScale;
+
+// Limitiranje na 100% (da ne buni posadu ako senzor malo prebaci)
+IF GVL_IO.fLevel_Bal_P1_Pct > 100.0 THEN GVL_IO.fLevel_Bal_P1_Pct := 100.0; END_IF
+IF GVL_IO.fLevel_Bal_P2_Pct > 100.0 THEN GVL_IO.fLevel_Bal_P2_Pct := 100.0; END_IF
+IF GVL_IO.fLevel_Bal_P3_Pct > 100.0 THEN GVL_IO.fLevel_Bal_P3_Pct := 100.0; END_IF
+
+
+// =========================================================
+// 2. SKALIRANJE BALASTA (STBD)
+// =========================================================
+GVL_IO.fLevel_Bal_S1_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_S1_Raw) * fScale;
+GVL_IO.fLevel_Bal_S2_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_S2_Raw) * fScale;
+GVL_IO.fLevel_Bal_S3_Pct := INT_TO_REAL(GVL_IO.iLevel_Bal_S3_Raw) * fScale;
+
+IF GVL_IO.fLevel_Bal_S1_Pct > 100.0 THEN GVL_IO.fLevel_Bal_S1_Pct := 100.0; END_IF
+IF GVL_IO.fLevel_Bal_S2_Pct > 100.0 THEN GVL_IO.fLevel_Bal_S2_Pct := 100.0; END_IF
+IF GVL_IO.fLevel_Bal_S3_Pct > 100.0 THEN GVL_IO.fLevel_Bal_S3_Pct := 100.0; END_IF
+
+
+// =========================================================
+// 3. OSTALI TANKOVI
+// =========================================================
+GVL_IO.fLevel_Fuel_Pct       := INT_TO_REAL(GVL_IO.iLevel_Fuel_Raw) * fScale;
+GVL_IO.fLevel_FreshWater_Pct := INT_TO_REAL(GVL_IO.iLevel_FreshWater_Raw) * fScale;
+GVL_IO.fLevel_Hydraulic_Pct  := INT_TO_REAL(GVL_IO.iLevel_Hydraulic_Raw) * fScale;
+
+
+// =========================================================
+// 4. ALARMI
+// =========================================================
+IF GVL_IO.fLevel_Hydraulic_Pct < 10.0 THEN GVL_IO.bAlarm_HydraulicLow := TRUE;
+ELSE GVL_IO.bAlarm_HydraulicLow := FALSE; END_IF
+
+IF GVL_IO.fLevel_Fuel_Pct < 15.0 THEN GVL_IO.bAlarm_FuelLow := TRUE;
+ELSE GVL_IO.bAlarm_FuelLow := FALSE; END_IF]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>

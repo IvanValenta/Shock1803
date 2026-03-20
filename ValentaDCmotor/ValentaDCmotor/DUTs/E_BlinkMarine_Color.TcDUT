@@ -1,0 +1,22 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_BlinkMarine_Color" Id="{20aeae70-2cd8-4bca-8d7e-cbf3bb80cd13}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+{attribute 'to_string'}
+TYPE E_BlinkMarine_Color :
+(
+    OFF      := 0,
+    RED      := 1,
+    GREEN    := 2,
+    BLUE     := 3,
+    YELLOW   := 4,
+    CYAN     := 5,
+    MAGENTA  := 6,
+    WHITE    := 7,
+    AMBER    := 8,   // Neki modeli podržavaju dodatne boje
+    ORANGE   := 9
+) USINT;
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>
