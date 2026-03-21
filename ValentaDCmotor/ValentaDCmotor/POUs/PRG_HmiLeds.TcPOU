@@ -1,0 +1,125 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <POU Name="PRG_HmiLeds" Id="{a1b2c3d4-e5f6-7890-abcd-ef1234567890}" SpecialFunc="None">
+    <Declaration><![CDATA[PROGRAM PRG_HmiLeds
+VAR
+END_VAR]]></Declaration>
+    <Implementation>
+      <ST><![CDATA[
+// ============================================================
+// HMI LED STATUSI - Zrcali logiku CAN tipkovnice (PRG_Ballast)
+// Cyan = VALVE_OPEN, Yellow = VALVE_UNKNOWN/putuje, Red = Greška
+// Baza (sivi LED) = VALVE_CLOSED ili OFF
+// ============================================================
+
+// --- MOTOR ---
+GVL_HMI.bLed_Engine_Green := GVL_ENGINE.bEngineRunning;
+
+// --- PUMPA ---
+GVL_HMI.bLed_Pump_Cyan := GVL_HMI.bCmdRun_TunelPump;
+GVL_HMI.bLed_Pump_Red  := FALSE; // Rezervirano za alarm suhe vožnje
+
+// --- PORT VENTILI ---
+// P1
+IF GVL_HMI.bAlarm_P1 THEN
+    GVL_HMI.bLed_P1_Red := TRUE; GVL_HMI.bLed_P1_Cyan := FALSE; GVL_HMI.bLed_P1_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P1 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_P1_Red := FALSE; GVL_HMI.bLed_P1_Cyan := TRUE;  GVL_HMI.bLed_P1_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P1 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_P1_Red := FALSE; GVL_HMI.bLed_P1_Cyan := FALSE; GVL_HMI.bLed_P1_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_P1_Red := FALSE; GVL_HMI.bLed_P1_Cyan := FALSE; GVL_HMI.bLed_P1_Yellow := FALSE;
+END_IF
+
+// P2
+IF GVL_HMI.bAlarm_P2 THEN
+    GVL_HMI.bLed_P2_Red := TRUE; GVL_HMI.bLed_P2_Cyan := FALSE; GVL_HMI.bLed_P2_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P2 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_P2_Red := FALSE; GVL_HMI.bLed_P2_Cyan := TRUE;  GVL_HMI.bLed_P2_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P2 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_P2_Red := FALSE; GVL_HMI.bLed_P2_Cyan := FALSE; GVL_HMI.bLed_P2_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_P2_Red := FALSE; GVL_HMI.bLed_P2_Cyan := FALSE; GVL_HMI.bLed_P2_Yellow := FALSE;
+END_IF
+
+// P3
+IF GVL_HMI.bAlarm_P3 THEN
+    GVL_HMI.bLed_P3_Red := TRUE; GVL_HMI.bLed_P3_Cyan := FALSE; GVL_HMI.bLed_P3_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P3 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_P3_Red := FALSE; GVL_HMI.bLed_P3_Cyan := TRUE;  GVL_HMI.bLed_P3_Yellow := FALSE;
+ELSIF GVL_HMI.eState_P3 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_P3_Red := FALSE; GVL_HMI.bLed_P3_Cyan := FALSE; GVL_HMI.bLed_P3_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_P3_Red := FALSE; GVL_HMI.bLed_P3_Cyan := FALSE; GVL_HMI.bLed_P3_Yellow := FALSE;
+END_IF
+
+// --- STBD VENTILI ---
+// S1
+IF GVL_HMI.bAlarm_S1 THEN
+    GVL_HMI.bLed_S1_Red := TRUE; GVL_HMI.bLed_S1_Cyan := FALSE; GVL_HMI.bLed_S1_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S1 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_S1_Red := FALSE; GVL_HMI.bLed_S1_Cyan := TRUE;  GVL_HMI.bLed_S1_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S1 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_S1_Red := FALSE; GVL_HMI.bLed_S1_Cyan := FALSE; GVL_HMI.bLed_S1_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_S1_Red := FALSE; GVL_HMI.bLed_S1_Cyan := FALSE; GVL_HMI.bLed_S1_Yellow := FALSE;
+END_IF
+
+// S2
+IF GVL_HMI.bAlarm_S2 THEN
+    GVL_HMI.bLed_S2_Red := TRUE; GVL_HMI.bLed_S2_Cyan := FALSE; GVL_HMI.bLed_S2_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S2 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_S2_Red := FALSE; GVL_HMI.bLed_S2_Cyan := TRUE;  GVL_HMI.bLed_S2_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S2 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_S2_Red := FALSE; GVL_HMI.bLed_S2_Cyan := FALSE; GVL_HMI.bLed_S2_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_S2_Red := FALSE; GVL_HMI.bLed_S2_Cyan := FALSE; GVL_HMI.bLed_S2_Yellow := FALSE;
+END_IF
+
+// S3
+IF GVL_HMI.bAlarm_S3 THEN
+    GVL_HMI.bLed_S3_Red := TRUE; GVL_HMI.bLed_S3_Cyan := FALSE; GVL_HMI.bLed_S3_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S3 = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_S3_Red := FALSE; GVL_HMI.bLed_S3_Cyan := TRUE;  GVL_HMI.bLed_S3_Yellow := FALSE;
+ELSIF GVL_HMI.eState_S3 = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_S3_Red := FALSE; GVL_HMI.bLed_S3_Cyan := FALSE; GVL_HMI.bLed_S3_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_S3_Red := FALSE; GVL_HMI.bLed_S3_Cyan := FALSE; GVL_HMI.bLed_S3_Yellow := FALSE;
+END_IF
+
+// --- TUNEL VENTIL ---
+IF GVL_HMI.bAlarm_Tunel THEN
+    GVL_HMI.bLed_Tunel_Red := TRUE; GVL_HMI.bLed_Tunel_Cyan := FALSE; GVL_HMI.bLed_Tunel_Yellow := FALSE;
+ELSIF GVL_HMI.eState_Tunel = E_ValveState.VALVE_OPEN THEN
+    GVL_HMI.bLed_Tunel_Red := FALSE; GVL_HMI.bLed_Tunel_Cyan := TRUE;  GVL_HMI.bLed_Tunel_Yellow := FALSE;
+ELSIF GVL_HMI.eState_Tunel = E_ValveState.VALVE_UNKNOWN THEN
+    GVL_HMI.bLed_Tunel_Red := FALSE; GVL_HMI.bLed_Tunel_Cyan := FALSE; GVL_HMI.bLed_Tunel_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_Tunel_Red := FALSE; GVL_HMI.bLed_Tunel_Cyan := FALSE; GVL_HMI.bLed_Tunel_Yellow := FALSE;
+END_IF
+
+// --- VRATA FWD ---
+IF GVL_HMI.bAlarm_DoorFwd THEN
+    GVL_HMI.bLed_DoorFwd_Red := TRUE; GVL_HMI.bLed_DoorFwd_Cyan := FALSE; GVL_HMI.bLed_DoorFwd_Yellow := FALSE;
+ELSIF GVL_HMI.eState_DoorFwd = 1 THEN // VALVE_OPEN
+    GVL_HMI.bLed_DoorFwd_Red := FALSE; GVL_HMI.bLed_DoorFwd_Cyan := TRUE;  GVL_HMI.bLed_DoorFwd_Yellow := FALSE;
+ELSIF GVL_HMI.eState_DoorFwd = 0 THEN // VALVE_UNKNOWN = putuje
+    GVL_HMI.bLed_DoorFwd_Red := FALSE; GVL_HMI.bLed_DoorFwd_Cyan := FALSE; GVL_HMI.bLed_DoorFwd_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_DoorFwd_Red := FALSE; GVL_HMI.bLed_DoorFwd_Cyan := FALSE; GVL_HMI.bLed_DoorFwd_Yellow := FALSE;
+END_IF
+
+// --- VRATA AFT ---
+IF GVL_HMI.bAlarm_DoorAft THEN
+    GVL_HMI.bLed_DoorAft_Red := TRUE; GVL_HMI.bLed_DoorAft_Cyan := FALSE; GVL_HMI.bLed_DoorAft_Yellow := FALSE;
+ELSIF GVL_HMI.eState_DoorAft = 1 THEN // VALVE_OPEN
+    GVL_HMI.bLed_DoorAft_Red := FALSE; GVL_HMI.bLed_DoorAft_Cyan := TRUE;  GVL_HMI.bLed_DoorAft_Yellow := FALSE;
+ELSIF GVL_HMI.eState_DoorAft = 0 THEN // VALVE_UNKNOWN = putuje
+    GVL_HMI.bLed_DoorAft_Red := FALSE; GVL_HMI.bLed_DoorAft_Cyan := FALSE; GVL_HMI.bLed_DoorAft_Yellow := TRUE;
+ELSE
+    GVL_HMI.bLed_DoorAft_Red := FALSE; GVL_HMI.bLed_DoorAft_Cyan := FALSE; GVL_HMI.bLed_DoorAft_Yellow := FALSE;
+END_IF
+]]></ST>
+    </Implementation>
+  </POU>
+</TcPlcObject>
