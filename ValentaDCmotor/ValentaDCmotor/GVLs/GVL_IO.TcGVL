@@ -4,6 +4,12 @@
     <Declaration><![CDATA[{attribute 'qualified_only'}
 VAR_GLOBAL
     (* --- DIGITALNI ULAZI (Feedback sa ventila) --- *)
+
+    (* --- SIGURNOSNI PREKIDAČI (NC - Normalno Zatvoreni) --- *)
+    (* TRUE = OK, FALSE = Pritisnut/prekinut = STOP *)
+    DI_Stop_Port   AT %I* : BOOL; (* NC Stop tipka Port strana *)
+    DI_Stop_Stbd   AT %I* : BOOL; (* NC Stop tipka Starboard strana *)
+
     (* PORT Strana *)
     DI_BAL_P1_OPEN_FB   AT %I* : BOOL;
     DI_BAL_P1_CLOSE_FB  AT %I* : BOOL;

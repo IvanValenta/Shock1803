@@ -22,11 +22,16 @@ VAR
     tmrDCPumpOff : TOF; // Timer za gašenje DC pumpe
     bEngineIsOn  : BOOL;
     
-    // Glavna dozvola za rad vinčeva (npr. možeš vezati na neku glavu sklopku ili E-Stop)
-    bSystemSafe  : BOOL := TRUE; 
+    // Glavna dozvola za rad vinčeva — AND oba NC stop prekidača
+    bSystemSafe  : BOOL;
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// =========================================================
+// 0. SYSTEM SAFE (oba NC stop prekidača moraju biti OK)
+// =========================================================
+bSystemSafe := GVL_IO.DI_Stop_Port AND GVL_IO.DI_Stop_Stbd;
+
+// =========================================================
 // 1. POZIV FUNKCIJSKIH BLOKOVA ZA VINČEVE
 // =========================================================
 

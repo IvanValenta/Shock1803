@@ -13,8 +13,8 @@ PRG_Engine();
 PRG_BlinkMarine();
 PRG_Ballast();
 PRG_Doors();
+PRG_Winches();
 PRG_SimDoors();
-// PRG_Sequence();
 
 
 ]]></ST>

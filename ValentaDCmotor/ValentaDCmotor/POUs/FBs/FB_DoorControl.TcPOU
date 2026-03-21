@@ -19,7 +19,7 @@ END_VAR
 VAR_OUTPUT
     bSolOpen      : BOOL;
     bSolClose     : BOOL;
-    eState        : INT;
+    eState        : E_DoorState;
     bError        : BOOL;
     bLeakAlarm    : BOOL;
 END_VAR
@@ -46,39 +46,30 @@ IF bReset THEN
 
     bSolOpen := FALSE;
     bSolClose := FALSE;
-    eState := 0;
+    eState := E_DoorState.IDLE;
 
     tmrMove(IN := FALSE, PT := tTimeout);
     tmrRefill(IN := FALSE, PT := tRefillMax);
     RETURN;
 END_IF;
 
-(*
-// 2. AKO JE GREŠKA / ALARM
-IF bError OR bLeakAlarm THEN
-    bSolOpen := FALSE;
-    bSolClose := FALSE;
-    bRefilling := FALSE;
-    eState := 0;
+// NAPOMENA: bError i bLeakAlarm su SAMO indikacije (HMI alarm).
+// Sustav namjerno NE zaustavlja rad vrata na alarm — operater odlučuje.
 
-    tmrMove(IN := FALSE, PT := tTimeout);
-    tmrRefill(IN := FALSE, PT := tRefillMax);
-    RETURN;
-END_IF;
-*)
-
-// 3. STATE MACHINE
+// 2. STATE MACHINE
 CASE iInternalSt OF
 
     0: // IDLE
         bSolOpen := FALSE;
         bSolClose := FALSE;
         bRefilling := FALSE;
-        eState := 0;
+        eState := E_DoorState.IDLE;
 
         IF bCmdOpen AND NOT bCmdClose THEN
+            bError      := FALSE; // Nova komanda čisti prethodnu timeout grešku
             iInternalSt := 10;
         ELSIF bCmdClose AND NOT bCmdOpen THEN
+            bError      := FALSE;
             iInternalSt := 20;
         END_IF
 
@@ -87,7 +78,7 @@ CASE iInternalSt OF
         bSolOpen := TRUE;
         bSolClose := FALSE;
         bRefilling := FALSE;
-        eState := 10;
+        eState := E_DoorState.TRAVELING_OPEN;
 
         IF fPresOpen >= fLimitOpen THEN
             iInternalSt := 1;
@@ -98,7 +89,7 @@ CASE iInternalSt OF
 
     1: // OTVORENO - ODRŽAVANJE TLAKA
         bSolClose := FALSE;
-        eState := 1;
+        eState := E_DoorState.OPEN;
 
         IF bEnableRefill THEN
             IF fPresOpen <= (fLimitOpen - fHysteresis) THEN
@@ -122,7 +113,7 @@ CASE iInternalSt OF
         bSolOpen := FALSE;
         bSolClose := TRUE;
         bRefilling := FALSE;
-        eState := 20;
+        eState := E_DoorState.TRAVELING_CLOSE;
 
         IF fPresClose >= fLimitClose THEN
             iInternalSt := 2;
@@ -133,7 +124,7 @@ CASE iInternalSt OF
 
     2: // ZATVORENO - ODRŽAVANJE TLAKA
         bSolOpen := FALSE;
-        eState := 2;
+        eState := E_DoorState.CLOSED;
 
         IF bEnableRefill THEN
             IF fPresClose <= (fLimitClose - fHysteresis) THEN
@@ -157,7 +148,7 @@ ELSE
     bSolOpen := FALSE;
     bSolClose := FALSE;
     bRefilling := FALSE;
-    eState := 0;
+    eState := E_DoorState.IDLE;
     iInternalSt := 0;
 END_CASE
 
@@ -165,7 +156,8 @@ END_CASE
 // 4. TIMERI
 tmrMove(IN := (iInternalSt = 10) OR (iInternalSt = 20), PT := tTimeout);
 IF tmrMove.Q THEN
-    bError := TRUE;
+    bError       := TRUE;
+    iInternalSt  := 0; // Vrati u IDLE — isključi solenoid, čekaj reset od operatera
 END_IF
 
 tmrRefill(IN := bRefilling, PT := tRefillMax);

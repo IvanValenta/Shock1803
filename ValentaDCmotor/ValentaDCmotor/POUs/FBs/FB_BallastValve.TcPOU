@@ -20,6 +20,9 @@ END_VAR
 
 VAR
     tmrMove      : TON;          (* Timer za praćenje kretanja *)
+    rtCmdOpen    : R_TRIG;       (* Rastući brid - komanda "Otvori" *)
+    ftCmdClose   : F_TRIG;       (* Padajući brid - komanda "Zatvori" *)
+    bCmdActive   : BOOL;         (* TRUE tek kad je komanda aktivno dana, sprječava lažni timeout pri PowerOn *)
 END_VAR]]></Declaration>
     <Implementation>
       <ST><![CDATA[// 1. Upravljanje fizičkim izlazom (Solenoid)
@@ -44,24 +47,34 @@ ELSE
     eState := 0; // VALVE_UNKNOWN (Niti jedan senzor - u putovanju)
 END_IF
 
-// 3. Logika Timeout-a
-// Pokrećemo timer samo ako nismo u željenom stanju (uspoređujemo s brojevima 1 i 2)
-// a nemamo sensorsku grešku
-IF (bCmdOpen AND eState <> 1) OR (NOT bCmdOpen AND eState <> 2) THEN
-    tmrMove(IN := TRUE, PT := tTimeout);
-ELSE
-    tmrMove(IN := FALSE); // Reset timera kad stignemo na cilj
+// 3. Detekcija nove komande (timer se aktivira tek na promjenu komande, ne pri PowerOn)
+rtCmdOpen(CLK := bCmdOpen);
+ftCmdClose(CLK := bCmdOpen);
+
+IF rtCmdOpen.Q OR ftCmdClose.Q THEN
+    bCmdActive := TRUE;
 END_IF
 
-// 4. Postavljanje Timeout greške
+// 4. Logika Timeout-a (samo ako je komanda aktivno dana)
+IF bCmdActive THEN
+    IF (bCmdOpen AND eState = 1) OR (NOT bCmdOpen AND eState = 2) THEN
+        bCmdActive := FALSE; // Cilj dostignut, zaustavi timer
+    END_IF
+END_IF
+
+tmrMove(IN := bCmdActive, PT := tTimeout);
+
+// 5. Postavljanje Timeout greške
 IF tmrMove.Q THEN
     bErrTimeout := TRUE;
+    bCmdActive  := FALSE; // Zaustavi timer nakon greške
 END_IF
 
-// 5. Resetiranje grešaka
+// 6. Resetiranje grešaka
 IF bReset THEN
     bErrTimeout := FALSE;
     bErrSensor  := FALSE;
+    bCmdActive  := FALSE; // Reset komande — korisnik mora ponovo dati komandu
 END_IF
 
 // 6. Zbirni izlaz za grešku

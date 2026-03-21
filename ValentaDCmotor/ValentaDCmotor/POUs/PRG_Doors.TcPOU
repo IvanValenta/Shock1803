@@ -88,7 +88,7 @@ IF (iDoorSeq = 0) AND (eTargetMode <> E_SystemMode.MODE_DRIVE) THEN
     IF GVL_HMI.eSystemMode = E_ControlMode.MAN THEN
 
         IF rtBtnDoorFwd.Q THEN
-            IF (fbDoorFwd.eState = 1) OR (fbDoorFwd.eState = 10) THEN
+            IF (fbDoorFwd.eState = E_DoorState.OPEN) OR (fbDoorFwd.eState = E_DoorState.TRAVELING_OPEN) THEN
                 GVL_HMI.bCmdDoorFwd_Open := FALSE;
                 GVL_HMI.bCmdDoorFwd_Close := TRUE;
             ELSE
@@ -98,7 +98,7 @@ IF (iDoorSeq = 0) AND (eTargetMode <> E_SystemMode.MODE_DRIVE) THEN
         END_IF
 
         IF rtBtnDoorAft.Q THEN
-            IF (fbDoorAft.eState = 1) OR (fbDoorAft.eState = 10) THEN
+            IF (fbDoorAft.eState = E_DoorState.OPEN) OR (fbDoorAft.eState = E_DoorState.TRAVELING_OPEN) THEN
                 GVL_HMI.bCmdDoorAft_Open := FALSE;
                 GVL_HMI.bCmdDoorAft_Close := TRUE;
             ELSE
@@ -125,14 +125,14 @@ CASE iDoorSeq OF
 
     1: // OTVARANJE
         // prvo FWD, pa kad je otvoren onda AFT
-        IF fbDoorFwd.eState <> 1 THEN
+        IF fbDoorFwd.eState <> E_DoorState.OPEN THEN
             GVL_HMI.bCmdDoorFwd_Open := TRUE;
             GVL_HMI.bCmdDoorFwd_Close := FALSE;
 
             GVL_HMI.bCmdDoorAft_Open := FALSE;
             GVL_HMI.bCmdDoorAft_Close := FALSE;
 
-        ELSIF fbDoorAft.eState <> 1 THEN
+        ELSIF fbDoorAft.eState <> E_DoorState.OPEN THEN
             GVL_HMI.bCmdDoorFwd_Open := FALSE;
             GVL_HMI.bCmdDoorFwd_Close := FALSE;
 
@@ -147,14 +147,14 @@ CASE iDoorSeq OF
 
     2: // ZATVARANJE
         // prvo FWD, pa kad je zatvoren onda AFT
-        IF fbDoorFwd.eState <> 2 THEN
+        IF fbDoorFwd.eState <> E_DoorState.CLOSED THEN
             GVL_HMI.bCmdDoorFwd_Open := FALSE;
             GVL_HMI.bCmdDoorFwd_Close := TRUE;
 
             GVL_HMI.bCmdDoorAft_Open := FALSE;
             GVL_HMI.bCmdDoorAft_Close := FALSE;
 
-        ELSIF fbDoorAft.eState <> 2 THEN
+        ELSIF fbDoorAft.eState <> E_DoorState.CLOSED THEN
             GVL_HMI.bCmdDoorFwd_Open := FALSE;
             GVL_HMI.bCmdDoorFwd_Close := FALSE;
 
@@ -221,25 +221,40 @@ END_IF;
 // =========================================================
 
 // FWD (Tipka 3)
-IF fbDoorFwd.eState = 2 THEN
-    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.GREEN;
-ELSIF fbDoorFwd.eState = 1 THEN
-    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.CYAN;
-ELSIF (fbDoorFwd.eState = 10) OR (fbDoorFwd.eState = 20) THEN
-    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.YELLOW;
+// Solid: CYAN=Otvoreno, GREEN=Zatvoreno | Blink: CYAN=Putuje prema otvorenom, GREEN=Putuje prema zatvorenom
+IF fbDoorFwd.eState = E_DoorState.OPEN THEN
+    GVL_CAN.ID20_Config[3].Boja  := E_BlinkMarine_Color.CYAN;
+    GVL_CAN.ID20_Config[3].Blink := FALSE;
+ELSIF fbDoorFwd.eState = E_DoorState.CLOSED THEN
+    GVL_CAN.ID20_Config[3].Boja  := E_BlinkMarine_Color.GREEN;
+    GVL_CAN.ID20_Config[3].Blink := FALSE;
+ELSIF fbDoorFwd.eState = E_DoorState.TRAVELING_OPEN THEN
+    GVL_CAN.ID20_Config[3].Boja  := E_BlinkMarine_Color.CYAN;
+    GVL_CAN.ID20_Config[3].Blink := TRUE;
+ELSIF fbDoorFwd.eState = E_DoorState.TRAVELING_CLOSE THEN
+    GVL_CAN.ID20_Config[3].Boja  := E_BlinkMarine_Color.GREEN;
+    GVL_CAN.ID20_Config[3].Blink := TRUE;
 ELSE
-    GVL_CAN.ID20_Config[3].Boja := E_BlinkMarine_Color.OFF;
+    GVL_CAN.ID20_Config[3].Boja  := E_BlinkMarine_Color.OFF;
+    GVL_CAN.ID20_Config[3].Blink := FALSE;
 END_IF;
 
 // AFT (Tipka 8)
-IF fbDoorAft.eState = 2 THEN
-    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.GREEN;
-ELSIF fbDoorAft.eState = 1 THEN
-    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.CYAN;
-ELSIF (fbDoorAft.eState = 10) OR (fbDoorAft.eState = 20) THEN
-    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.YELLOW;
+IF fbDoorAft.eState = E_DoorState.OPEN THEN
+    GVL_CAN.ID20_Config[8].Boja  := E_BlinkMarine_Color.CYAN;
+    GVL_CAN.ID20_Config[8].Blink := FALSE;
+ELSIF fbDoorAft.eState = E_DoorState.CLOSED THEN
+    GVL_CAN.ID20_Config[8].Boja  := E_BlinkMarine_Color.GREEN;
+    GVL_CAN.ID20_Config[8].Blink := FALSE;
+ELSIF fbDoorAft.eState = E_DoorState.TRAVELING_OPEN THEN
+    GVL_CAN.ID20_Config[8].Boja  := E_BlinkMarine_Color.CYAN;
+    GVL_CAN.ID20_Config[8].Blink := TRUE;
+ELSIF fbDoorAft.eState = E_DoorState.TRAVELING_CLOSE THEN
+    GVL_CAN.ID20_Config[8].Boja  := E_BlinkMarine_Color.GREEN;
+    GVL_CAN.ID20_Config[8].Blink := TRUE;
 ELSE
-    GVL_CAN.ID20_Config[8].Boja := E_BlinkMarine_Color.OFF;
+    GVL_CAN.ID20_Config[8].Boja  := E_BlinkMarine_Color.OFF;
+    GVL_CAN.ID20_Config[8].Blink := FALSE;
 END_IF;]]></ST>
     </Implementation>
   </POU>

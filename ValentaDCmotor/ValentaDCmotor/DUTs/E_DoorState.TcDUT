@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="utf-8"?>
+<TcPlcObject Version="1.1.0.1" ProductVersion="3.1.4026.17">
+  <DUT Name="E_DoorState" Id="{e1a2b3c4-d5e6-7f89-ab01-cd23ef456789}">
+    <Declaration><![CDATA[{attribute 'qualified_only'}
+{attribute 'strict'}
+TYPE E_DoorState :
+(
+    IDLE             := 0,  (* Miruje, nema komande *)
+    OPEN             := 1,  (* Potvrđeno otvoreno - održava tlak *)
+    CLOSED           := 2,  (* Potvrđeno zatvoreno - održava tlak *)
+    TRAVELING_OPEN   := 10, (* Putuje prema otvorenom *)
+    TRAVELING_CLOSE  := 20  (* Putuje prema zatvorenom *)
+);
+END_TYPE]]></Declaration>
+  </DUT>
+</TcPlcObject>

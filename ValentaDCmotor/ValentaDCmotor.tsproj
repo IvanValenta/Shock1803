@@ -114,7 +114,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6CCBC4A6-2DB5-4FD8-A360-2DF8A41C936D}" Name="ValentaDCmotor" PrjFilePath="ValentaDCmotor\ValentaDCmotor.plcproj" TmcFilePath="ValentaDCmotor\ValentaDCmotor.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{4C58FD9D-CAD9-5D84-E214-5D860692CD31}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{74CB2C7D-D69E-8C8A-5092-DDC2C3485D0F}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
 					<Name>ValentaDCmotor Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -364,6 +364,16 @@
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
 						<Var>
+							<Name>GVL_IO.DI_Stop_Port</Name>
+							<Comment><![CDATA[ NC Stop tipka Port strana ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_Stop_Stbd</Name>
+							<Comment><![CDATA[ NC Stop tipka Starboard strana ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
 							<Name>GVL_IO.DI_TUNEL_OPEN_FB</Name>
 							<Comment><![CDATA[ --- NOVO: TUNEL PUMP (Ventil za usmjeravanje) --- ]]></Comment>
 							<Type>BOOL</Type>
@@ -539,8 +549,7 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.DI_BAL_P1_OPEN_FB</Name>
-							<Comment><![CDATA[ --- DIGITALNI ULAZI (Feedback sa ventila) --- 
- PORT Strana ]]></Comment>
+							<Comment><![CDATA[ PORT Strana ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
