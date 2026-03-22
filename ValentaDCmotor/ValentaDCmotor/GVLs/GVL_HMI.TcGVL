@@ -40,6 +40,8 @@ VAR_GLOBAL
     bAlarm_Tunel : BOOL;
 	
 	(* --- VRATA --- *)
+    bCmdDoorFwd  : BOOL;
+    bCmdDoorAft  : BOOL;
     bCmdDoorFwd_Open  : BOOL;
     bCmdDoorFwd_Close : BOOL;
     bCmdDoorAft_Open  : BOOL;
@@ -84,21 +86,21 @@ VAR_GLOBAL
 	test : BOOL;
 
     (* --- HMI LED STATUSI (postavljaju se u PRG_HmiLeds) --- *)
-    (* Ventili - 3 boje: Cyan=Otvoren, Yellow=Putuje, Red=Greška *)
-    bLed_P1_Cyan   : BOOL; bLed_P1_Yellow : BOOL; bLed_P1_Red : BOOL;
-    bLed_P2_Cyan   : BOOL; bLed_P2_Yellow : BOOL; bLed_P2_Red : BOOL;
-    bLed_P3_Cyan   : BOOL; bLed_P3_Yellow : BOOL; bLed_P3_Red : BOOL;
-    bLed_S1_Cyan   : BOOL; bLed_S1_Yellow : BOOL; bLed_S1_Red : BOOL;
-    bLed_S2_Cyan   : BOOL; bLed_S2_Yellow : BOOL; bLed_S2_Red : BOOL;
-    bLed_S3_Cyan   : BOOL; bLed_S3_Yellow : BOOL; bLed_S3_Red : BOOL;
-    bLed_Tunel_Cyan   : BOOL; bLed_Tunel_Yellow : BOOL; bLed_Tunel_Red : BOOL;
+    (* Ventili - 4 boje: Cyan=Otvoren, Green=Zatvoren, Orange(Yellow)=Putuje, Red=Greška *)
+    bLed_P1_Cyan   : BOOL; bLed_P1_Yellow : BOOL; bLed_P1_Red : BOOL; bLed_P1_Green : BOOL;
+    bLed_P2_Cyan   : BOOL; bLed_P2_Yellow : BOOL; bLed_P2_Red : BOOL; bLed_P2_Green : BOOL;
+    bLed_P3_Cyan   : BOOL; bLed_P3_Yellow : BOOL; bLed_P3_Red : BOOL; bLed_P3_Green : BOOL;
+    bLed_S1_Cyan   : BOOL; bLed_S1_Yellow : BOOL; bLed_S1_Red : BOOL; bLed_S1_Green : BOOL;
+    bLed_S2_Cyan   : BOOL; bLed_S2_Yellow : BOOL; bLed_S2_Red : BOOL; bLed_S2_Green : BOOL;
+    bLed_S3_Cyan   : BOOL; bLed_S3_Yellow : BOOL; bLed_S3_Red : BOOL; bLed_S3_Green : BOOL;
+    bLed_Tunel_Cyan   : BOOL; bLed_Tunel_Yellow : BOOL; bLed_Tunel_Red : BOOL; bLed_Tunel_Green : BOOL;
     (* Pumpa *)
     bLed_Pump_Cyan : BOOL; bLed_Pump_Red  : BOOL;
     (* Motor *)
     bLed_Engine_Green : BOOL;
     (* Vrata *)
-    bLed_DoorFwd_Cyan : BOOL; bLed_DoorFwd_Yellow : BOOL; bLed_DoorFwd_Red : BOOL;
-    bLed_DoorAft_Cyan : BOOL; bLed_DoorAft_Yellow : BOOL; bLed_DoorAft_Red : BOOL;
+    bLed_DoorFwd_Cyan : BOOL; bLed_DoorFwd_Yellow : BOOL; bLed_DoorFwd_Red : BOOL; bLed_DoorFwd_Green : BOOL;
+    bLed_DoorAft_Cyan : BOOL; bLed_DoorAft_Yellow : BOOL; bLed_DoorAft_Red : BOOL; bLed_DoorAft_Green : BOOL;
 
 END_VAR]]></Declaration>
   </GVL>

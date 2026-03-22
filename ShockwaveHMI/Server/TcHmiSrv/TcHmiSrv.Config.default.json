@@ -823,6 +823,26 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_Alarms.bAnyAlarmActive": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_Alarms::bAnyAlarmActive",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_ENGINE.bAlarm_HighRPM": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_ENGINE::bAlarm_HighRPM",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_ENGINE.eGearOut": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -833,11 +853,21 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bCmdOpen_P1": {
+        "ADS.PLC1.GVL_HMI.bAlarm_DoorAft": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_P1",
+            "MAPPING": "PLC1::GVL_HMI::bAlarm_DoorAft",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bAlarm_DoorFwd": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bAlarm_DoorFwd",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -913,21 +943,252 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bAlarm_DoorFwd": {
+        "ADS.PLC1.GVL_HMI.bCmdDoorAft": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bAlarm_DoorFwd",
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorAft",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bAlarm_DoorAft": {
+        "ADS.PLC1.GVL_HMI.bCmdDoorAft_Close": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bAlarm_DoorAft",
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorAft_Close",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdDoorAft_Open": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorAft_Open",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdDoorFwd": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorFwd",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "--- VRATA ---"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdDoorFwd_Close": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorFwd_Close",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdDoorFwd_Open": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdDoorFwd_Open",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "--- VRATA ---"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_P1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_P1",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_P2": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_P2",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_P3": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_P3",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_S1": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_S1",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_S2": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_S2",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_S3": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_S3",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdOpen_Tunel": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdOpen_Tunel",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bCmdRun_TunelPump": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bCmdRun_TunelPump",
+            "SCHEMA": {
+                "allOf": [
+                    {
+                        "$ref": "tchmi:general#/definitions/BOOL"
+                    },
+                    {
+                        "comment": "--- TUNEL PUMP ---"
+                    }
+                ]
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Cyan": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Cyan",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Green": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Green",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Red": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Red",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Cyan": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Cyan",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Green": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Green",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Red": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Red",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_Engine_Green": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_Engine_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -943,11 +1204,11 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_P1_Yellow": {
+        "ADS.PLC1.GVL_HMI.bLed_P1_Green": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_P1_Yellow",
+            "MAPPING": "PLC1::GVL_HMI::bLed_P1_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -963,6 +1224,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.bLed_P1_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_P1_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.bLed_P2_Cyan": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -973,11 +1244,11 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_P2_Yellow": {
+        "ADS.PLC1.GVL_HMI.bLed_P2_Green": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_P2_Yellow",
+            "MAPPING": "PLC1::GVL_HMI::bLed_P2_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -993,6 +1264,16 @@
             },
             "USEMAPPING": true
         },
+        "ADS.PLC1.GVL_HMI.bLed_P2_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_P2_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
         "ADS.PLC1.GVL_HMI.bLed_P3_Cyan": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
@@ -1003,11 +1284,11 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_P3_Yellow": {
+        "ADS.PLC1.GVL_HMI.bLed_P3_Green": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_P3_Yellow",
+            "MAPPING": "PLC1::GVL_HMI::bLed_P3_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -1023,121 +1304,11 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_S1_Cyan": {
+        "ADS.PLC1.GVL_HMI.bLed_P3_Yellow": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Cyan",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S1_Yellow": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Yellow",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S1_Red": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Red",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S2_Cyan": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Cyan",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S2_Yellow": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Yellow",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S2_Red": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Red",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S3_Cyan": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Cyan",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S3_Yellow": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Yellow",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_S3_Red": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Red",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_Tunel_Cyan": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Cyan",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_Tunel_Yellow": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Yellow",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_HMI.bLed_Tunel_Red": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Red",
+            "MAPPING": "PLC1::GVL_HMI::bLed_P3_Yellow",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
@@ -1163,83 +1334,163 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_Engine_Green": {
+        "ADS.PLC1.GVL_HMI.bLed_S1_Cyan": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_Engine_Green",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Cyan",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Cyan": {
+        "ADS.PLC1.GVL_HMI.bLed_S1_Green": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Cyan",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Yellow": {
+        "ADS.PLC1.GVL_HMI.bLed_S1_Red": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Yellow",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Red",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Red": {
+        "ADS.PLC1.GVL_HMI.bLed_S1_Yellow": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorFwd_Red",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S1_Yellow",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Cyan": {
+        "ADS.PLC1.GVL_HMI.bLed_S2_Cyan": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Cyan",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Cyan",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Yellow": {
+        "ADS.PLC1.GVL_HMI.bLed_S2_Green": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Yellow",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Green",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.bLed_DoorAft_Red": {
+        "ADS.PLC1.GVL_HMI.bLed_S2_Red": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::bLed_DoorAft_Red",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Red",
             "SCHEMA": {
                 "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_HMI.eState_DoorFwd": {
+        "ADS.PLC1.GVL_HMI.bLed_S2_Yellow": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_HMI::eState_DoorFwd",
+            "MAPPING": "PLC1::GVL_HMI::bLed_S2_Yellow",
             "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/INT"
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_S3_Cyan": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Cyan",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_S3_Green": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Green",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_S3_Red": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Red",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_S3_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_S3_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_Tunel_Cyan": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Cyan",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_Tunel_Green": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Green",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_Tunel_Red": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Red",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
+            },
+            "USEMAPPING": true
+        },
+        "ADS.PLC1.GVL_HMI.bLed_Tunel_Yellow": {
+            "ACCESS": 3,
+            "DOMAIN": "ADS",
+            "DYNAMIC": true,
+            "MAPPING": "PLC1::GVL_HMI::bLed_Tunel_Yellow",
+            "SCHEMA": {
+                "$ref": "tchmi:general#/definitions/BOOL"
             },
             "USEMAPPING": true
         },
@@ -1253,23 +1504,13 @@
             },
             "USEMAPPING": true
         },
-        "ADS.PLC1.GVL_ENGINE.bAlarm_HighRPM": {
+        "ADS.PLC1.GVL_HMI.eState_DoorFwd": {
             "ACCESS": 3,
             "DOMAIN": "ADS",
             "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_ENGINE::bAlarm_HighRPM",
+            "MAPPING": "PLC1::GVL_HMI::eState_DoorFwd",
             "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
-            },
-            "USEMAPPING": true
-        },
-        "ADS.PLC1.GVL_Alarms.bAnyAlarmActive": {
-            "ACCESS": 3,
-            "DOMAIN": "ADS",
-            "DYNAMIC": true,
-            "MAPPING": "PLC1::GVL_Alarms::bAnyAlarmActive",
-            "SCHEMA": {
-                "$ref": "tchmi:general#/definitions/BOOL"
+                "$ref": "tchmi:general#/definitions/INT"
             },
             "USEMAPPING": true
         },
@@ -4545,8 +4786,11 @@
                 "ADS.AdsSyncReadStateReq": 3,
                 "ADS.CheckLicense": 3,
                 "ADS.Diagnostics": 3,
+                "ADS.PLC1.GVL_Alarms.bAnyAlarmActive": 3,
+                "ADS.PLC1.GVL_ENGINE.bAlarm_HighRPM": 3,
                 "ADS.PLC1.GVL_ENGINE.eGearOut": 3,
-                "ADS.PLC1.GVL_HMI.bCmdOpen_P1": 3,
+                "ADS.PLC1.GVL_HMI.bAlarm_DoorAft": 3,
+                "ADS.PLC1.GVL_HMI.bAlarm_DoorFwd": 3,
                 "ADS.PLC1.GVL_HMI.bAlarm_P1": 3,
                 "ADS.PLC1.GVL_HMI.bAlarm_P2": 3,
                 "ADS.PLC1.GVL_HMI.bAlarm_P3": 3,
@@ -4554,42 +4798,61 @@
                 "ADS.PLC1.GVL_HMI.bAlarm_S2": 3,
                 "ADS.PLC1.GVL_HMI.bAlarm_S3": 3,
                 "ADS.PLC1.GVL_HMI.bAlarm_Tunel": 3,
-                "ADS.PLC1.GVL_HMI.bAlarm_DoorFwd": 3,
-                "ADS.PLC1.GVL_HMI.bAlarm_DoorAft": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorAft": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorAft_Close": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorAft_Open": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorFwd": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorFwd_Close": 3,
+                "ADS.PLC1.GVL_HMI.bCmdDoorFwd_Open": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_P1": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_P2": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_P3": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_S1": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_S2": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_S3": 3,
+                "ADS.PLC1.GVL_HMI.bCmdOpen_Tunel": 3,
+                "ADS.PLC1.GVL_HMI.bCmdRun_TunelPump": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_Engine_Green": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P1_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_P1_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P1_Green": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P1_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P1_Yellow": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P2_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_P2_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P2_Green": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P2_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P2_Yellow": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P3_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_P3_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P3_Green": 3,
                 "ADS.PLC1.GVL_HMI.bLed_P3_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S1_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S1_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S1_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S2_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S2_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S2_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S3_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S3_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_S3_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_Tunel_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_Tunel_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_Tunel_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_P3_Yellow": 3,
                 "ADS.PLC1.GVL_HMI.bLed_Pump_Cyan": 3,
                 "ADS.PLC1.GVL_HMI.bLed_Pump_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_Engine_Green": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorFwd_Red": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Cyan": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Yellow": 3,
-                "ADS.PLC1.GVL_HMI.bLed_DoorAft_Red": 3,
-                "ADS.PLC1.GVL_HMI.eState_DoorFwd": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S1_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S1_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S1_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S1_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S2_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S2_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S2_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S2_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S3_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S3_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S3_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_S3_Yellow": 3,
+                "ADS.PLC1.GVL_HMI.bLed_Tunel_Cyan": 3,
+                "ADS.PLC1.GVL_HMI.bLed_Tunel_Green": 3,
+                "ADS.PLC1.GVL_HMI.bLed_Tunel_Red": 3,
+                "ADS.PLC1.GVL_HMI.bLed_Tunel_Yellow": 3,
                 "ADS.PLC1.GVL_HMI.eState_DoorAft": 3,
-                "ADS.PLC1.GVL_ENGINE.bAlarm_HighRPM": 3,
-                "ADS.PLC1.GVL_Alarms.bAnyAlarmActive": 3,
+                "ADS.PLC1.GVL_HMI.eState_DoorFwd": 3,
                 "ADS.PLC1.GVL_IO.fEngineRPM_Scaled": 3,
                 "ADS.PLC1.GVL_IO.fLevel_Bal_P1_Pct_Hmi": 3,
                 "ADS.PLC1.GVL_IO.fLevel_Bal_P2_Pct_Hmi": 3,

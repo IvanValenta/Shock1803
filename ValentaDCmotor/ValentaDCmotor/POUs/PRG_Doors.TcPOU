@@ -82,8 +82,8 @@ GVL_HMI.bCmdDoorAft_Close := FALSE;
 //    I KAD NIJE AKTIVAN DRIVE MODE
 // =========================================================
 IF (iDoorSeq = 0) AND (eTargetMode <> E_SystemMode.MODE_DRIVE) THEN
-    rtBtnDoorFwd(CLK := GVL_CAN.ID20_Status[3]);
-    rtBtnDoorAft(CLK := GVL_CAN.ID20_Status[8]);
+    rtBtnDoorFwd(CLK := GVL_CAN.ID20_Status[3] OR GVL_HMI.bCmdDoorFwd);
+    rtBtnDoorAft(CLK := GVL_CAN.ID20_Status[8] OR GVL_HMI.bCmdDoorAft);
 
     IF GVL_HMI.eSystemMode = E_ControlMode.MAN THEN
 
