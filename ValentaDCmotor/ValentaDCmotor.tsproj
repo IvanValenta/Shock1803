@@ -114,7 +114,7 @@
 		</System>
 		<Plc>
 			<Project GUID="{6CCBC4A6-2DB5-4FD8-A360-2DF8A41C936D}" Name="ValentaDCmotor" PrjFilePath="ValentaDCmotor\ValentaDCmotor.plcproj" TmcFilePath="ValentaDCmotor\ValentaDCmotor.tmc" ReloadTmc="true" AmsPort="851" FileArchiveSettings="#x000e" SymbolicMapping="true">
-				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{74CB2C7D-D69E-8C8A-5092-DDC2C3485D0F}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
+				<Instance Id="#x08502000" TcSmClass="TComPlcObjDef" KeepUnrestoredLinks="2" TmcHash="{F2BC5602-D96F-6FFA-21DE-586584C24F0C}" TmcPath="ValentaDCmotor\ValentaDCmotor.tmc">
 					<Name>ValentaDCmotor Instance</Name>
 					<CLSID ClassFactory="TcPlc30">{08500001-0000-0000-F000-000000000064}</CLSID>
 					<Vars VarGrpType="2" AreaNo="1">
@@ -123,6 +123,41 @@
 							<Name>GVL.bEnable_M1</Name>
 							<Comment><![CDATA[ DCM Control Channel 1.Enable]]></Comment>
 							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bReset_M1</Name>
+							<Comment><![CDATA[ DCM Control Channel 1.Reset  ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bReduceTorque_M1</Name>
+							<Comment><![CDATA[ DCM Control Channel 1.Reduce torque]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.nVelocitySetpoint_M1</Name>
+							<Comment><![CDATA[ Link na "Velocity" (49.0)]]></Comment>
+							<Type>INT</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bEnable_M2</Name>
+							<Comment><![CDATA[ DCM Control Channel 1.Enable]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bReset_M2</Name>
+							<Comment><![CDATA[ DCM Control Channel 1.Reset  ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.bReduceTorque_M2</Name>
+							<Comment><![CDATA[ DCM Control Channel 1.Reduce torque]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL.nVelocitySetpoint_M2</Name>
+							<Comment><![CDATA[ Link na "Velocity" (49.0)]]></Comment>
+							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_CAN.ID10_LedRed</Name>
@@ -173,28 +208,8 @@
 							<Type>USINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.DO_TUNEL_VALVE</Name>
-							<Comment><![CDATA[ --- NOVO: TUNEL PUMP IZLAZ --- ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_CAN.ID20_LedRed</Name>
 							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bReset_M1</Name>
-							<Comment><![CDATA[ DCM Control Channel 1.Reset  ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bReduceTorque_M1</Name>
-							<Comment><![CDATA[ DCM Control Channel 1.Reduce torque]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.nVelocitySetpoint_M1</Name>
-							<Comment><![CDATA[ Link na "Velocity" (49.0)]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_CAN.ID20_LedGreen</Name>
@@ -211,26 +226,6 @@
 						<Var>
 							<Name>GVL_CAN.ID20_LedBlinkGreen</Name>
 							<Type>UINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bEnable_M2</Name>
-							<Comment><![CDATA[ DCM Control Channel 1.Enable]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bReset_M2</Name>
-							<Comment><![CDATA[ DCM Control Channel 1.Reset  ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.bReduceTorque_M2</Name>
-							<Comment><![CDATA[ DCM Control Channel 1.Reduce torque]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL.nVelocitySetpoint_M2</Name>
-							<Comment><![CDATA[ Link na "Velocity" (49.0)]]></Comment>
-							<Type>INT</Type>
 						</Var>
 						<Var>
 							<Name>GVL_CAN.ID20_LedBlinkBlue</Name>
@@ -271,6 +266,11 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.DO_BAL_S3</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DO_TUNEL_VALVE</Name>
+							<Comment><![CDATA[ --- NOVO: TUNEL PUMP IZLAZ --- ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -327,14 +327,6 @@
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.DO_Engine_Starter</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.DO_Engine_Stop</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
 							<Name>GVL_IO.fLevel_Bal_P1_Pct_Disp</Name>
 							<Comment><![CDATA[ PORT ]]></Comment>
 							<Type>INT</Type>
@@ -360,43 +352,17 @@
 							<Name>GVL_IO.fLevel_Bal_S3_Pct_Disp</Name>
 							<Type>INT</Type>
 						</Var>
+						<Var>
+							<Name>GVL_IO.DO_Engine_Starter</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DO_Engine_Stop</Name>
+							<Type>BOOL</Type>
+						</Var>
 					</Vars>
 					<Vars VarGrpType="1">
 						<Name>PlcTask Inputs</Name>
-						<Var>
-							<Name>GVL_IO.DI_Stop_Port</Name>
-							<Comment><![CDATA[ NC Stop tipka Port strana ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.DI_Stop_Stbd</Name>
-							<Comment><![CDATA[ NC Stop tipka Starboard strana ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.DI_TUNEL_OPEN_FB</Name>
-							<Comment><![CDATA[ --- NOVO: TUNEL PUMP (Ventil za usmjeravanje) --- ]]></Comment>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_IO.DI_TUNEL_CLOSE_FB</Name>
-							<Type>BOOL</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.ID10_KeyState</Name>
-							<Comment><![CDATA[ --- ID10 (4 tipke) ---]]></Comment>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.ID11_KeyState</Name>
-							<Comment><![CDATA[ --- ID11 (4 tipke) ---]]></Comment>
-							<Type>USINT</Type>
-						</Var>
-						<Var>
-							<Name>GVL_CAN.ID20_KeyState</Name>
-							<Comment><![CDATA[ --- ID20 (15 tipki) ---]]></Comment>
-							<Type>UINT</Type>
-						</Var>
 						<Var>
 							<Name>GVL.iwPotFeedback_M1</Name>
 							<Comment><![CDATA[ AI Channel 1]]></Comment>
@@ -538,13 +504,28 @@
 							<Type>UINT</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.DI_Sonda_Port</Name>
-							<Comment><![CDATA[ Senzor u Port usisu]]></Comment>
+							<Name>GVL_CAN.ID10_KeyState</Name>
+							<Comment><![CDATA[ --- ID10 (4 tipke) ---]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID11_KeyState</Name>
+							<Comment><![CDATA[ --- ID11 (4 tipke) ---]]></Comment>
+							<Type>USINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_CAN.ID20_KeyState</Name>
+							<Comment><![CDATA[ --- ID20 (15 tipki) ---]]></Comment>
+							<Type>UINT</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_Stop_Port</Name>
+							<Comment><![CDATA[ NC Stop tipka Port strana ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
-							<Name>GVL_IO.DI_Sonda_Stbd</Name>
-							<Comment><![CDATA[ Senzor u Stbd usisu]]></Comment>
+							<Name>GVL_IO.DI_Stop_Stbd</Name>
+							<Comment><![CDATA[ NC Stop tipka Starboard strana ]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>
@@ -595,6 +576,25 @@
 						</Var>
 						<Var>
 							<Name>GVL_IO.DI_BAL_S3_CLOSE_FB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_TUNEL_OPEN_FB</Name>
+							<Comment><![CDATA[ --- NOVO: TUNEL PUMP (Ventil za usmjeravanje) --- ]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_TUNEL_CLOSE_FB</Name>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_Sonda_Port</Name>
+							<Comment><![CDATA[ Senzor u Port usisu]]></Comment>
+							<Type>BOOL</Type>
+						</Var>
+						<Var>
+							<Name>GVL_IO.DI_Sonda_Stbd</Name>
+							<Comment><![CDATA[ Senzor u Stbd usisu]]></Comment>
 							<Type>BOOL</Type>
 						</Var>
 						<Var>

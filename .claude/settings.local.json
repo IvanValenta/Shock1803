@@ -1,0 +1,40 @@
+{
+  "permissions": {
+    "allow": [
+      "Bash(xargs grep:*)",
+      "Bash(grep -v \"^$\")",
+      "Bash(find /c/AAProj/Shock1803_1/ShockwaveHMI/bin -name *.js)",
+      "Bash(find /c/AAProj/Shock1803_1/ShockwaveHMI/bin -name *.json)",
+      "Bash(grep -rn \"IfThenElse\\\\|binding\\\\|path\\\\|expression\\\\|valueConverter\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/Schema/ --include=*.json)",
+      "Bash(grep -rn \"path\\\\|expression\\\\|binding\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/Schema/ --include=*.json)",
+      "Bash(grep -rn \"activeBackground\\\\|ActiveBackgroundColor\\\\|data-tchmi-active-background\\\\|checked.*color\\\\|state.*true.*color\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Controls/TcHmiButton/ --include=*.css)",
+      "Bash(grep -rn \"StateSymbol\\\\|state-symbol\\\\|stateSymbol\\\\|\\\\.active\\\\|\\\\.checked\\\\|\\\\.selected\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Controls/dist/TcHmiButton/ --include=*.js)",
+      "Bash(grep -rn \"mapping\\\\|Mapping\\\\|mapValue\\\\|valueMap\\\\|map\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/ --include=*.json)",
+      "Bash(grep -rn \"data-tchmi-fill\\\\b\\\\|fill\\\\b\\\\|attrFill\\\\|fillAttr\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/ --include=*.js)",
+      "Bash(grep -rn data-tchmi-fillb /c/AAProj/Shock1803_1/ShockwaveHMI/bin/ --include=*.json)",
+      "Bash(grep -o processFillColor[^}]*}[^}]*}[^}]*} /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/dist/System/StyleManager.js)",
+      "Bash(grep -rn \"button-background-pressed\\\\|tchmi-button-background\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/ --include=*.css)",
+      "Bash(grep -rn \"button-background-pressed\\\\|tchmi-button-background\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/ --include=*.css)",
+      "Bash(grep -rn \"tchmi-button-background\\\\b\\\\|tchmi-button-background-pressed\" /c/AAProj/Shock1803_1/ShockwaveHMI/Themes/ --include=*.css --include=*.theme)",
+      "Bash(grep -rn button-background-pressed /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/ --include=*.css)",
+      "Bash(grep -rn \"tchmi-button-background\\\\b\\\\|tchmi-button-background\" /c/AAProj/Shock1803_1/ShockwaveHMI/bin/ --include=*.theme)",
+      "Bash(grep -rn tchmi-button-backgroundb /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/ --include=*.css)",
+      "Bash(grep -rn tchmi-button-background /c/AAProj/Shock1803_1/ShockwaveHMI/bin/ --include=*.theme)",
+      "Bash(cat /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/Themes/Base-Dark/*.css)",
+      "Bash(grep -rn tchmi-button-background /c/AAProj/Shock1803_1/ShockwaveHMI/ --include=*.css)",
+      "Bash(grep -rn \"tchmi-button-background\\\\|tchmi-button-background-pressed\" /c/AAProj/Shock1803_1/ShockwaveHMI/ --include=*.theme)",
+      "Bash(grep -rn \"button-background\\\\|button.pressed\" /c/AAProj/Shock1803_1/ShockwaveHMI/ --include=*.theme)",
+      "Bash(grep -o processBackgroundColor[^}]*} /c/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/dist/API/StyleProvider.js)",
+      "Bash(grep -r \"target-attribute\\\\|targetAttribute\\\\|binding.*path\\\\|processScript\" C:AAProjShock1803_1ShockwaveHMIbinBeckhoff.TwinCAT.HMI.Framework --include=*.js -l)",
+      "Bash(python3:*)",
+      "Bash(find /c/TwinCAT/Functions -name TcHmiSrv.Config*)",
+      "Bash(/dev/null ls:*)",
+      "Bash(find /c/TwinCAT/TwinCAT -name TcHmiSrv*)",
+      "Bash(find C:/AAProj/Shock1803_1/ShockwaveHMI/bin -name TcHmiEllipse*)",
+      "Bash(head -5 find C:/AAProj/Shock1803_1/ShockwaveHMI -name TcHmiEllipse*)",
+      "Bash(grep -o \"\"colorHex\"\"[^}]*} C:/AAProj/Shock1803_1/ShockwaveHMI/bin/Beckhoff.TwinCAT.HMI.Framework/dist/System/TcHmi.esm.js)",
+      "Bash(grep -c '\"\"color\"\":' \"C:/AAProj/Shock1803_1/ShockwaveHMI/Desktop.view\")",
+      "Bash(grep -c '\"\"colorHex\"\":' \"C:/AAProj/Shock1803_1/ShockwaveHMI/Desktop.view\")"
+    ]
+  }
+}
